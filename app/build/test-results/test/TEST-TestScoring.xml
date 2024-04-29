@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestScoring" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-04-24T07:09:21" hostname="192-168-1-102.tpgi.com.au" time="2.574">
+  <properties/>
+  <testcase name="test0Winner" classname="TestScoring" time="2.574"/>
+  <system-out><![CDATA[logResult = Round1:P0-2D-3D,P1-2S-3S,P2-1C-2C,P3-2H-10H,Score:0,0,0,0,
+Round2:P0-3D-4D,P1-3S-4S,P2-1C-2C,P3-10H-11H,Score:0,0,0,0,
+Round3:P0-4D-9D,P1-4S-7S,P2-2C-8C,P3-10H-11H,Score:13,0,0,0,
+Round4:P0-9D-10D,P1-7S-8S,P2-8C-9C,P3-10H-11H,Score:0,0,0,0,
+EndGame:38,60,17,63,
+Winners:3
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
