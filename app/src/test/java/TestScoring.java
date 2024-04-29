@@ -80,7 +80,7 @@ public class TestScoring {
             int[]endGameScores = convertEndGameFromLogLine(line);
 
             if (endGameScores != null) {
-                assertArrayEquals(endGameScores, new int[] { 100, 0, 0, 0 });
+                assertArrayEquals(new int[] { 100, 0, 0, 0 }, endGameScores);
             }
         }
     }
@@ -94,7 +94,7 @@ public class TestScoring {
             int[]endGameScores = convertEndGameFromLogLine(line);
 
             if (endGameScores != null) {
-                assertArrayEquals(endGameScores, new int[] { 100, 0, 0, 0 });
+                assertArrayEquals(new int[] { 100, 0, 0, 0 }, endGameScores);
             }
         }
     }
@@ -108,7 +108,7 @@ public class TestScoring {
             int[]endGameScores = convertEndGameFromLogLine(line);
 
             if (endGameScores != null) {
-                assertArrayEquals(endGameScores, new int[] { 30, 45, 0, 0 });
+                assertArrayEquals(new int[] { 30, 45, 0, 0 }, endGameScores);
             }
         }
     }
@@ -136,7 +136,7 @@ public class TestScoring {
             int[]endGameScores = convertEndGameFromLogLine(line);
 
             if (endGameScores != null) {
-                assertArrayEquals(endGameScores, new int[] { 38, 60, 17, 63 });
+                assertArrayEquals(new int[] { 38, 60, 17, 63 }, endGameScores);
             }
         }
     }

@@ -1,7 +1,35 @@
-GlogResult = Round1:P0-2D-3D,P1-2S-3S,P2-1C-2C,P3-2H-10H,Score:0,0,0,0,
-<Round2:P0-3D-4D,P1-3S-4S,P2-1C-2C,P3-10H-11H,Score:0,0,0,0,
-=Round3:P0-4D-9D,P1-4S-7S,P2-2C-8C,P3-10H-11H,Score:13,0,0,0,
-=Round4:P0-9D-10D,P1-7S-8S,P2-8C-9C,P3-10H-11H,Score:0,0,0,0,
-EndGame:38,60,17,63,
+FlogResult = Round1:P0-1D-2D,P1-2H-7H,P2-1C-2C,P3-1S-2S,Score:0,0,0,0,
+:Round2:P0-2D-4D,P1-7H-8H,P2-1C-2C,P3-1S-2S,Score:0,0,0,0,
+:Round3:P0-2D-4D,P1-8H-8S,P2-1C-2C,P3-1S-2S,Score:0,0,0,0,
+;Round4:P0-2D-4D,P1-8S-9H,P2-1C-2C,P3-1S-2S,Score:0,13,0,0,
+EndGame:0,100,0,0,
 
+Winners:1
+FlogResult = Round1:P0-1H-2H,P1-2D-3D,P2-2C-3C,P3-2S-3S,Score:0,0,0,0,
+:Round2:P0-1H-2H,P1-3D-4D,P2-3C-4C,P3-3S-4S,Score:0,0,0,0,
+=Round3:P0-1H-2H,P1-4D-9D,P2-4C-9C,P3-4S-9S,Score:0,13,13,13,
+=Round4:P0-1H-2H,P1-9D-10D,P2-9C-10C,P3-9S-10S,Score:0,0,0,0,
+EndGame:9,38,19,76,
+
 Winners:3
+FlogResult = Round1:P0-1H-3H,P1-1D-2D,P2-1C-2C,P3-1S-2S,Score:0,0,0,0,
+;Round2:P0-1H-4H,P1-1D-2D,P2-1C-2C,P3-1S-2S,Score:13,0,0,0,
+;Round3:P0-1H-4H,P1-1D-2D,P2-1C-2C,P3-1S-2S,Score:13,0,0,0,
+;Round4:P0-1H-4H,P1-1D-2D,P2-1C-2C,P3-1S-2S,Score:13,0,0,0,
+EndGame:100,0,0,0,
+
+Winners:0
+GlogResult = Round1:P0-2D-3D,P1-2S-3S,P2-1C-2C,P3-2H-10H,Score:0,0,0,0,
+<Round2:P0-3D-4D,P1-3S-4S,P2-1C-2C,P3-10H-11H,Score:0,0,0,0,
+=Round3:P0-4D-9D,P1-4S-7S,P2-2C-8C,P3-10H-11H,Score:13,0,0,0,
+=Round4:P0-9D-10D,P1-7S-8S,P2-8C-9C,P3-10H-11H,Score:0,0,0,0,
+EndGame:38,60,17,63,
+
+Winners:3
+FlogResult = Round1:P0-1H-2H,P1-2S-3S,P2-1C-2C,P3-1D-2D,Score:0,0,0,0,
+<Round2:P0-1H-4H,P1-3S-4S,P2-1C-2C,P3-1D-2D,Score:13,13,0,0,
+<Round3:P0-1H-4H,P1-4S-6S,P2-1C-2C,P3-1D-2D,Score:13,13,0,0,
+<Round4:P0-1H-4H,P1-6S-7H,P2-1C-2C,P3-1D-2D,Score:13,13,0,0,
+EndGame:30,45,0,0,
+
+Winners:1
