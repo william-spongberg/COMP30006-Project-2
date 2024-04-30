@@ -188,19 +188,6 @@ public class LuckyThirdteen extends CardGame {
         return maxScore;
     }
 
-    private int findIndexWithHigestScore(int[] scoreArray) {
-        int maxScore = -1;
-        int maxScoreIndex = 0;
-        for (int i = 0; i < scores.length; i++) {
-            if (maxScore < scores[i]) {
-                maxScoreIndex = i;
-                maxScore = scores[i];
-            }
-        }
-
-        return maxScoreIndex;
-    }
-
     private void calculateScoreEndOfRound() {
         List<Boolean> isThirteenChecks = Arrays.asList(false, false, false, false);
         for (int i = 0; i < hands.length; i++) {
@@ -417,7 +404,7 @@ public class LuckyThirdteen extends CardGame {
                 }
             }
         }
-        int cardsToShare = nbSharedCards - pack.getNumberOfCards();
+        int cardsToShare = nbSharedCards - playingArea.getNumberOfCards();
 
         for (int j = 0; j < cardsToShare; j++) {
             if (pack.isEmpty()) return;
@@ -565,9 +552,6 @@ public class LuckyThirdteen extends CardGame {
                 // End Follow
             }
 
-            boolean isSumThirteen = isThirteen(nextPlayer);
-            scores[nextPlayer] = isSumThirteen ? THIRTEEN_GOAL : 0;
-            updateScore(nextPlayer);
             nextPlayer = (nextPlayer + 1) % nbPlayers;
 
             if (nextPlayer == 0) {
@@ -611,6 +595,10 @@ public class LuckyThirdteen extends CardGame {
 
         for (int i = 0; i < playerMovements.length; i++) {
             String movementString = playerMovements[i];
+            if (movementString.equals("")) {
+                playerAutoMovements.add(new ArrayList<>());
+                continue;
+            }
             List<String> movements = Arrays.asList(movementString.split(","));
             playerAutoMovements.add(movements);
         }
