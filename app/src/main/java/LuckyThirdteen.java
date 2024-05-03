@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
 
+    // move this into a card factory class.
     public enum Suit {
         SPADES ("S", 4), HEARTS ("H", 3),
         DIAMONDS ("D", 2), CLUBS ("C", 1);
@@ -32,6 +33,8 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
+
+    // move this into a card factory class.
     public enum Rank {
         // Reverse order of rank importance (see rankGreater() below)
         ACE (1, 1, 0, 1),
@@ -488,6 +491,7 @@ public class LuckyThirdteen extends CardGame {
         logResult.append("Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
     }
 
+    // keep this here - Ethan
     private void playGame() {
         // End trump suit
         int winner = 0;

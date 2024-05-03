@@ -1,10 +1,10 @@
-app/build/
 build/
 .gradle
 
 *.class
 
 # Log file
+*.log
 
 # BlueJ files
 *.ctxt
@@ -31,3 +31,17 @@ dist/
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries
+
+# VSCode
+.vscode
+
+# Properties
+*.properties
+
+# Images
+*.png
+*.gif
+
+# Statistics
+statistics.txt
+app/statistics.txt
