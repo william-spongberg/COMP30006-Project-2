@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
 
-    // move this into a card factory class.
+    // TODO: move into card factory class?
     public enum Suit {
         SPADES ("S", 4), HEARTS ("H", 3),
         DIAMONDS ("D", 2), CLUBS ("C", 1);
@@ -33,8 +33,7 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
-
-    // move this into a card factory class.
+    // TODO: move into card factory class?
     public enum Rank {
         // Reverse order of rank importance (see rankGreater() below)
         ACE (1, 1, 0, 1),
@@ -71,18 +70,17 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
+    // TODO: move values put here to static finals in info expert?
+    // TODO: move attributes into respective classes?
     final String trumpImage[] = {"bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif"};
-
     static public final int seed = 30008;
     static final Random random = new Random(seed);
     private Properties properties;
     private StringBuilder logResult = new StringBuilder();
     private List<List<String>> playerAutoMovements = new ArrayList<>();
-
     public boolean rankGreater(Card card1, Card card2) {
         return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
     }
-
     private final String version = "1.0";
     public final int nbPlayers = 4;
     public final int nbStartCards = 2;
@@ -113,16 +111,16 @@ public class LuckyThirdteen extends CardGame {
     public void setStatus(String string) {
         setStatusText(string);
     }
-
     private int[] scores = new int[nbPlayers];
-
     private int[] autoIndexHands = new int [nbPlayers];
     private boolean isAuto = false;
     private Hand playingArea;
     private Hand pack;
-
     Font bigFont = new Font("Arial", Font.BOLD, 36);
+    private Card selected;
 
+
+    // TODO: move scoring to new score class?
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
             // scores[i] = 0;
@@ -131,19 +129,16 @@ public class LuckyThirdteen extends CardGame {
             addActor(scoreActors[i], scoreLocations[i]);
         }
     }
-
     private int getScorePrivateCard(Card card) {
         Rank rank = (Rank) card.getRank();
         Suit suit = (Suit) card.getSuit();
 
         return rank.getScoreCardValue() * suit.getMultiplicationFactor();
     }
-
     private int getScorePublicCard(Card card) {
         Rank rank = (Rank) card.getRank();
         return rank.getScoreCardValue() * Suit.PUBLIC_CARD_MULTIPLICATION_FACTOR;
     }
-
     private int calculateMaxScoreForThirteenPlayer(int playerIndex) {
         List<Card> privateCards = hands[playerIndex].getCardList();
         List<Card> publicCards = playingArea.getCardList();
@@ -190,7 +185,6 @@ public class LuckyThirdteen extends CardGame {
 
         return maxScore;
     }
-
     private void calculateScoreEndOfRound() {
         List<Boolean> isThirteenChecks = Arrays.asList(false, false, false, false);
         for (int i = 0; i < hands.length; i++) {
@@ -219,7 +213,6 @@ public class LuckyThirdteen extends CardGame {
             }
         }
     }
-
     private void updateScore(int player) {
         removeActor(scoreActors[player]);
         int displayScore = Math.max(scores[player], 0);
@@ -227,60 +220,21 @@ public class LuckyThirdteen extends CardGame {
         scoreActors[player] = new TextActor(text, Color.WHITE, bgColor, bigFont);
         addActor(scoreActors[player], scoreLocations[player]);
     }
-
     private void initScores() {
         Arrays.fill(scores, 0);
     }
 
-    private Card selected;
-
-    private void initGame() {
-        hands = new Hand[nbPlayers];
-        for (int i = 0; i < nbPlayers; i++) {
-            hands[i] = new Hand(deck);
-        }
-        playingArea = new Hand(deck);
-        dealingOut(hands, nbPlayers, nbStartCards, nbFaceUpCards);
-        playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
-        playingArea.draw();
-
-        for (int i = 0; i < nbPlayers; i++) {
-            hands[i].sort(Hand.SortType.SUITPRIORITY, false);
-        }
-        // Set up human player for interaction
-        CardListener cardListener = new CardAdapter()  // Human Player plays card
-        {
-            public void leftDoubleClicked(Card card) {
-                selected = card;
-                hands[0].setTouchEnabled(false);
-            }
-        };
-        hands[0].addCardListener(cardListener);
-        // graphics
-        RowLayout[] layouts = new RowLayout[nbPlayers];
-        for (int i = 0; i < nbPlayers; i++) {
-            layouts[i] = new RowLayout(handLocations[i], handWidth);
-            layouts[i].setRotationAngle(90 * i);
-            // layouts[i].setStepDelay(10);
-            hands[i].setView(this, layouts[i]);
-            hands[i].setTargetArea(new TargetArea(trickLocation));
-            hands[i].draw();
-        }
-    }
-
-
-    // return random Enum value
+    // TODO: move into new getter classes?
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
+        // return random Enum value - *NOTE* never used
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
-
     // return random Card from ArrayList
     public static Card randomCard(ArrayList<Card> list) {
         int x = random.nextInt(list.size());
         return list.get(x);
     }
-
     public Card getRandomCard(Hand hand) {
         dealACardToHand(hand);
 
@@ -289,7 +243,6 @@ public class LuckyThirdteen extends CardGame {
         int x = random.nextInt(hand.getCardList().size());
         return hand.getCardList().get(x);
     }
-
     private Rank getRankFromString(String cardName) {
         String rankString = cardName.substring(0, cardName.length() - 1);
         Integer rankValue = Integer.parseInt(rankString);
@@ -302,7 +255,6 @@ public class LuckyThirdteen extends CardGame {
 
         return Rank.ACE;
     }
-
     private Suit getSuitFromString(String cardName) {
         String rankString = cardName.substring(0, cardName.length() - 1);
         String suitString = cardName.substring(cardName.length() - 1, cardName.length());
@@ -315,8 +267,6 @@ public class LuckyThirdteen extends CardGame {
         }
         return Suit.CLUBS;
     }
-
-
     private Card getCardFromList(List<Card> cards, String cardName) {
         Rank cardRank = getRankFromString(cardName);
         Suit cardSuit = getSuitFromString(cardName);
@@ -330,27 +280,7 @@ public class LuckyThirdteen extends CardGame {
         return null;
     }
 
-    private Card applyAutoMovement(Hand hand, String nextMovement) {
-        if (pack.isEmpty()) return null;
-        String[] cardStrings = nextMovement.split("-");
-        String cardDealtString = cardStrings[0];
-        Card dealt = getCardFromList(pack.getCardList(), cardDealtString);
-        if (dealt != null) {
-            dealt.removeFromHand(false);
-            hand.insert(dealt, true);
-        } else {
-            System.out.println("cannot draw card: " + cardDealtString + " - hand: " + hand);
-        }
-
-        if (cardStrings.length > 1) {
-            String cardDiscardString = cardStrings[1];
-            return getCardFromList(hand.getCardList(), cardDiscardString);
-        } else {
-            return null;
-        }
-    }
-
-
+    // TODO: move game referee methods into seperate class?
     private boolean isThirteenFromPossibleValues(int[] possibleValues1, int[] possibleValues2) {
         for (int value1 : possibleValues1) {
             for (int value2 : possibleValues2) {
@@ -361,13 +291,11 @@ public class LuckyThirdteen extends CardGame {
         }
         return false;
     }
-
     private boolean isThirteenCards(Card card1, Card card2) {
         Rank rank1 = (Rank) card1.getRank();
         Rank rank2 = (Rank) card2.getRank();
         return isThirteenFromPossibleValues(rank1.getPossibleSumValues(), rank2.getPossibleSumValues());
     }
-
     private boolean isThirteenMixedCards(List<Card> privateCards, List<Card> publicCards) {
         for (Card privateCard : privateCards) {
             for (Card publicCard : publicCards) {
@@ -379,7 +307,6 @@ public class LuckyThirdteen extends CardGame {
 
         return false;
     }
-
     private boolean isThirteen(int playerIndex) {
         List<Card> privateCards = hands[playerIndex].getCardList();
         List<Card> publicCards = playingArea.getCardList();
@@ -388,7 +315,7 @@ public class LuckyThirdteen extends CardGame {
         return isThirteenMixed || isThirteenPrivate;
     }
 
-
+    // TODO: move into new dealer class?
     private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer, int nbSharedCards) {
         pack = deck.toHand(false);
 
@@ -445,7 +372,6 @@ public class LuckyThirdteen extends CardGame {
             }
         }
     }
-
     private void dealACardToHand(Hand hand) {
         if (pack.isEmpty()) return;
         Card dealt = randomCard(pack.getCardList());
@@ -453,6 +379,7 @@ public class LuckyThirdteen extends CardGame {
         hand.insert(dealt, true);
     }
 
+    // TODO: move to new log class?
     private void addCardPlayedToLog(int player, List<Card> cards) {
         if (cards.size() < 2) {
             return;
@@ -469,11 +396,9 @@ public class LuckyThirdteen extends CardGame {
         }
         logResult.append(",");
     }
-
     private void addRoundInfoToLog(int roundNumber) {
         logResult.append("Round" + roundNumber + ":");
     }
-
     private void addEndOfRoundToLog() {
         logResult.append("Score:");
         for (int i = 0; i < scores.length; i++) {
@@ -481,7 +406,6 @@ public class LuckyThirdteen extends CardGame {
         }
         logResult.append("\n");
     }
-
     private void addEndOfGameToLog(List<Integer> winners) {
         logResult.append("EndGame:");
         for (int i = 0; i < scores.length; i++) {
@@ -491,7 +415,94 @@ public class LuckyThirdteen extends CardGame {
         logResult.append("Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
     }
 
-    // keep this here - Ethan
+    // TODO: move to new auto move class?
+    private Card applyAutoMovement(Hand hand, String nextMovement) {
+        if (pack.isEmpty()) return null;
+        String[] cardStrings = nextMovement.split("-");
+        String cardDealtString = cardStrings[0];
+        Card dealt = getCardFromList(pack.getCardList(), cardDealtString);
+        if (dealt != null) {
+            dealt.removeFromHand(false);
+            hand.insert(dealt, true);
+        } else {
+            System.out.println("cannot draw card: " + cardDealtString + " - hand: " + hand);
+        }
+
+        if (cardStrings.length > 1) {
+            String cardDiscardString = cardStrings[1];
+            return getCardFromList(hand.getCardList(), cardDiscardString);
+        } else {
+            return null;
+        }
+    }
+    private void setupPlayerAutoMovements() {
+        String player0AutoMovement = properties.getProperty("players.0.cardsPlayed");
+        String player1AutoMovement = properties.getProperty("players.1.cardsPlayed");
+        String player2AutoMovement = properties.getProperty("players.2.cardsPlayed");
+        String player3AutoMovement = properties.getProperty("players.3.cardsPlayed");
+
+        String[] playerMovements = new String[] {"", "", "", ""};
+        if (player0AutoMovement != null) {
+            playerMovements[0] = player0AutoMovement;
+        }
+
+        if (player1AutoMovement != null) {
+            playerMovements[1] = player1AutoMovement;
+        }
+
+        if (player2AutoMovement != null) {
+            playerMovements[2] = player2AutoMovement;
+        }
+
+        if (player3AutoMovement != null) {
+            playerMovements[3] = player3AutoMovement;
+        }
+
+        for (int i = 0; i < playerMovements.length; i++) {
+            String movementString = playerMovements[i];
+            if (movementString.equals("")) {
+                playerAutoMovements.add(new ArrayList<>());
+                continue;
+            }
+            List<String> movements = Arrays.asList(movementString.split(","));
+            playerAutoMovements.add(movements);
+        }
+    }
+
+    // TODO: update but keep this here? - Ethan
+    private void initGame() {
+        hands = new Hand[nbPlayers];
+        for (int i = 0; i < nbPlayers; i++) {
+            hands[i] = new Hand(deck);
+        }
+        playingArea = new Hand(deck);
+        dealingOut(hands, nbPlayers, nbStartCards, nbFaceUpCards);
+        playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
+        playingArea.draw();
+
+        for (int i = 0; i < nbPlayers; i++) {
+            hands[i].sort(Hand.SortType.SUITPRIORITY, false);
+        }
+        // Set up human player for interaction
+        CardListener cardListener = new CardAdapter()  // Human Player plays card
+        {
+            public void leftDoubleClicked(Card card) {
+                selected = card;
+                hands[0].setTouchEnabled(false);
+            }
+        };
+        hands[0].addCardListener(cardListener);
+        // graphics
+        RowLayout[] layouts = new RowLayout[nbPlayers];
+        for (int i = 0; i < nbPlayers; i++) {
+            layouts[i] = new RowLayout(handLocations[i], handWidth);
+            layouts[i].setRotationAngle(90 * i);
+            // layouts[i].setStepDelay(10);
+            hands[i].setView(this, layouts[i]);
+            hands[i].setTargetArea(new TargetArea(trickLocation));
+            hands[i].draw();
+        }
+    }
     private void playGame() {
         // End trump suit
         int winner = 0;
@@ -573,41 +584,6 @@ public class LuckyThirdteen extends CardGame {
             delay(delayTime);
         }
     }
-
-    private void setupPlayerAutoMovements() {
-        String player0AutoMovement = properties.getProperty("players.0.cardsPlayed");
-        String player1AutoMovement = properties.getProperty("players.1.cardsPlayed");
-        String player2AutoMovement = properties.getProperty("players.2.cardsPlayed");
-        String player3AutoMovement = properties.getProperty("players.3.cardsPlayed");
-
-        String[] playerMovements = new String[] {"", "", "", ""};
-        if (player0AutoMovement != null) {
-            playerMovements[0] = player0AutoMovement;
-        }
-
-        if (player1AutoMovement != null) {
-            playerMovements[1] = player1AutoMovement;
-        }
-
-        if (player2AutoMovement != null) {
-            playerMovements[2] = player2AutoMovement;
-        }
-
-        if (player3AutoMovement != null) {
-            playerMovements[3] = player3AutoMovement;
-        }
-
-        for (int i = 0; i < playerMovements.length; i++) {
-            String movementString = playerMovements[i];
-            if (movementString.equals("")) {
-                playerAutoMovements.add(new ArrayList<>());
-                continue;
-            }
-            List<String> movements = Arrays.asList(movementString.split(","));
-            playerAutoMovements.add(movements);
-        }
-    }
-
     public String runApp() {
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
         setStatusText("Initializing...");
