@@ -227,6 +227,7 @@ public class LuckyThirdteen extends CardGame {
     }
 
     private void updateScore(int player) {
+        // FIXME: why create new actor each time? just change text
         removeActor(scoreActors[player]);
         int displayScore = Math.max(scores[player], 0);
         String text = "P" + player + "[" + String.valueOf(displayScore) + "]";
@@ -518,6 +519,7 @@ public class LuckyThirdteen extends CardGame {
         }
 
         // Set up human player for interaction
+        // FIXME: move into Human class as child of Player class
         CardListener cardListener = new CardAdapter() // Human Player plays card
         {
             @Override
@@ -526,7 +528,7 @@ public class LuckyThirdteen extends CardGame {
                 hands[0].setTouchEnabled(false);
             }
         };
-        // FIXME: always player 0 is human player
+        // FIXME: player 0 is always human player, even if auto is true
         hands[0].addCardListener(cardListener);
 
         // graphics
@@ -543,86 +545,135 @@ public class LuckyThirdteen extends CardGame {
     }
 
     private void playGame() {
-        // End trump suit
+        // initialize winner + round number
+        // FIXME: winner not used
         int winner = 0;
         int roundNumber = 1;
+
+        // update the score for each player
+        // FIXME: necessary to update score here? should already be initialised
         for (int i = 0; i < nbPlayers; i++)
             updateScore(i);
 
+        // initialize list of cards played
         List<Card> cardsPlayed = new ArrayList<>();
+
+        // log initial round number
         addRoundInfoToLog(roundNumber);
 
+        // initialize next player
         int nextPlayer = 0;
-        // FIXME: only 4 rounds allowed??
+
+        // start game loop
+        // FIXME: 4 should be MAX_ROUNDS
         while (roundNumber <= 4) {
             selected = null;
             boolean finishedAuto = false;
 
+            // if game is set to auto
             if (isAuto) {
+                // get next player's auto index and movements
                 int nextPlayerAutoIndex = autoIndexHands[nextPlayer];
                 List<String> nextPlayerMovement = playerAutoMovements.get(nextPlayer);
                 String nextMovement = "";
 
+                // if there are more movements
                 if (nextPlayerMovement.size() > nextPlayerAutoIndex) {
+                    // get next movement and increment the auto index
                     nextMovement = nextPlayerMovement.get(nextPlayerAutoIndex);
                     nextPlayerAutoIndex++;
 
+                    // update the auto index for the player
                     autoIndexHands[nextPlayer] = nextPlayerAutoIndex;
                     Hand nextHand = hands[nextPlayer];
 
-                    // Apply movement for player
+                    // apply player movement
                     selected = applyAutoMovement(nextHand, nextMovement);
                     delay(delayTime);
+
+                    // if card was selected, remove from hand
                     if (selected != null) {
                         selected.removeFromHand(true);
                     } else {
+                        // if no card was selected, get random card and remove from hand
+                        // (default behaviour)
+                        // TODO: move random card selection to Bot Random class
                         selected = getRandomCard(hands[nextPlayer]);
                         selected.removeFromHand(true);
                     }
                 } else {
+                    // if no more movements for player, set finishedAuto to true
                     finishedAuto = true;
                 }
             }
 
+            // if game is not set to auto or if finishedAuto is true
             if (!isAuto || finishedAuto) {
+                // if the next player is player 0
                 if (0 == nextPlayer) {
+                    // enable touch for player 0
                     hands[0].setTouchEnabled(true);
 
+                    // set the status message and deal a card to player 0
                     setStatus("Player 0 is playing. Please double click on a card to discard");
                     selected = null;
                     dealACardToHand(hands[0]);
-                    while (null == selected)
+
+                    // wait until a card is selected
+                    while (null == selected) {
+                        // FIXME: delay here is not necessary
                         delay(delayTime);
+                    }
+
+                    // remove selected card from the hand
                     selected.removeFromHand(true);
                 } else {
+                    // if the next player is not player 0 (human), set the status message
                     setStatusText("Player " + nextPlayer + " thinking...");
+
+                    // get random card and remove it from the hand
+                    // FIXME: doing random bot behaviour here, means if human is playing all bots
+                    // will be random
                     selected = getRandomCard(hands[nextPlayer]);
                     selected.removeFromHand(true);
                 }
             }
 
+            // log cards played by the player
             addCardPlayedToLog(nextPlayer, hands[nextPlayer].getCardList());
+
+            // if card was selected
             if (selected != null) {
+                // add card to the list of cards played
                 cardsPlayed.add(selected);
-                selected.setVerso(false); // In case it is upside down
+                // set face up
+                selected.setVerso(false);
                 delay(delayTime);
-                // End Follow
             }
 
+            // next player's turn
             nextPlayer = (nextPlayer + 1) % nbPlayers;
 
+            // if the next player is player 0, increment the round number and log the end of
+            // round scores
             if (nextPlayer == 0) {
                 roundNumber++;
                 addEndOfRoundToLog();
 
+                // if more rounds, log the round information
+                // FIXME: 4 should be MAX_ROUNDS
                 if (roundNumber <= 4) {
                     addRoundInfoToLog(roundNumber);
                 }
             }
 
+            // if game is over, calculate final score
+            // FIXME: 4 should be MAX_ROUNDS
             if (roundNumber > 4) {
                 calculateScoreEndOfRound();
             }
+
+            // delay before next round
             delay(delayTime);
         }
     }
