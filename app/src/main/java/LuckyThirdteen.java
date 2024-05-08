@@ -35,7 +35,6 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
-    // TODO: move into card factory class?
     public enum Rank {
         // Reverse order of rank importance (see rankGreater() below)
         ACE(1, 1, 0, 1),
@@ -85,17 +84,25 @@ public class LuckyThirdteen extends CardGame {
     private List<List<String>> playerAutoMovements = new ArrayList<>();
 
     public boolean rankGreater(Card card1, Card card2) {
-        return card1.getRankId() < card2.getRankId(); // Warning: Reverse rank order of cards (see comment on enum)
+        // Warning: Reverse rank order of cards (see comment on enum)
+        // FIXME: why warning?
+        return card1.getRankId() < card2.getRankId();
     }
 
+    // TODO: increment version per major commit?
     private final String version = "1.0";
+
     public final int nbPlayers = 4;
     public final int nbStartCards = 2;
     public final int nbFaceUpCards = 2;
+
     private final int handWidth = 400;
     private final int trickWidth = 40;
+
     private static final int THIRTEEN_GOAL = 13;
+
     private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
+
     private final Location[] handLocations = {
             new Location(350, 625),
             new Location(75, 350),
@@ -106,14 +113,19 @@ public class LuckyThirdteen extends CardGame {
             new Location(575, 675),
             new Location(25, 575),
             new Location(575, 25),
+            // TODO: why is this location not used?
             // new Location(650, 575)
             new Location(575, 575)
     };
+
     private Actor[] scoreActors = { null, null, null, null };
+
     private final Location trickLocation = new Location(350, 350);
     private final Location textLocation = new Location(350, 450);
+
     private int thinkingTime = 2000;
     private int delayTime = 600;
+
     private Hand[] hands;
 
     public void setStatus(String string) {
@@ -121,17 +133,20 @@ public class LuckyThirdteen extends CardGame {
     }
 
     private int[] scores = new int[nbPlayers];
+
     private int[] autoIndexHands = new int[nbPlayers];
     private boolean isAuto = false;
+
     private Hand playingArea;
     private Hand pack;
+
     Font bigFont = new Font("Arial", Font.BOLD, 36);
+    
     private Card selected;
 
     // TODO: move scoring to new score class?
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
-            // scores[i] = 0;
             String text = "[" + String.valueOf(scores[i]) + "]";
             scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
             addActor(scoreActors[i], scoreLocations[i]);
@@ -159,6 +174,8 @@ public class LuckyThirdteen extends CardGame {
         Card publicCard2 = publicCards.get(1);
 
         int maxScore = 0;
+
+        // TODO: refactor to use a list of cards instead of multiple if statements
         if (isThirteenCards(privateCard1, privateCard2)) {
             int score = getScorePrivateCard(privateCard1) + getScorePrivateCard(privateCard2);
             if (maxScore < score) {
@@ -241,7 +258,7 @@ public class LuckyThirdteen extends CardGame {
 
     // TODO: move into new getter classes?
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        // return random Enum value - *NOTE* never used
+        // FIXME: method never used
         int x = random.nextInt(clazz.getEnumConstants().length);
         return clazz.getEnumConstants()[x];
     }
@@ -261,6 +278,7 @@ public class LuckyThirdteen extends CardGame {
         return hand.getCardList().get(x);
     }
 
+    // TODO: combine getRankFromString and getSuitFromString into one method?
     private Rank getRankFromString(String cardName) {
         String rankString = cardName.substring(0, cardName.length() - 1);
         Integer rankValue = Integer.parseInt(rankString);
@@ -276,7 +294,9 @@ public class LuckyThirdteen extends CardGame {
 
     private Suit getSuitFromString(String cardName) {
         String rankString = cardName.substring(0, cardName.length() - 1);
+        // FIXME: rankString is not used
         String suitString = cardName.substring(cardName.length() - 1, cardName.length());
+        // FIXME: rankValue is not used
         Integer rankValue = Integer.parseInt(rankString);
 
         for (Suit suit : Suit.values()) {
@@ -474,7 +494,10 @@ public class LuckyThirdteen extends CardGame {
         String player2AutoMovement = properties.getProperty("players.2.cardsPlayed");
         String player3AutoMovement = properties.getProperty("players.3.cardsPlayed");
 
+        // FIXME: playerMovements should be immediately initialised with properties,
+        // remove if statements
         String[] playerMovements = new String[] { "", "", "", "" };
+
         if (player0AutoMovement != null) {
             playerMovements[0] = player0AutoMovement;
         }
@@ -492,6 +515,7 @@ public class LuckyThirdteen extends CardGame {
         }
 
         for (int i = 0; i < playerMovements.length; i++) {
+            // FIXME: unnecessary to define here
             String movementString = playerMovements[i];
             if (movementString.equals("")) {
                 playerAutoMovements.add(new ArrayList<>());
@@ -537,7 +561,6 @@ public class LuckyThirdteen extends CardGame {
         for (int i = 0; i < nbPlayers; i++) {
             layouts[i] = new RowLayout(handLocations[i], handWidth);
             layouts[i].setRotationAngle(90 * i);
-            // layouts[i].setStepDelay(10);
             hands[i].setView(this, layouts[i]);
             hands[i].setTargetArea(new TargetArea(trickLocation));
             hands[i].draw();
