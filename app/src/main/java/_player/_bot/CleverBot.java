@@ -1,4 +1,4 @@
-package _player.bot;
+package _player._bot;
 
 public class CleverBot implements Bot{
     
