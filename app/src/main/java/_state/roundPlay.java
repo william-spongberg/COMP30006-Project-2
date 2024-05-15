@@ -1,5 +1,5 @@
 package _state;
 
-public class roundPlay implements State {
+public class RoundPlay implements State {
     
 }

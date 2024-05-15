@@ -1,10 +1,13 @@
 package _state;
 
-public class gameStart implements State {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
+
+public class GameStart implements State {
     
     final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
-    static public final int seed = 30008;
-    static final Random random = new Random(seed);
     private Properties properties;
     private StringBuilder logResult = new StringBuilder();
     private List<List<String>> playerAutoMovements = new ArrayList<>();

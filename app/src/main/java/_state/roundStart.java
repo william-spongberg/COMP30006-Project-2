@@ -1,4 +1,4 @@
 package _state;
 
-public class roundStart implements State {
+public class RoundStart implements State {
 }

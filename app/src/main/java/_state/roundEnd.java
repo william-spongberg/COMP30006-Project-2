@@ -1,5 +1,5 @@
 package _state;
 
-public class roundEnd implements State {
+public class RoundEnd implements State {
     
 }

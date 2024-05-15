@@ -1,5 +1,5 @@
 package _state;
 
-public class gameEnd  implements State {
+public class GameEnd  implements State {
     
 }
