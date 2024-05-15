@@ -1,8 +1,12 @@
 import _card.Rank;
 import ch.aplu.jcardgame.Card;
 
+import java.util.List;
+
 public class Referee {
     
+    private static final int THIRTEEN_GOAL = 13;
+
     private boolean isThirteenFromPossibleValues(int[] possibleValues1, int[] possibleValues2) {
         for (int value1 : possibleValues1) {
             for (int value2 : possibleValues2) {
