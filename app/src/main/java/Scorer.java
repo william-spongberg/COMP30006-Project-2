@@ -1,14 +1,21 @@
 import _card.Rank;
 import _card.Suit;
+
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.TextActor;
+
+import java.awt.Color;
+import java.awt.Font;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Scorer {
 
     private Actor[] scoreActors = { null, null, null, null };
 
-    private Actor[] initScore(int nbPlayers) {
+    private Actor[] initScore(String[] scores, int nbPlayers, Color bgColor, Font bigFont) {
         for (int i = 0; i < nbPlayers; i++) {
             String text = "[" + String.valueOf(scores[i]) + "]";
             scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
