@@ -9,70 +9,13 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import _card.Rank;
+import _card.Suit;
+import _player.Player;
+import _player.PlayerFactory;
+
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
-
-    // TODO: move into card factory class?
-    public enum Suit {
-        SPADES("S", 4), HEARTS("H", 3),
-        DIAMONDS("D", 2), CLUBS("C", 1);
-
-        private String suitShortHand = "";
-        private int multiplicationFactor = 1;
-        public static final int PUBLIC_CARD_MULTIPLICATION_FACTOR = 2;
-
-        Suit(String shortHand, int multiplicationFactor) {
-            this.suitShortHand = shortHand;
-            this.multiplicationFactor = multiplicationFactor;
-        }
-
-        public String getSuitShortHand() {
-            return suitShortHand;
-        }
-
-        public int getMultiplicationFactor() {
-            return multiplicationFactor;
-        }
-    }
-
-    public enum Rank {
-        // Reverse order of rank importance (see rankGreater() below)
-        ACE(1, 1, 0, 1),
-        KING(13, 13, 10, 11, 12, 13),
-        QUEEN(12, 12, 10, 11, 12, 13),
-        JACK(11, 11, 10, 11, 12, 13),
-        TEN(10, 10, 10), NINE(9, 9, 9),
-        EIGHT(8, 8, 8), SEVEN(7, 7, 7),
-        SIX(6, 6, 6), FIVE(5, 5, 5),
-        FOUR(4, 4, 4), THREE(3, 3, 3),
-        TWO(2, 2, 2);
-
-        private int rankCardValue = 1;
-        private int scoreValue = 0;
-        private int[] possibleSumValues = null;
-
-        Rank(int rankCardValue, int scoreValue, int... possibleSumValues) {
-            this.rankCardValue = rankCardValue;
-            this.scoreValue = scoreValue;
-            this.possibleSumValues = possibleSumValues;
-        }
-
-        public int getRankCardValue() {
-            return rankCardValue;
-        }
-
-        public int getScoreCardValue() {
-            return scoreValue;
-        }
-
-        public int[] getPossibleSumValues() {
-            return possibleSumValues;
-        }
-
-        public String getRankCardLog() {
-            return String.format("%d", rankCardValue);
-        }
-    }
 
     // TODO: move values put here to static finals in info expert?
     // TODO: move attributes into respective classes?
@@ -92,7 +35,7 @@ public class LuckyThirdteen extends CardGame {
     // TODO: increment version per major commit?
     private final String version = "1.0";
 
-    public final int nbPlayers = 4;
+    public int nbPlayers = 4;
     public final int nbStartCards = 2;
     public final int nbFaceUpCards = 2;
 
@@ -113,8 +56,6 @@ public class LuckyThirdteen extends CardGame {
             new Location(575, 675),
             new Location(25, 575),
             new Location(575, 25),
-            // TODO: why is this location not used?
-            // new Location(650, 575)
             new Location(575, 575)
     };
 
@@ -141,7 +82,7 @@ public class LuckyThirdteen extends CardGame {
     private Hand pack;
 
     Font bigFont = new Font("Arial", Font.BOLD, 36);
-    
+
     private Card selected;
 
     // TODO: move scoring to new score class?
@@ -152,6 +93,16 @@ public class LuckyThirdteen extends CardGame {
             addActor(scoreActors[i], scoreLocations[i]);
         }
     }
+
+    // private Actor[] initScore(int nbPlayers, int[] scores, Color bgColor, Font
+    // bigFont) {
+    // for (int i = 0; i < nbPlayers; i++) {
+    // String text = "[" + String.valueOf(scores[i]) + "]";
+    // scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
+    // //addActor(scoreActors[i], scoreLocations[i]);
+    // }
+    // return scoreActors;
+    // }
 
     private int getScorePrivateCard(Card card) {
         Rank rank = (Rank) card.getRank();
@@ -165,7 +116,7 @@ public class LuckyThirdteen extends CardGame {
         return rank.getScoreCardValue() * Suit.PUBLIC_CARD_MULTIPLICATION_FACTOR;
     }
 
-    private int calculateMaxScoreForThirteenPlayer(int playerIndex) {
+    private int calculateMaxScoreForThirteenPlayer(int playerIndex) {// , Hand[] hands, Hand playingArea) {
         List<Card> privateCards = hands[playerIndex].getCardList();
         List<Card> publicCards = playingArea.getCardList();
         Card privateCard1 = privateCards.get(0);
@@ -526,21 +477,46 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
-    // TODO: update but keep this here? - Ethan
+    // TODO: move variables to more appopriate spots
+    Player[] players;
+    List<String> playerTypes;
+    List<String> initPlayerHands;
+    String initSharedCards;
+
+    //Dealer dealer; // necessary??
+
     private void initGame() {
         // FIXME: each player should contain hand and score
+
+        // read properties file
+        PropertiesReader pReader = new PropertiesReader(properties);
+        nbPlayers = pReader.getNumPlayers();
+        isAuto = pReader.isAuto();
+        thinkingTime = pReader.getThinkingTime();
+        delayTime = pReader.getDelayTime();
+        playerTypes = pReader.getPlayerTypes();
+        playerAutoMovements = pReader.getPlayerAutoMovements();
+        initPlayerHands = pReader.getInitialPlayerHands();
+        initSharedCards = pReader.getInitialSharedCards();
+
+        // create players
+        players = new Player[nbPlayers];
+        PlayerFactory pFactory = new PlayerFactory();
+        for (int i = 0; i < nbPlayers; i++) {
+            players[i] = pFactory.createPlayer(playerTypes.get(i), initPlayerHands.get(i), initSharedCards, isAuto,
+                    playerAutoMovements.get(i));
+        }
+
+        // deal out cards to players
         hands = new Hand[nbPlayers];
         for (int i = 0; i < nbPlayers; i++) {
             hands[i] = new Hand(deck);
-        }
-        playingArea = new Hand(deck);
-        dealingOut(hands, nbPlayers, nbStartCards, nbFaceUpCards);
-        playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
-        playingArea.draw();
-
-        for (int i = 0; i < nbPlayers; i++) {
             hands[i].sort(Hand.SortType.SUITPRIORITY, false);
+            players[i].setHand(hands[i]);
         }
+        //dealingOut(hands, nbPlayers, nbStartCards, nbFaceUpCards);
+
+        
 
         // Set up human player for interaction
         // FIXME: move into Human class as child of Player class
@@ -552,11 +528,23 @@ public class LuckyThirdteen extends CardGame {
                 hands[0].setTouchEnabled(false);
             }
         };
-        // FIXME: player 0 is always human player, even if auto is true
-        hands[0].addCardListener(cardListener);
 
-        // graphics
-        // TODO: move to new graphics class?
+        if (!isAuto) {
+            //hands[0].addCardListener(cardListener);
+            for (Player player : players) {
+                if (player instanceof Human) {
+                    Human humanPlayer = (Human) player;
+                    //humanPlayer.setController(new ManualController());
+                    // TODO: fix this, should be in controller
+                    humanPlayer.addCardListener(cardListener);
+                }
+            }
+        }
+
+        // UI stuff
+        playingArea = new Hand(deck);
+        playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
+        playingArea.draw();
         RowLayout[] layouts = new RowLayout[nbPlayers];
         for (int i = 0; i < nbPlayers; i++) {
             layouts[i] = new RowLayout(handLocations[i], handWidth);
@@ -708,6 +696,11 @@ public class LuckyThirdteen extends CardGame {
         // FIXME: create Score object here - or should it be inside the game?
         initScores();
         initScore();
+
+        // Actor[] scoreActors = initScore(nbPlayers, scores, bgColor, bigFont);
+
+        // for (int i = 0; i < nbPlayers; i++)
+        // addActor(scoreActors[i], scoreLocations[i]);
 
         setupPlayerAutoMovements();
 
