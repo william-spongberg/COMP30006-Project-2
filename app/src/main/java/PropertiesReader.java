@@ -65,8 +65,8 @@ public class PropertiesReader {
         return isAuto;
     }
 
-    public void setAuto(boolean auto) {
-        isAuto = auto;
+    public void setAuto(boolean isAuto) {
+        this.isAuto = isAuto;
     }
 
     public int getThinkingTime() {
@@ -94,7 +94,7 @@ public class PropertiesReader {
     }
 
     public void incrementNumPlayers() {
-        numPlayers++;
+        this.numPlayers++;
     }
 
     public List<String> getPlayerTypes() {
@@ -106,7 +106,7 @@ public class PropertiesReader {
     }
 
     public void addPlayerType(String playerType) {
-        playerTypes.add(playerType);
+        this.playerTypes.add(playerType);
     }
 
     public String getInitialSharedCards() {
@@ -132,7 +132,7 @@ public class PropertiesReader {
     }
 
     public void addInitialPlayerHand(String initialPlayerHand) {
-        initialPlayerHands.add(initialPlayerHand);
+        this.initialPlayerHands.add(initialPlayerHand);
     }
 
     public List<List<String>> getPlayerAutoMovements() {
