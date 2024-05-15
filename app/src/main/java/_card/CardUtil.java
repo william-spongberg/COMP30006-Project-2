@@ -2,9 +2,17 @@ package _card;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import ch.aplu.jgamegrid.GameGrid;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class CardUtil {
-    
+
+    private static final int SEED = 30008; // TODO: only define once and use by all, needed for testing
+    private static final Random random = new Random(SEED);
+
     public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
         // FIXME: method never used
         int x = random.nextInt(clazz.getEnumConstants().length);
@@ -17,54 +25,16 @@ public class CardUtil {
         return list.get(x);
     }
 
-    public Card getRandomCard(Hand hand) {
+    public Card getRandomCard(Hand hand, int thinkingTime) {
         dealACardToHand(hand);
 
-        delay(thinkingTime);
+        GameGrid.delay(thinkingTime);
 
         int x = random.nextInt(hand.getCardList().size());
         return hand.getCardList().get(x);
     }
 
-    // TODO: combine getRankFromString and getSuitFromString into one method?
-    private Rank getRankFromString(String cardName) {
-        String rankString = cardName.substring(0, cardName.length() - 1);
-        Integer rankValue = Integer.parseInt(rankString);
-
-        for (Rank rank : Rank.values()) {
-            if (rank.getRankCardValue() == rankValue) {
-                return rank;
-            }
-        }
-
-        return Rank.ACE;
-    }
-
-    private Suit getSuitFromString(String cardName) {
-        String rankString = cardName.substring(0, cardName.length() - 1);
-        // FIXME: rankString is not used
-        String suitString = cardName.substring(cardName.length() - 1, cardName.length());
-        // FIXME: rankValue is not used
-        Integer rankValue = Integer.parseInt(rankString);
-
-        for (Suit suit : Suit.values()) {
-            if (suit.getSuitShortHand().equals(suitString)) {
-                return suit;
-            }
-        }
-        return Suit.CLUBS;
-    }
-
-    private Card getCardFromList(List<Card> cards, String cardName) {
-        Rank cardRank = getRankFromString(cardName);
-        Suit cardSuit = getSuitFromString(cardName);
-        for (Card card : cards) {
-            if (card.getSuit() == cardSuit
-                    && card.getRank() == cardRank) {
-                return card;
-            }
-        }
-
-        return null;
-    }
+    // public static Card getCardFromString(String cardName) {
+    // return new Card(getSuitFromString(cardName), getRankFromString(cardName));
+    // }    
 }
