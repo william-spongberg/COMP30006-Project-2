@@ -20,15 +20,17 @@ public class AutoController implements PlayerController {
     }
 
     public Card drawCard() {
-        if (getAutoMovements().get(autoIndex).size() == 2) {
-            System.out.println("auto moves: " + getAutoMovements());
-            return getAutoMovements().get(autoIndex).remove(0);
-        } else {
-            // don't care which card is dealt otherwise
-            // dealer with deal random card
-            System.out.println("auto moves: " + getAutoMovements());
-            return null;
+        if (!getAutoMovements().get(0).isEmpty()) {
+            if (getAutoMovements().get(autoIndex).size() == 2) {
+                System.out.println("auto moves: " + getAutoMovements());
+                return getAutoMovements().get(autoIndex).remove(0);
+            }
         }
+
+        // don't care which card is dealt otherwise
+        // dealer with deal random card
+        System.out.println("auto moves: " + getAutoMovements());
+        return null;
     }
 
     public Card discardCard(Hand hand) {
@@ -36,13 +38,15 @@ public class AutoController implements PlayerController {
         // else if list within list is size 1, then it is the card wanting to draw
 
         System.out.println("auto moves: " + getAutoMovements());
-        if (getAutoMovements().get(autoIndex).size() == 1) {
-            autoIndex++;
-            return getAutoMovements().get(autoIndex - 1).remove(0);
-        } else {
-            // pick random card to discard otherwise
-            return hand.get(random.nextInt(hand.getNumberOfCards()));
+        if (!getAutoMovements().get(0).isEmpty()) {
+            if (getAutoMovements().get(autoIndex).size() == 1) {
+                autoIndex++;
+                return getAutoMovements().get(autoIndex - 1).remove(0);
+            }
         }
+
+        // pick random card to discard otherwise
+        return hand.get(random.nextInt(hand.getNumberOfCards()));
     }
 
     public List<List<Card>> getAutoMovements() {

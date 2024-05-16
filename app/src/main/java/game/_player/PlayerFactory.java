@@ -22,9 +22,9 @@ public class PlayerFactory {
     public PlayerFactory(List<List<String>> strInitCards, List<String> strSharedCards, 
             List<List<List<String>>> strAutoMovements) {
         dealer = new Dealer();
+        convertAutoMovements(strAutoMovements);
         convertInitCards(strInitCards);
         convertSharedCards(strSharedCards);
-        convertAutoMovements(strAutoMovements);
     }
 
     public Player createPlayer(String playerType, int i, boolean isAuto) {
@@ -53,42 +53,38 @@ public class PlayerFactory {
     
     private void convertAutoMovements(List<List<List<String>>> strAutoMovements) {
         autoMovements = new ArrayList<>();
-        if (!(strAutoMovements.isEmpty())) {
-            for (List<List<String>> movement : strAutoMovements) {
-                List<List<Card>> cardMovement = new ArrayList<>();
-                for (List<String> cardStrings : movement) {
+        for (List<List<String>> movement : strAutoMovements) {
+            // Skip if all inner lists are empty
+            List<List<Card>> cardMovement = new ArrayList<>();
+            for (List<String> cardStrings : movement) {
+                if (!cardStrings.get(0).isEmpty()) {
                     List<Card> cards = new ArrayList<>();
                     for (String cardString : cardStrings) {
-                        // needs to be false - not actually removing card from deck
                         cards.add(dealer.getCard(cardString, false));
                     }
                     cardMovement.add(cards);
                 }
-                autoMovements.add(cardMovement);
             }
+            autoMovements.add(cardMovement);
         }
+        System.out.println("Auto movements: " + autoMovements);
+        // System.out.println("Auto movements size: " + autoMovements.size());
     }
-    
+
     private void convertInitCards(List<List<String>> strInitCards) {
         initCards = new ArrayList<>();
-        if (!strInitCards.isEmpty() && !strInitCards.get(0).isEmpty()) {
-            for (List<String> cardStrings : strInitCards) {
-                List<Card> cards = new ArrayList<>();
+        for (List<String> cardStrings : strInitCards) {
+            List<Card> cards = new ArrayList<>();
+            if (!cardStrings.get(0).isEmpty()) {
+                //System.out.println("cardStrings: " + cardStrings);
                 for (String cardString : cardStrings) {
                     cards.add(dealer.getCard(cardString, true));
                 }
-                initCards.add(cards);
             }
+            initCards.add(cards);
         }
-        // else deal out two cards to each player
-        else {
-            for (int j = 0; j < 2; j++) {
-                List<Card> cards = new ArrayList<>();
-                cards.add(dealer.getRandomCard(true));
-                initCards.add(cards);
-            }
-            System.out.println("Init cards after random: " + initCards);
-        }
+        System.out.println("Initial cards: " + initCards);
+        // System.out.println("Init cards size: " + initCards.size());
     }
 
     private void convertSharedCards(List<String> strSharedCards) {
@@ -100,8 +96,9 @@ public class PlayerFactory {
         }
         //else deal out two cards to shared cards
         else {
+            System.out.println("No shared cards given, dealing out two random cards");
             for (int i = 0; i < 2; i++) {
-                sharedCards.add(dealer.getRandomCard(false));
+                sharedCards.add(dealer.getRandomCard(true));
             }
             System.out.println("Shared cards after random: " + sharedCards);
         }
