@@ -16,7 +16,7 @@ public class Human extends Player {
         return getController().drawCard();
     }
 
-    public Card discardCard() { // give cards on table as param?
+    public Card discardCard() {
         Card discardCard = null;
         if (!isAuto()) {
             startListening();

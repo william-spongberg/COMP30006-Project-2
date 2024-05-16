@@ -385,6 +385,19 @@ public class LuckyThirdteen extends CardGame {
             // card is removed from hand
             // add to list of cards played (add to discard pile)
 
+            // DEBUG //
+            // check player's cards are not in dealer's deck
+            // Hand tmpHand = new Hand(dealer.getDeck());
+            // for (int i = 0; i < nbPlayers; i++) {
+            //     for (Card card : players[i].getCards()) {
+            //         for (Card deckCard: tmpHand.getCardList()) {
+            //             if (card.equals(deckCard)) {
+            //                 System.err.println("Player " + i + " has card in dealer's deck");
+            //             }
+            //         }
+            //     }
+            // }
+
             // show player's hand
             players[currPlayer].showCards();
             players[currPlayer].renderCards();
