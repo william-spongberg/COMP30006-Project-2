@@ -12,7 +12,6 @@ import game._card.Rank;
 import game._card.Suit;
 import game._player.Player;
 import game._player.PlayerFactory;
-import game._player.controller.ManualController;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
@@ -282,13 +281,36 @@ public class LuckyThirdteen extends CardGame {
     }
 
     // TODO: move variables to more appopriate spots
-    Player[] players;
     List<Card> initSharedCards = new ArrayList<>();
     List<List<Card>> initPlayerHands = new ArrayList<>();
     List<List<List<Card>>> autoPlayerMovements = new ArrayList<>();
 
+    CardListener cardListener = new CardAdapter() {
+        @Override
+        public void leftDoubleClicked(Card card) {
+            System.out.println("Player selected: " + card);
+
+            // tell players listening that card has been selected
+            // not good to do? all players that are not auto can see card that has been
+            // selected?
+            // idk it works for now, probably don't need to change
+            // cardListener for whatever reason has to be created here in CardGame for this
+            // to work
+            // doesn't work if created in different class e.g. manualController
+            // docs say nothing about this or how CardListener/CardAdapter works, super
+            // frustrating
+            for (int i = 0; i < nbPlayers; i++) {
+                if (!players[i].isAuto()) {
+                    players[i].setSelected(card);
+                    players[i].stopListening();
+                }
+            }
+        }
+    };
+
     static final int MAX_ROUNDS = 4;
 
+    Player[] players;
     Dealer dealer;
     Card selected;
 
@@ -325,49 +347,15 @@ public class LuckyThirdteen extends CardGame {
         dealer = pFactory.getDealer();
 
         // UI stuff //
-        // shared cards
+        // init shared cards
         playingArea = new Hand(Dealer.DECK);
         for (Card card : pFactory.getSharedCards()) {
             playingArea.insert(card, false);
         }
-        // draw shared + player cards
+        // draw shared
         playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
         playingArea.draw();
-    }
-
-    CardListener cardListener = new CardAdapter() {
-        @Override
-        public void leftDoubleClicked(Card card) {
-            System.out.println("Player selected: " + card);
-
-            // tell players listening that card has been selected
-            // not good to do? all players that are not auto can see card that has been
-            // selected?
-            // idk it works for now, probably don't need to change
-            // cardListener for whatever reason has to be created here in CardGame for this
-            // to work
-            // doesn't work if created in different class e.g. manualController
-            // docs say nothing about this or how CardListener/CardAdapter works, super
-            // frustrating
-            for (int i = 0; i < nbPlayers; i++) {
-                if (!players[i].isAuto()) {
-                    players[i].setSelected(card);
-                    players[i].stopListening();
-                }
-            }
-        }
-    };
-
-    private void playGame() {
-        // int winner = 0;
-        int currPlayer = 0;
-        Card drawnCard = null;
-        Card discardCard = null;
-        List<Card> cardsPlayed = new ArrayList<>();
-        int roundNumber = 1;
-        addRoundInfoToLog(roundNumber);
-
-        // draw player cards
+        // init + draw player cards
         RowLayout[] layouts = new RowLayout[nbPlayers];
         for (int i = 0; i < nbPlayers; i++) {
             layouts[i] = new RowLayout(handLocations[i], handWidth);
@@ -378,6 +366,16 @@ public class LuckyThirdteen extends CardGame {
             players[i].hideCards();
             players[i].renderCards();
         }
+    }
+
+    private void playGame() {
+        // int winner = 0;
+        int currPlayer = 0;
+        Card drawnCard = null;
+        Card discardCard = null;
+        List<Card> cardsPlayed = new ArrayList<>();
+        int roundNumber = 1;
+        addRoundInfoToLog(roundNumber);
 
         // start game loop
         while (roundNumber <= MAX_ROUNDS) {
@@ -417,14 +415,7 @@ public class LuckyThirdteen extends CardGame {
 
             players[currPlayer].renderCards();
 
-            if (!players[currPlayer].isAuto()) {
-                players[currPlayer].startListening();
-                while ((discardCard = players[currPlayer].getSelected()) == null) {
-                    delay(delayTime);
-                }
-            } else {
-                discardCard = players[currPlayer].discardCard();
-            }
+            discardCard = players[currPlayer].discardCard();
 
             if (discardCard == null) {
                 System.err.println("Player " + currPlayer + " did not discard a card");

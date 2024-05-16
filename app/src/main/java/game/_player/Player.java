@@ -162,7 +162,7 @@ public abstract class Player {
         if (isAuto()) {
             setController(new AutoController(autoMovements));
         } else {
-            setController(new ManualController(getHand()));
+            setController(new ManualController());
         }
     }
     

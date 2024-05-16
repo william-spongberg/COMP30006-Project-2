@@ -1,6 +1,7 @@
 package game._player;
 
 import ch.aplu.jcardgame.Card;
+import ch.aplu.jgamegrid.GameGrid;
 
 import java.util.List;
 
@@ -16,6 +17,14 @@ public class Human extends Player {
     }
 
     public Card discardCard() { // give cards on table as param?
+        Card discardCard = null;
+        if (!isAuto()) {
+            startListening();
+            while ((discardCard = getSelected()) == null) {
+                GameGrid.delay(50);
+            }
+            return discardCard;
+        }
         return getController().discardCard(getHand());
     }
     
