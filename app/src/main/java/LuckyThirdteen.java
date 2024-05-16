@@ -18,12 +18,11 @@ import game._player.controller.ManualController;
 public class LuckyThirdteen extends CardGame {
     // TODO: move values put here to static finals in info expert?
     // TODO: move attributes into respective classes?
-    final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
-    static public final int seed = 30008;
-    static final Random random = new Random(seed);
+    public static final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
+    public static final int seed = 30008;
+    public static final Random random = new Random(seed);
     private Properties properties;
     private StringBuilder logResult = new StringBuilder();
-    //private List<List<String>> playerAutoMovements = new ArrayList<>();
 
     public boolean rankGreater(Card card1, Card card2) {
         // Warning: Reverse rank order of cards (see comment on enum)
@@ -42,8 +41,6 @@ public class LuckyThirdteen extends CardGame {
     private final int trickWidth = 40;
 
     private static final int THIRTEEN_GOAL = 13;
-
-    // private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 
     private final Location[] handLocations = {
             new Location(350, 625),
@@ -107,15 +104,14 @@ public class LuckyThirdteen extends CardGame {
         addActor(scoreActors[player], scoreLocations[player]);
     }
 
-    // private Actor[] initScore(int nbPlayers, int[] scores, Color bgColor, Font
-    // bigFont) {
-    // for (int i = 0; i < nbPlayers; i++) {
-    // String text = "[" + String.valueOf(scores[i]) + "]";
-    // scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
-    // //addActor(scoreActors[i], scoreLocations[i]);
-    // }
-    // return scoreActors;
-    // }
+    private Actor[] initScore(int nbPlayers, int[] scores, Color bgColor, Font bigFont) {
+        for (int i = 0; i < nbPlayers; i++) {
+            String text = "[" + String.valueOf(scores[i]) + "]";
+            scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
+            addActor(scoreActors[i], scoreLocations[i]);
+        }
+        return scoreActors;
+    }
 
     private int getScorePrivateCard(Card card) {
         Rank rank = (Rank) card.getRank();
@@ -207,71 +203,6 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
-    // TODO: move into new getter classes?
-    // public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-    // // FIXME: method never used
-    // int x = random.nextInt(clazz.getEnumConstants().length);
-    // return clazz.getEnumConstants()[x];
-    // }
-
-    // return random Card from ArrayList
-    // public static Card randomCard(ArrayList<Card> list) {
-    // int x = random.nextInt(list.size());
-    // return list.get(x);
-    // }
-
-    // public Card getRandomCard(Hand hand) {
-    // dealACardToHand(hand);
-
-    // delay(thinkingTime);
-
-    // int x = random.nextInt(hand.getCardList().size());
-    // return hand.getCardList().get(x);
-    // }
-
-    // TODO: combine getRankFromString and getSuitFromString into one method?
-    // private Rank getRankFromString(String cardName) {
-    // String rankString = cardName.substring(0, cardName.length() - 1);
-    // Integer rankValue = Integer.parseInt(rankString);
-
-    // for (Rank rank : Rank.values()) {
-    // if (rank.getRankCardValue() == rankValue) {
-    // return rank;
-    // }
-    // }
-
-    // return Rank.ACE;
-    // }
-
-    // private Suit getSuitFromString(String cardName) {
-    // String rankString = cardName.substring(0, cardName.length() - 1);
-    // // FIXME: rankString is not used
-    // String suitString = cardName.substring(cardName.length() - 1,
-    // cardName.length());
-    // // FIXME: rankValue is not used
-    // Integer rankValue = Integer.parseInt(rankString);
-
-    // for (Suit suit : Suit.values()) {
-    // if (suit.getSuitShortHand().equals(suitString)) {
-    // return suit;
-    // }
-    // }
-    // return Suit.CLUBS;
-    // }
-
-    // private Card getCardFromList(List<Card> cards, String cardName) {
-    // Rank cardRank = getRankFromString(cardName);
-    // Suit cardSuit = getSuitFromString(cardName);
-    // for (Card card : cards) {
-    // if (card.getSuit() == cardSuit
-    // && card.getRank() == cardRank) {
-    // return card;
-    // }
-    // }
-
-    // return null;
-    // }
-
     // TODO: move game referee methods into seperate class?
     private boolean isThirteenFromPossibleValues(int[] possibleValues1, int[] possibleValues2) {
         for (int value1 : possibleValues1) {
@@ -309,75 +240,6 @@ public class LuckyThirdteen extends CardGame {
         boolean isThirteenMixed = isThirteenMixedCards(privateCards, publicCards);
         return isThirteenMixed || isThirteenPrivate;
     }
-
-    // TODO: move into new dealer class?
-    // private void dealingOut(Hand[] hands, int nbPlayers, int nbCardsPerPlayer,
-    // int nbSharedCards) {
-    // pack = deck.toHand(false);
-
-    // String initialShareKey = "shared.initialcards";
-    // String initialShareValue = properties.getProperty(initialShareKey);
-    // if (initialShareValue != null) {
-    // String[] initialCards = initialShareValue.split(",");
-    // for (String initialCard : initialCards) {
-    // if (initialCard.length() <= 1) {
-    // continue;
-    // }
-    // Card card = getCardFromList(pack.getCardList(), initialCard);
-    // if (card != null) {
-    // card.removeFromHand(true);
-    // playingArea.insert(card, true);
-    // }
-    // }
-    // }
-    // int cardsToShare = nbSharedCards - playingArea.getNumberOfCards();
-
-    // for (int j = 0; j < cardsToShare; j++) {
-    // if (pack.isEmpty())
-    // return;
-    // Card dealt = randomCard(pack.getCardList());
-    // dealt.removeFromHand(true);
-    // playingArea.insert(dealt, true);
-    // }
-
-    // for (int i = 0; i < nbPlayers; i++) {
-    // String initialCardsKey = "players." + i + ".initialcards";
-    // String initialCardsValue = properties.getProperty(initialCardsKey);
-    // if (initialCardsValue == null) {
-    // continue;
-    // }
-    // String[] initialCards = initialCardsValue.split(",");
-    // for (String initialCard : initialCards) {
-    // if (initialCard.length() <= 1) {
-    // continue;
-    // }
-    // Card card = getCardFromList(pack.getCardList(), initialCard);
-    // if (card != null) {
-    // card.removeFromHand(false);
-    // hands[i].insert(card, false);
-    // }
-    // }
-    // }
-
-    // for (int i = 0; i < nbPlayers; i++) {
-    // int cardsToDealt = nbCardsPerPlayer - hands[i].getNumberOfCards();
-    // for (int j = 0; j < cardsToDealt; j++) {
-    // if (pack.isEmpty())
-    // return;
-    // Card dealt = randomCard(pack.getCardList());
-    // dealt.removeFromHand(false);
-    // hands[i].insert(dealt, false);
-    // }
-    // }
-    // }
-
-    // private void dealACardToHand(Hand hand) {
-    // if (pack.isEmpty())
-    // return;
-    // Card dealt = randomCard(pack.getCardList());
-    // dealt.removeFromHand(false);
-    // hand.insert(dealt, true);
-    // }
 
     // TODO: move to new log class?
     private void addCardPlayedToLog(int player, List<Card> cards) {
@@ -419,67 +281,6 @@ public class LuckyThirdteen extends CardGame {
                 "Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
     }
 
-    // TODO: move to new auto move class?
-    // private Card applyAutoMovement(Hand hand, String nextMovement) {
-    // if (pack.isEmpty())
-    // return null;
-    // String[] cardStrings = nextMovement.split("-");
-    // String cardDealtString = cardStrings[0];
-    // Card dealt = getCardFromList(pack.getCardList(), cardDealtString);
-    // if (dealt != null) {
-    // dealt.removeFromHand(false);
-    // hand.insert(dealt, true);
-    // } else {
-    // System.out.println("cannot draw card: " + cardDealtString + " - hand: " +
-    // hand);
-    // }
-
-    // if (cardStrings.length > 1) {
-    // String cardDiscardString = cardStrings[1];
-    // return getCardFromList(hand.getCardList(), cardDiscardString);
-    // } else {
-    // return null;
-    // }
-    // }
-
-    // private void setupPlayerAutoMovements() {
-    // String player0AutoMovement = properties.getProperty("players.0.cardsPlayed");
-    // String player1AutoMovement = properties.getProperty("players.1.cardsPlayed");
-    // String player2AutoMovement = properties.getProperty("players.2.cardsPlayed");
-    // String player3AutoMovement = properties.getProperty("players.3.cardsPlayed");
-
-    // // FIXME: playerMovements should be immediately initialised with properties,
-    // // remove if statements
-    // String[] playerMovements = new String[] { "", "", "", "" };
-
-    // if (player0AutoMovement != null) {
-    // playerMovements[0] = player0AutoMovement;
-    // }
-
-    // if (player1AutoMovement != null) {
-    // playerMovements[1] = player1AutoMovement;
-    // }
-
-    // if (player2AutoMovement != null) {
-    // playerMovements[2] = player2AutoMovement;
-    // }
-
-    // if (player3AutoMovement != null) {
-    // playerMovements[3] = player3AutoMovement;
-    // }
-
-    // for (int i = 0; i < playerMovements.length; i++) {
-    // // FIXME: unnecessary to define here
-    // String movementString = playerMovements[i];
-    // if (movementString.equals("")) {
-    // playerAutoMovements.add(new ArrayList<>());
-    // continue;
-    // }
-    // List<String> movements = Arrays.asList(movementString.split(","));
-    // playerAutoMovements.add(movements);
-    // }
-    // }
-
     // TODO: move variables to more appopriate spots
     Player[] players;
     List<Card> initSharedCards = new ArrayList<>();
@@ -509,63 +310,6 @@ public class LuckyThirdteen extends CardGame {
 
         pReader.printProperties();
 
-        // TODO: move conversions into PlayerFactory
-        // convert strings to cards
-        // if (isAuto && !(strAutoPlayerMovements.isEmpty())) {
-        // for (List<List<String>> playerMovements : strAutoPlayerMovements) {
-        // List<List<Card>> playerMovement = new ArrayList<>();
-        // for (List<String> movement : playerMovements) {
-        // List<Card> cardMovement = new ArrayList<>();
-        // for (String cardString : movement) {
-        // // needs to be false - not actually removing card from deck
-        // cardMovement.add(dealer.getCard(cardString, false));
-        // }
-        // playerMovement.add(cardMovement);
-        // }
-        // autoPlayerMovements.add(playerMovement);
-        // }
-        // }
-
-        // if (!(strInitPlayerHands.isEmpty())) {
-        // for (List<String> playerCards : strInitPlayerHands) {
-        // List<Card> playerHand = new ArrayList<>();
-        // for (String cardString : playerCards) {
-
-        // playerHand.add(dealer.getCard(cardString, true));
-        // }
-        // initPlayerHands.add(playerHand);
-        // }
-        // }
-        // // else deal out two cards to each player
-        // else {
-        // for (int i = 0; i < nbPlayers; i++) {
-        // List<Card> playerHand = new ArrayList<>();
-        // for (int j = 0; j < 2; j++) {
-        // playerHand.add(dealer.getRandomCard(true));
-        // }
-        // initPlayerHands.add(playerHand);
-        // }
-        // }
-
-        // if (!(strInitSharedCards.isEmpty())) {
-        // for (String cardString : strInitSharedCards) {
-        // initSharedCards.add(dealer.getCard(cardString, true));
-        // }
-        // }
-        // // else deal out two cards to shared cards
-        // else {
-        // for (int i = 0; i < 2; i++) {
-        // initSharedCards.add(dealer.getRandomCard(true));
-        // }
-        // }
-
-        // player cards (UI + manual control stuff)
-        // hands = new Hand[nbPlayers];
-        // for (int i = 0; i < nbPlayers; i++) {
-        //     hands[i] = new Hand(Dealer.DECK);
-        //     hands[i].sort(Hand.SortType.SUITPRIORITY, false);
-        // }
-
         // create players
         players = new Player[nbPlayers];
         PlayerFactory pFactory = new PlayerFactory();
@@ -574,43 +318,11 @@ public class LuckyThirdteen extends CardGame {
         for (int i = 0; i < nbPlayers; i++) {
             players[i] = pFactory.createPlayer(playerTypes.get(i), strInitPlayerCards.get(i), isAuto,
                     strAutoPlayerMovements.get(i));
-
-            // tmp for UI/manual control
-            // for (Card card : pFactory.getInitCards()) {
-            //     hands[i].insert(card, false);
-            // }
         }
 
-        // TODO: fix heavy coupling between pFactory and dealer
-
+        // TODO: fix heavy coupling between pFactory and dealer??
         // cards in dealer changed after being used by pFactory
         dealer = pFactory.getDealer();
-
-        // basic manual controller setup
-        // TODO: move into ManualController
-        // CardListener cardListener = new CardAdapter() {
-        //     @Override
-        //     public void leftDoubleClicked(Card card) {
-        //         selected = card;
-
-        //         // enable manual movement for all manual players
-        //         for (int i = 0; i < nbPlayers; i++) {
-        //             if (players[i].isAuto()) {
-        //                 players[i].stopListening();
-        //             }
-        //         }
-        //     }
-        // };
-
-        // for (int i = 0; i < nbPlayers; i++) {
-        //     if (!players[i].isAuto()) {
-        //         // player[i].getHand().addCardListener(cardListener)
-        //         // player[i].getController.addCardListener(cardListener);
-        //         //players[i].setCardListener((ManualController) players[i].getController());
-        //         //hands[i].addCardListener((ManualController)players[i].getController());
-        //         //hands[i].addCardListener(cardListener);
-        //     }
-        // }
 
         // UI stuff //
         // shared cards
@@ -621,15 +333,6 @@ public class LuckyThirdteen extends CardGame {
         // draw shared + player cards
         playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
         playingArea.draw();
-        // RowLayout[] layouts = new RowLayout[nbPlayers];
-        // for (int i = 0; i < nbPlayers; i++) {
-        //     layouts[i] = new RowLayout(handLocations[i], handWidth);
-        //     layouts[i].setRotationAngle(90.0 * i);
-        //     hands[i].setView(this, layouts[i]);
-        //     hands[i].setTargetArea(new TargetArea(trickLocation));
-        //     hands[i].setVerso(true);
-        //     hands[i].draw();
-        // }
     }
 
     CardListener cardListener = new CardAdapter() {
@@ -638,13 +341,16 @@ public class LuckyThirdteen extends CardGame {
             System.out.println("Player selected: " + card);
 
             // tell players listening that card has been selected
-            // not good to do? all players that are not auto can see card that has been selected?
+            // not good to do? all players that are not auto can see card that has been
+            // selected?
             // idk it works for now, probably don't need to change
-            // cardListener for whatever reason has to be created here in CardGame for this to work
+            // cardListener for whatever reason has to be created here in CardGame for this
+            // to work
             // doesn't work if created in different class e.g. manualController
-            // docs say nothing about this or how CardListener/CardAdapter works, super frustrating
+            // docs say nothing about this or how CardListener/CardAdapter works, super
+            // frustrating
             for (int i = 0; i < nbPlayers; i++) {
-                if (!players[i].isAuto()) {  
+                if (!players[i].isAuto()) {
                     players[i].setSelected(card);
                     players[i].stopListening();
                 }
@@ -671,29 +377,17 @@ public class LuckyThirdteen extends CardGame {
             players[i].setCardListener(cardListener);
             players[i].hideCards();
             players[i].renderCards();
-
-            // if (!players[i].isAuto()) {
-            //     players[i].setCardListener((ManualController) players[i].getController());
-            // }
-
-            //addComponentListener()
         }
 
         // start game loop
         while (roundNumber <= MAX_ROUNDS) {
-            // boolean finishedAuto = false;
-
-            // player behaviour:
-
+            // player behaviour: //
             // deal a card to the player
             // player selects a card from hand to discard
             // card is removed from hand
             // add to list of cards played (add to discard pile)
 
             // show player's hand
-            // hands[currPlayer].setVerso(false);
-            // hands[currPlayer].draw();
-
             players[currPlayer].showCards();
             players[currPlayer].renderCards();
 
@@ -704,7 +398,7 @@ public class LuckyThirdteen extends CardGame {
                 drawnCard = dealer.getRandomCard(false);
             }
             players[currPlayer].addCard(dealer.getCard(drawnCard, true));
-            //hands[currPlayer].insert(drawnCard, false);
+            // hands[currPlayer].insert(drawnCard, false);
 
             System.out.println("Player " + currPlayer + " drew card: " + drawnCard);
 
@@ -713,7 +407,6 @@ public class LuckyThirdteen extends CardGame {
             }
 
             players[currPlayer].renderCards();
-            //hands[currPlayer].draw();
 
             // log stuff //
             if (drawnCard != null) {
@@ -723,48 +416,13 @@ public class LuckyThirdteen extends CardGame {
             }
 
             players[currPlayer].renderCards();
-            //hands[currPlayer].draw();
-
-            // if (!isAuto) {
-            // // updating player hand to reflect drawn card
-            // RowLayout handLayout = new RowLayout(handLocations[currPlayer], handWidth);
-            // handLayout.setRotationAngle(90.0 * currPlayer);
-            // // new hand based on deck
-            // Hand tmp = new Hand(Dealer.DECK);
-            // for (Card card : hands[currPlayer].getCardList()) {
-            // tmp.insert(card, false);
-            // }
-            // tmp.setView(this, handLayout);
-            // tmp.setTargetArea(new TargetArea(trickLocation));
-            // tmp.draw();
-
-            // players[currPlayer].setHand(tmp);
-            // }
-
-            // // working but shit manual play
-            // if (!isAuto) {
-            //     hands[currPlayer].setTouchEnabled(true);
-            //     setStatus("Player " + currPlayer + " is playing. Please double click on a card to discard");
-            //     selected = null;
-            //     // dealACardToHand(hands[currPlayer]);
-            //     while (selected == null) {
-            //         delay(delayTime);
-            //     }
-            //     discardCard = selected;
-            // } else {
-            //     // normal discard card behaviour
-            //     discardCard = players[currPlayer].discardCard();
-            // }
-
-            //players[currPlayer].setHand(hands[currPlayer]);
 
             if (!players[currPlayer].isAuto()) {
                 players[currPlayer].startListening();
                 while ((discardCard = players[currPlayer].getSelected()) == null) {
                     delay(delayTime);
                 }
-            }
-            else {
+            } else {
                 discardCard = players[currPlayer].discardCard();
             }
 
@@ -777,87 +435,12 @@ public class LuckyThirdteen extends CardGame {
 
             players[currPlayer].removeCard(discardCard);
             players[currPlayer].renderCards();
-            //hands[currPlayer].remove(discardCard, false);
-            //hands[currPlayer].draw();
 
             delay(delayTime);
 
             // hide player's hand
             players[currPlayer].hideCards();
             players[currPlayer].renderCards();
-            //hands[currPlayer].setVerso(true);
-            //hands[currPlayer].draw();
-
-            // put card in discard pile
-            // playingArea.insert(card, true);
-
-            // selected = dealer.getCard(card);
-
-            // // if game is set to auto
-            // if (isAuto) {
-            // // get next player's auto index and movements
-            // int nextPlayerAutoIndex = autoIndexHands[currPlayer];
-            // List<String> nextPlayerMovement = playerAutoMovements.get(currPlayer);
-            // String nextMovement = "";
-
-            // // if there are more movements
-            // if (nextPlayerMovement.size() > nextPlayerAutoIndex) {
-            // // get next movement and increment the auto index
-            // nextMovement = nextPlayerMovement.get(nextPlayerAutoIndex);
-            // nextPlayerAutoIndex++;
-
-            // // update the auto index for the player
-            // autoIndexHands[currPlayer] = nextPlayerAutoIndex;
-            // Hand nextHand = hands[currPlayer];
-
-            // // apply player movement
-            // selected = applyAutoMovement(nextHand, nextMovement);
-            // delay(delayTime);
-
-            // // if card was selected, remove from hand
-            // if (selected != null) {
-            // selected.removeFromHand(true);
-            // } else {
-            // // if no card was selected, get random card and remove from hand
-            // // (default behaviour)
-            // selected = getRandomCard(hands[currPlayer]);
-            // selected.removeFromHand(true);
-            // }
-            // } else {
-            // // if no more movements for player, set finishedAuto to true
-            // finishedAuto = true;
-            // }
-            // }
-
-            // // if game is not set to auto or if finishedAuto is true
-            // if (!isAuto || finishedAuto) {
-            // // if the next player is player 0
-            // if (0 == currPlayer) {
-            // // enable touch for player 0
-            // hands[0].setTouchEnabled(true);
-
-            // // set the status message and deal a card to player 0
-            // setStatus("Player 0 is playing. Please double click on a card to discard");
-            // selected = null;
-            // dealACardToHand(hands[0]);
-
-            // // wait until a card is selected
-            // while (null == selected) {
-            // delay(delayTime);
-            // }
-
-            // // remove selected card from the hand
-            // selected.removeFromHand(true);
-            // } else {
-            // // if the next player is not player 0 (human), set the status message
-            // setStatusText("Player " + currPlayer + " thinking...");
-
-            // // get random card and remove it from the hand
-            // // FIXME: doing random bot behaviour here - if manual all bots will be random
-            // selected = getRandomCard(hands[currPlayer]);
-            // selected.removeFromHand(true);
-            // }
-            // }
 
             // log cards played by the player
             addCardPlayedToLog(currPlayer, players[currPlayer].getCards());
@@ -875,7 +458,7 @@ public class LuckyThirdteen extends CardGame {
                 if (roundNumber <= MAX_ROUNDS) {
                     addRoundInfoToLog(roundNumber);
                 }
-                //calculateScoreEndOfRound();
+                // calculateScoreEndOfRound();
             }
 
             // FIXME: this is never reached?
@@ -900,7 +483,7 @@ public class LuckyThirdteen extends CardGame {
         // Actor[] scoreActors = initScore(nbPlayers, scores, bgColor, bigFont);
 
         // for (int i = 0; i < nbPlayers; i++)
-        // addActor(scoreActors[i], scoreLocations[i]);
+        //     addActor(scoreActors[i], scoreLocations[i]);
 
         // setupPlayerAutoMovements();
 
