@@ -1,8 +1,8 @@
+
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -333,30 +333,20 @@ public class LuckyThirdteen extends CardGame {
         players = new Player[nbPlayers];
         PlayerFactory pFactory = new PlayerFactory(pReader.getStrInitPlayerHands(), pReader.getStrInitSharedCards(),
                 pReader.getStrPlayerAutoMovements());
+        // dealer created by player factory
+        dealer = pFactory.getDealer();
 
         for (int i = 0; i < nbPlayers; i++) {
             players[i] = pFactory.createPlayer(playerTypes.get(i), i, isAuto);
+            if (players[i].getCards().isEmpty()) {
+                System.err.println("Player " + i + " has no starting cards");
+                for (int j = 0; j < 2; j++) {
+                    players[i].addCard(dealer.getRandomCard(true));
+                }
+                System.out.println("Init cards after random: " + players[i].getCards());
+            }
         }
-
-        // TODO: fix heavy coupling between pFactory and dealer??
-        // cards in dealer changed after being used by pFactory
-        dealer = pFactory.getDealer();
-
-        // TODO: fix overlapping between sharedcards and initPlayerHands
-        // draw sharedCards if needed after all player hands drawn
-        // do in PlayerFactory
-
-        // if shared cards is null
-        // if (pFactory.getSharedCards().isEmpty()) {
-        // for (int i = 0; i < 2; i++) {
-        // initSharedCards.add(dealer.getRandomCard(true));
-        // }
-        // pFactory.setSharedCards(initSharedCards);
-
-        // for (int i = 0; i < nbPlayers; i++) {
-        // players[i].setSharedCards(initSharedCards);
-        // }
-        // }
+        
 
         // UI stuff //
         // init shared cards
