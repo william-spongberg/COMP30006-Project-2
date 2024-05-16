@@ -38,6 +38,10 @@ public abstract class Player {
     public abstract Card discardCard();
 
     public void convertListToHand(List<Card> cards) {
+        if (cards.isEmpty() || cards.get(0) == null) {
+            return;
+        }
+        System.out.println("cards: " + cards);
         for (Card card : cards) {
             hand.insert(card, false);
         }
