@@ -1,3 +1,5 @@
+
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -5,6 +7,9 @@ import java.util.Arrays;
 
 public class PropertiesReader {
     // TODO: move static finals to info expert
+    private static final String IS_AUTO = "isAuto";
+    private static final String THINKING_TIME = "thinkingTime";
+    private static final String DELAY_TIME = "delayTime";
     private static final String PLAYERS = "players";
     private static final String SHARED = "shared";
     private static final String INITIAL_CARDS = "initialcards";
@@ -21,22 +26,32 @@ public class PropertiesReader {
     private int numPlayers = 0;
     private List<String> playerTypes = new ArrayList<>();
 
-    private String initialSharedCards;
-    private List<String> initialPlayerHands = new ArrayList<>();
-    private List<List<String>> playerAutoMovements = new ArrayList<>();
+    private List<String> strInitSharedCards = new ArrayList<>();
+    private List<List<String>> strInitPlayerHands = new ArrayList<>();
+    private List<List<List<String>>> strPlayerAutoMovements = new ArrayList<>();
 
     public PropertiesReader(Properties properties) {
-        setAuto(Boolean.parseBoolean(properties.getProperty("auto")));
-        setThinkingTime(Integer.parseInt(properties.getProperty("thinkingTime")));
-        setDelayTime(Integer.parseInt(properties.getProperty("delayTime")));
-
+        setAuto(properties);
+        setThinkingTime(properties);
+        setDelayTime(properties);
         setPlayerTypes(properties);
-
-        setInitialSharedCards(properties.getProperty(SHARED + "." + INITIAL_CARDS));
-        setInitialPlayerHands(properties);
-
+        setInitialSharedCards(properties);
+        setInitPlayerHands(properties);
         setAutoMovements(properties);
 
+        // TODO: throw exceptions if certain properties are not set properly
+    }
+
+    // print properties for debugging
+    public void printProperties() {
+        System.out.println("isAuto: " + isAuto);
+        System.out.println("thinkingTime: " + thinkingTime);
+        System.out.println("delayTime: " + delayTime);
+        System.out.println("numPlayers: " + numPlayers);
+        System.out.println("playerTypes: " + playerTypes);
+        System.out.println("initialSharedCards: " + strInitSharedCards);
+        System.out.println("initialPlayerHands: " + strInitPlayerHands);
+        System.out.println("playerAutoMovements: " + strPlayerAutoMovements);
     }
 
     private void setPlayerTypes(Properties properties) {
@@ -53,10 +68,16 @@ public class PropertiesReader {
         for (int i = 0; i < 4; i++) {
             String playerAutoMovement = properties.getProperty(PLAYERS + "." + i + "." + CARDS_PLAYED);
             if (playerAutoMovement == null) {
-                playerAutoMovements.add(new ArrayList<>());
+                strPlayerAutoMovements.add(new ArrayList<>());
             } else {
+                // split up rounds by ","
                 List<String> movements = Arrays.asList(playerAutoMovement.split(","));
-                playerAutoMovements.add(movements);
+                // split up movements by "-"
+                List<List<String>> playerMovements = new ArrayList<>();
+                for (String movement : movements) {
+                    playerMovements.add(Arrays.asList(movement.split("-")));
+                }
+                strPlayerAutoMovements.add(playerMovements);
             }
         }
     }
@@ -69,6 +90,12 @@ public class PropertiesReader {
         this.isAuto = isAuto;
     }
 
+    public void setAuto(Properties properties) {
+        if (properties.getProperty(IS_AUTO) != null) {
+            this.isAuto = Boolean.parseBoolean(properties.getProperty(IS_AUTO));
+        }
+    }
+
     public int getThinkingTime() {
         return thinkingTime;
     }
@@ -77,12 +104,24 @@ public class PropertiesReader {
         this.thinkingTime = thinkingTime;
     }
 
+    public void setThinkingTime(Properties properties) {
+        if (properties.getProperty(THINKING_TIME) != null) {
+            this.thinkingTime = Integer.parseInt(properties.getProperty(THINKING_TIME));
+        }
+    }
+
     public int getDelayTime() {
         return delayTime;
     }
 
     public void setDelayTime(int delayTime) {
         this.delayTime = delayTime;
+    }
+
+    public void setDelayTime(Properties properties) {
+        if (properties.getProperty(DELAY_TIME) != null) {
+            this.delayTime = Integer.parseInt(properties.getProperty(DELAY_TIME));
+        }
     }
 
     public int getNumPlayers() {
@@ -109,37 +148,37 @@ public class PropertiesReader {
         this.playerTypes.add(playerType);
     }
 
-    public String getInitialSharedCards() {
-        return initialSharedCards;
+    public List<String> getStrInitSharedCards() {
+        return strInitSharedCards;
     }
 
-    public void setInitialSharedCards(String initialSharedCards) {
-        this.initialSharedCards = initialSharedCards;
-    }
-
-    public List<String> getInitialPlayerHands() {
-        return initialPlayerHands;
-    }
-
-    public void setInitialPlayerHands(List<String> initialPlayerHands) {
-        this.initialPlayerHands = initialPlayerHands;
-    }
-
-    public void setInitialPlayerHands(Properties properties) {
-        for (int i = 0; i < MAX_PLAYERS; i++) {
-            addInitialPlayerHand(properties.getProperty(PLAYERS + "." + i + "." + INITIAL_CARDS));
+    public void setInitialSharedCards(Properties properties) {
+        String initialCards = properties.getProperty(SHARED + "." + INITIAL_CARDS);
+        if (initialCards != null) {
+            this.strInitSharedCards = Arrays.asList(properties.getProperty(SHARED + "." + INITIAL_CARDS).split(","));
         }
     }
 
-    public void addInitialPlayerHand(String initialPlayerHand) {
-        this.initialPlayerHands.add(initialPlayerHand);
+    public List<List<String>> getStrInitPlayerHands() {
+        return strInitPlayerHands;
     }
 
-    public List<List<String>> getPlayerAutoMovements() {
-        return playerAutoMovements;
+    public void setInitPlayerHands(Properties properties) {
+        for (int i = 0; i < MAX_PLAYERS; i++) {
+            String initialCards = properties.getProperty(PLAYERS + "." + i + "." + INITIAL_CARDS);
+            List<String> cardsList = new ArrayList<>();
+            if (initialCards != null) {
+                cardsList = Arrays.asList(initialCards.split(","));
+            }
+            strInitPlayerHands.add(cardsList);
+        }
     }
 
-    public void setPlayerAutoMovements(List<List<String>> playerAutoMovements) {
-        this.playerAutoMovements = playerAutoMovements;
+    public List<List<List<String>>> getStrPlayerAutoMovements() {
+        return strPlayerAutoMovements;
+    }
+
+    public void setStrPlayerAutoMovements(List<List<List<String>>> playerAutoMovements) {
+        this.strPlayerAutoMovements = playerAutoMovements;
     }
 }
