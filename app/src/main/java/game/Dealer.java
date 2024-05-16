@@ -139,4 +139,8 @@ public class Dealer {
     public Deck getDeck() {
         return deck;
     }
+
+    public Hand getPack() {
+        return pack;
+    }
 }
