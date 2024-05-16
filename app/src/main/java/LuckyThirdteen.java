@@ -280,7 +280,7 @@ public class LuckyThirdteen extends CardGame {
                 "Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
     }
 
-    // TODO: move variables to more appopriate spots
+    // TODO: move variables to more appropriate spots
     List<Card> initSharedCards = new ArrayList<>();
     List<List<Card>> initPlayerHands = new ArrayList<>();
     List<List<List<Card>>> autoPlayerMovements = new ArrayList<>();
@@ -326,25 +326,37 @@ public class LuckyThirdteen extends CardGame {
         thinkingTime = pReader.getThinkingTime();
         delayTime = pReader.getDelayTime();
         List<String> playerTypes = pReader.getPlayerTypes();
-        List<List<List<String>>> strAutoPlayerMovements = pReader.getStrPlayerAutoMovements();
-        List<List<String>> strInitPlayerCards = pReader.getStrInitPlayerHands();
-        List<String> strInitSharedCards = pReader.getStrInitSharedCards();
-
+        // print for debugging
         pReader.printProperties();
 
         // create players
         players = new Player[nbPlayers];
-        PlayerFactory pFactory = new PlayerFactory();
-        pFactory.setSharedCards(strInitSharedCards);
+        PlayerFactory pFactory = new PlayerFactory(pReader.getStrInitPlayerHands(), pReader.getStrInitSharedCards(),
+                pReader.getStrPlayerAutoMovements());
 
         for (int i = 0; i < nbPlayers; i++) {
-            players[i] = pFactory.createPlayer(playerTypes.get(i), strInitPlayerCards.get(i), isAuto,
-                    strAutoPlayerMovements.get(i));
+            players[i] = pFactory.createPlayer(playerTypes.get(i), i, isAuto);
         }
 
         // TODO: fix heavy coupling between pFactory and dealer??
         // cards in dealer changed after being used by pFactory
         dealer = pFactory.getDealer();
+
+        // TODO: fix overlapping between sharedcards and initPlayerHands
+        // draw sharedCards if needed after all player hands drawn
+        // do in PlayerFactory
+
+        // if shared cards is null
+        // if (pFactory.getSharedCards().isEmpty()) {
+        // for (int i = 0; i < 2; i++) {
+        // initSharedCards.add(dealer.getRandomCard(true));
+        // }
+        // pFactory.setSharedCards(initSharedCards);
+
+        // for (int i = 0; i < nbPlayers; i++) {
+        // players[i].setSharedCards(initSharedCards);
+        // }
+        // }
 
         // UI stuff //
         // init shared cards
@@ -387,16 +399,16 @@ public class LuckyThirdteen extends CardGame {
 
             // DEBUG //
             // check player's cards are not in dealer's deck
-            // Hand tmpHand = new Hand(dealer.getDeck());
-            // for (int i = 0; i < nbPlayers; i++) {
-            //     for (Card card : players[i].getCards()) {
-            //         for (Card deckCard: tmpHand.getCardList()) {
-            //             if (card.equals(deckCard)) {
-            //                 System.err.println("Player " + i + " has card in dealer's deck");
-            //             }
-            //         }
-            //     }
-            // }
+            Hand tmpHand = dealer.getPack();
+            for (int i = 0; i < nbPlayers; i++) {
+                for (Card card : players[i].getCards()) {
+                    for (Card deckCard : tmpHand.getCardList()) {
+                        if (card.equals(deckCard)) {
+                            System.err.println("Player " + i + " has card in dealer's deck");
+                        }
+                    }
+                }
+            }
 
             // show player's hand
             players[currPlayer].showCards();
@@ -487,7 +499,7 @@ public class LuckyThirdteen extends CardGame {
         // Actor[] scoreActors = initScore(nbPlayers, scores, bgColor, bigFont);
 
         // for (int i = 0; i < nbPlayers; i++)
-        //     addActor(scoreActors[i], scoreLocations[i]);
+        // addActor(scoreActors[i], scoreLocations[i]);
 
         // setupPlayerAutoMovements();
 
