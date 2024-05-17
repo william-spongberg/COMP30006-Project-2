@@ -2,7 +2,7 @@
 import java.util.Properties;
 
 public class Driver {
-    public static final String DEFAULT_PROPERTIES_PATH = "properties/game3.properties";
+    public static final String DEFAULT_PROPERTIES_PATH = "properties/game1.properties";
 
     public static void main(String[] args) {
         final Properties properties = PropertiesLoader.loadPropertiesFile(DEFAULT_PROPERTIES_PATH);
@@ -11,5 +11,4 @@ public class Driver {
         // forced to do this way for testing
         System.out.println("logResult = " + logResult);
     }
-
 }
