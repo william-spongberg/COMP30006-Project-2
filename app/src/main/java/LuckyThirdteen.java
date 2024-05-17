@@ -286,31 +286,6 @@ public class LuckyThirdteen extends CardGame {
     List<List<Card>> initPlayerHands = new ArrayList<>();
     List<List<List<Card>>> autoPlayerMovements = new ArrayList<>();
 
-    CardListener cardListener = new CardAdapter() {
-        @Override
-        public void leftDoubleClicked(Card card) {
-            System.out.println("Player selected: " + card);
-
-            // tell players listening that card has been selected
-            // not good to do? all players that are not auto can see card that has been
-            // selected?
-            // idk it works for now, probably don't need to change
-            // cardListener for whatever reason has to be created here in CardGame for this
-            // to work
-            // doesn't work if created in different class e.g. manualController
-            // docs say nothing about this or how CardListener/CardAdapter works, super
-            // frustrating
-            for (int i = 0; i < nbPlayers; i++) {
-                if (players[i].isMouseControlled() && !players[i].isAuto()) {
-                    // TODO: tidy this up, shouldnt be casting or talking directly to controller. Facade maybe?
-                    Human controller = (Human) players[i].getController();
-                    controller.setSelected(card);
-                    controller.stopListening(players[i].getHand());
-                }
-            }
-        }
-    };
-
     static final int MAX_ROUNDS = 4;
 
     Player[] players;
@@ -367,7 +342,6 @@ public class LuckyThirdteen extends CardGame {
             layouts[i].setRotationAngle(90.0 * i);
             players[i].setView(this, layouts[i]);
             players[i].setTargetArea(new TargetArea(trickLocation));
-            /*players[i].setCardListener(cardListener);*/
             players[i].hideCards();
             players[i].renderCards();
         }
@@ -532,5 +506,4 @@ public class LuckyThirdteen extends CardGame {
         thinkingTime = Integer.parseInt(properties.getProperty("thinkingTime", "200"));
         delayTime = Integer.parseInt(properties.getProperty("delayTime", "50"));
     }
-
 }
