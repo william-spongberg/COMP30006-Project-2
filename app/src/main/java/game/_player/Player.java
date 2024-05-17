@@ -77,9 +77,10 @@ public abstract class Player {
     }
 
     public Card getSelected() {
-        Card card = selected;
-        selected = null;
-        return card;
+        return selected;
+        // Card card = selected;
+        // selected = null;
+        // return card;
     }
 
     public PlayerController getController() {
@@ -131,6 +132,10 @@ public abstract class Player {
     // public void startRendering() {
     //     hand.setDo
     // }
+
+    public void resetSelected() {
+        selected = null;
+    }
 
     public void setSelected(Card selected) {
         this.selected = selected;

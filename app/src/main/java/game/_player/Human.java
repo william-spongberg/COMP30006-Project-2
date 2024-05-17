@@ -18,6 +18,7 @@ public class Human extends Player {
 
     public Card discardCard() {
         Card discardCard = null;
+        resetSelected();
         if (!isAuto()) {
             startListening();
             while ((discardCard = getSelected()) == null) {
