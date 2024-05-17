@@ -12,6 +12,7 @@ import game._card.Rank;
 import game._card.Suit;
 import game._player.Player;
 import game._player.PlayerFactory;
+import game._player._controllers.Human;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
@@ -300,9 +301,11 @@ public class LuckyThirdteen extends CardGame {
             // docs say nothing about this or how CardListener/CardAdapter works, super
             // frustrating
             for (int i = 0; i < nbPlayers; i++) {
-                if (!players[i].isAuto()) {
-                    players[i].setSelected(card);
-                    players[i].stopListening();
+                if (players[i].isMouseControlled() && !players[i].isAuto()) {
+                    // TODO: tidy this up, shouldnt be casting or talking directly to controller. Facade maybe?
+                    Human controller = (Human) players[i].getController();
+                    controller.setSelected(card);
+                    controller.stopListening(players[i].getHand());
                 }
             }
         }
@@ -364,7 +367,7 @@ public class LuckyThirdteen extends CardGame {
             layouts[i].setRotationAngle(90.0 * i);
             players[i].setView(this, layouts[i]);
             players[i].setTargetArea(new TargetArea(trickLocation));
-            players[i].setCardListener(cardListener);
+            /*players[i].setCardListener(cardListener);*/
             players[i].hideCards();
             players[i].renderCards();
         }

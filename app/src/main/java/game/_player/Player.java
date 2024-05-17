@@ -1,7 +1,7 @@
 package game._player;
 
 import game.Dealer;
-import game._player.controller.*;
+import game._player._controllers.PlayerController;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.CardGame;
@@ -12,30 +12,34 @@ import ch.aplu.jcardgame.TargetArea;
 
 import java.util.List;
 
-public abstract class Player {
+public class Player {
     public static final String PLAYER_NAME = "player";
-
-    private String name;
     private boolean isAuto;
     private List<Card> cards;
     private Hand hand;
     private List<Card> sharedCards;
-    private Card selected = null;
-    private PlayerController controller;
+    private final PlayerController controller;
+    private List<List<Card>> autoMovements;
+    private int autoIndex = 0;
 
-    protected Player(String name, List<Card> initialCards, List<Card> initialSharedCards, boolean isAuto, List<List<Card>> autoMovements) {
-        setHand(new Hand(Dealer.DECK));
-        sortHand();
-        setName(name);
-        setCards(initialCards);
-        convertListToHand(initialCards);
-        setIsAuto(isAuto);
-        setSharedCards(initialSharedCards);
-        setController(autoMovements);
+    public boolean isMouseControlled() {
+        return isMouseControlled;
     }
 
-    public abstract Card drawCard(); // done automatically by dealer if manual player
-    public abstract Card discardCard();
+    private final boolean isMouseControlled;
+
+    public Player(List<Card> initialCards, List<Card> initialSharedCards, boolean isAuto, List<List<Card>> autoMovements, PlayerController controller, boolean isMouseControlled) {
+        this.controller = controller;
+        this.isAuto = isAuto;
+        this.autoMovements = autoMovements;
+        this.isMouseControlled = isMouseControlled;
+        hand = new Hand(Dealer.DECK);
+        cards = initialCards;
+        sharedCards = initialSharedCards;
+        sortHand();
+        convertListToHand(initialCards);
+    }
+
 
     public void convertListToHand(List<Card> cards) {
         if (cards.isEmpty() || cards.get(0) == null) {
@@ -47,18 +51,7 @@ public abstract class Player {
         }
     }
 
-    public void startListening() {
-        hand.setTouchEnabled(true);
-    }
-
-    public void stopListening() {
-        hand.setTouchEnabled(false);
-    }
-
     /* getters */
-    public String getName() {
-        return name;
-    }
 
     public boolean isAuto() {
         return isAuto;
@@ -76,26 +69,11 @@ public abstract class Player {
         return sharedCards;
     }
 
-    public Card getSelected() {
-        return selected;
-        // Card card = selected;
-        // selected = null;
-        // return card;
-    }
-
     public PlayerController getController() {
         return controller;
     }
 
     /* setters */
-    public void setName(String name) {
-        if (name == null) {
-            this.name = PLAYER_NAME;
-        }
-        else {
-            this.name = name;
-        }
-    }
 
     public void setIsAuto(boolean isAuto) {
         this.isAuto = isAuto;
@@ -133,13 +111,7 @@ public abstract class Player {
     //     hand.setDo
     // }
 
-    public void resetSelected() {
-        selected = null;
-    }
 
-    public void setSelected(Card selected) {
-        this.selected = selected;
-    }
 
     public void setCardListener(CardListener cardListener) {
         hand.addCardListener(cardListener);
@@ -163,16 +135,35 @@ public abstract class Player {
         this.sharedCards = sharedCards;
     }
 
-    public void setController(PlayerController controller) {
-        this.controller = controller;
-    }
-
-    public void setController(List<List<Card>> autoMovements) {
-        if (isAuto()) {
-            setController(new AutoController(autoMovements));
-        } else {
-            setController(new ManualController());
+    public Card drawCard() {
+        if (!autoMovements.get(0).isEmpty()) {
+            if (autoMovements.get(autoIndex).size() == 2) {
+                System.out.println("auto moves: " + autoMovements);
+                return autoMovements.get(autoIndex).remove(0);
+            }
         }
+
+        // don't care which card is dealt otherwise
+        // dealer with deal random card
+        System.out.println("auto moves: " + autoMovements);
+        return null;
     }
-    
+    public Card discardCard(){
+        boolean finishedAuto = autoMovements.get(0).isEmpty();
+
+        // if game is set to auto
+        if (isAuto && !finishedAuto) {
+            System.out.println("auto moves: " + autoMovements);
+            if (!autoMovements.get(0).isEmpty()) {
+                if (autoMovements.get(autoIndex).size() == 1) {
+                    autoIndex++;
+                    return autoMovements.get(autoIndex - 1).remove(0);
+                }
+            }
+        }
+
+        // if game is not set to auto or if finishedAuto is true
+        // fallback to controller
+        return controller.discardCard(hand);
+    }
 }

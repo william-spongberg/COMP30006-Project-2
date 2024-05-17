@@ -1,11 +1,9 @@
 package game._player;
 
 import game.Dealer;
-import game._player._bot.BasicBot;
-import game._player._bot.CleverBot;
-import game._player._bot.RandomBot;
 
 import ch.aplu.jcardgame.Card;
+import game._player._controllers.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,24 +29,24 @@ public class PlayerFactory {
         // kinda crappy to use i to keep track but eh
         // java lists not linked lists, otherwise would use next()
         // TODO: change in future
+        PlayerController controller;
+        boolean mouseControlled = false;
+        switch (playerType) {
+            case "human" -> {
+                controller = new Human();
+                mouseControlled = true;
+            }
+            case "random" -> controller = new Random();
+            case "basic" -> controller = new Basic();
+            case "clever" -> controller = new Clever();
 
-        if (playerType.equals(Human.NAME)) {
-            System.out.println("Creating human player");
-            return new Human(initCards.get(i), sharedCards, isAuto, autoMovements.get(i));
-        } else if (playerType.equals(RandomBot.NAME)) {
-            System.out.println("Creating random bot player");
-            return new RandomBot(initCards.get(i), sharedCards, isAuto, autoMovements.get(i));
-        } else if (playerType.equals(BasicBot.NAME)) {
-            System.out.println("Creating basic bot player");
-            return new BasicBot(initCards.get(i), sharedCards, isAuto, autoMovements.get(i));
-        } else if (playerType.equals(CleverBot.NAME)) {
-            System.out.println("Creating clever bot player");
-            return new CleverBot(initCards.get(i), sharedCards, isAuto, autoMovements.get(i));
-        } else {
-            System.err.println("Invalid player type: " + playerType);
-            System.exit(1);
-            return null;
+            // should this be throwing an error instead?
+            default -> {
+                System.exit(1);
+                return null;
+            }
         }
+        return new Player(initCards.get(i), sharedCards, isAuto, autoMovements.get(i), controller, mouseControlled);
     }
     
     private void convertAutoMovements(List<List<List<String>>> strAutoMovements) {
