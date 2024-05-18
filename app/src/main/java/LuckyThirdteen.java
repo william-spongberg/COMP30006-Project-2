@@ -120,7 +120,7 @@ public class LuckyThirdteen extends CardGame {
         return rank.getScoreCardValue() * suit.getMultiplicationFactor();
     }
 
-    private int getScorePublicCard(Card card) {
+    public int getScorePublicCard(Card card) {
         Rank rank = (Rank) card.getRank();
         return rank.getScoreCardValue() * Suit.PUBLIC_CARD_MULTIPLICATION_FACTOR;
     }
