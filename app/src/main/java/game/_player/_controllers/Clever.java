@@ -19,8 +19,9 @@ public class Clever implements PlayerController {
                 return hand.getCardList().get(1);
             case 2:
                 return hand.getCardList().get(2);
-            return null;
+
         }
+        return null;
     }
 
 
