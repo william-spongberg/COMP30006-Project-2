@@ -1,8 +1,8 @@
 package game._observer;
 
-import game._state.State;
+import game._state.States;
 
 public interface Observer {
 
-    public void onStateUpdate(State changedState);
+    public void onStateUpdate(States changedState);
 }

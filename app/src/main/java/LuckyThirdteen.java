@@ -10,9 +10,14 @@ import java.util.stream.Collectors;
 import game.Dealer;
 import game._card.Rank;
 import game._card.Suit;
+import game._observer.LoggerObserver;
+import game._observer.ScorerObserver;
 import game._player.Player;
 import game._player.PlayerFactory;
 import game._player._controllers.Human;
+import game._state.State;
+import game._state.StateContext;
+import game._state.States;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
@@ -79,6 +84,12 @@ public class LuckyThirdteen extends CardGame {
 
     private Properties properties;
 
+    // state initialisation (initialised in initgame)
+    private StateContext state = new StateContext();
+    private LoggerObserver loggerObserver = new LoggerObserver();
+    private ScorerObserver scorerObserver = new ScorerObserver();
+
+
     // --------------------------- CONSTRUCTOR ---------------------------
     public LuckyThirdteen(Properties properties) {
         super(700, 700, 30);
@@ -89,6 +100,8 @@ public class LuckyThirdteen extends CardGame {
     }
 
     // --------------------------- INITIALISATION FUNCTIONS ---------------------------
+
+
 
     public String runApp() {
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
@@ -129,7 +142,11 @@ public class LuckyThirdteen extends CardGame {
         addActor(new Actor("sprites/gameover.gif"), textLocation);
         setStatusText(winText);
         refresh();
-        addEndOfGameToLog(winners);
+
+        state.setCurrentState(States.END_GAME);
+
+        //TODO: CALL LOGGER
+        //addEndOfGameToLog(winners);
 
         return logResult.toString();
     }
@@ -159,6 +176,10 @@ public class LuckyThirdteen extends CardGame {
         // FIXME: each player should contain hand and score
 
         System.out.println("initialising game");
+
+        // ADDED - SETUP OF OBSERVERS
+        state.addObservers(loggerObserver);
+        state.addObservers(scorerObserver);
 
         // read properties file
         PropertiesReader pReader = new PropertiesReader(properties);
@@ -221,8 +242,15 @@ public class LuckyThirdteen extends CardGame {
         int roundNumber = 1;
         addRoundInfoToLog(roundNumber);
 
+        //TODO: CAN POTENTIALLY COMBINE THESE TO ONE
+        // set state to start DO WE ACTUALLY NEED TO DO ANYTHING WITH THE OBSERVERS HERE?
+        state.setCurrentState(States.START_GAME);
+
         // start game loop
         while (roundNumber <= MAX_ROUNDS) {
+            // DONT UPDATE THE LOGGERS HERE!
+            state.setCurrentState(States.START_ROUND);
+
             // player behaviour: //
             // deal a card to the player
             // player selects a card from hand to discard
@@ -290,8 +318,11 @@ public class LuckyThirdteen extends CardGame {
             players[currPlayer].hideCards();
             players[currPlayer].renderCards();
 
+            state.setCurrentState(States.END_TURN);
+            // TODO: CALL LOGGER
+
             // log cards played by the player
-            addCardPlayedToLog(currPlayer, players[currPlayer].getCards());
+            // addCardPlayedToLog(currPlayer, players[currPlayer].getCards());
 
             // next player's turn
             currPlayer = (currPlayer + 1) % nbPlayers;
@@ -300,11 +331,13 @@ public class LuckyThirdteen extends CardGame {
             // round scores
             if (currPlayer == 0) {
                 roundNumber++;
-                addEndOfRoundToLog();
+                state.setCurrentState(States.END_ROUND);
 
                 // if more rounds, log the round information
                 if (roundNumber <= MAX_ROUNDS) {
-                    addRoundInfoToLog(roundNumber);
+                    // TODO: CALL LOGGER
+                    state.setCurrentState(States.START_ROUND);
+                    // addRoundInfoToLog(roundNumber);
                 }
                 // calculateScoreEndOfRound();
             }

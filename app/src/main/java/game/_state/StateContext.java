@@ -7,21 +7,22 @@ import java.util.List;
 
 public class StateContext {
 
-    private State currentState;
+    private States currentState;
     private List<Observer> observers = new ArrayList<>();
 
     public StateContext() {
-        currentState = new GameStart();
+        currentState = States.START_GAME;
     }
 
     public void addObservers(Observer observer) {
         observers.add(observer);
     }
-    public State getCurrentState() {
+    public States getCurrentState() {
         return currentState;
     }
-    public void setCurrentState(State currentState) {
+    public void setCurrentState(States currentState) {
         this.currentState = currentState;
+        notifyObservers();
     }
 
     // call this to run the onStateupdate of all observers.
@@ -31,8 +32,9 @@ public class StateContext {
         }
     }
 
+    // TODO: PROBABLY REMOVE THIS?
     // call this when changing state to run the code of each state
-    public void stateChanging() {
-        currentState.StateHandle(this);
-    }
+    // public void stateChanging() {
+    //    currentState.StateHandle(this);
+    //}
 }
