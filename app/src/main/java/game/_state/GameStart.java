@@ -6,6 +6,10 @@ import java.util.Properties;
 import java.util.Random;
 
 public class GameStart implements State {
+
+    public void StateHandle(StateContext context) {
+        return;
+    }
     
     final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
     private Properties properties;

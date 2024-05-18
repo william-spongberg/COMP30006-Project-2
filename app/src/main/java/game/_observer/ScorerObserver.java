@@ -1,8 +1,10 @@
 package game._observer;
 
+import game._state.State;
+
 public class ScorerObserver implements Observer{
     
-    public void update() {
+    public void onStateUpdate(State changedState) {
         // contact Score
     }
 }
