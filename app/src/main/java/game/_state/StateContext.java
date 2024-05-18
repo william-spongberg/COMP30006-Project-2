@@ -7,8 +7,6 @@ import java.util.List;
 
 public class StateContext {
 
-    //TODO HANDLE STATE ON STATE CHANGE
-
     private State currentState;
     private List<Observer> observers = new ArrayList<>();
 
@@ -19,8 +17,6 @@ public class StateContext {
     public void addObservers(Observer observer) {
         observers.add(observer);
     }
-
-
     public State getCurrentState() {
         return currentState;
     }
@@ -33,5 +29,10 @@ public class StateContext {
         for (Observer observer : observers) {
             observer.onStateUpdate(currentState);
         }
+    }
+
+    // call this when changing state to run the code of each state
+    public void stateChanging() {
+        currentState.StateHandle(this);
     }
 }
