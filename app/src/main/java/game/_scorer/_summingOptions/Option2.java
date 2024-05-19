@@ -4,6 +4,7 @@ import ch.aplu.jcardgame.Card;
 
 import java.util.List;
 
+// Option 2: one public card and one private card
 public class Option2 extends SummingOption {
     /**
      * finds if a player can make thirteen using option 2
@@ -12,7 +13,7 @@ public class Option2 extends SummingOption {
      * @return true if the player can make thirteen with option 2, false otherwise
      */
     @Override
-    public boolean isThirteen(List<Card> privateCards, List<Card> publicCards)
+    public boolean containsThirteen(List<Card> privateCards, List<Card> publicCards)
     {
         return false;
     }

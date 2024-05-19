@@ -86,7 +86,7 @@ public class Scorer {
         List<Card> privateCards = player.getCards();
         for (SummingOption summingOption: SUMMING_OPTIONS)
         {
-            if (summingOption.isThirteen(privateCards, publicCards))
+            if (summingOption.containsThirteen(privateCards, publicCards))
             {
                 return true;
             }

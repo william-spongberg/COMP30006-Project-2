@@ -12,7 +12,7 @@ public class Option3 extends SummingOption {
      * @return true if the player can make thirteen with option 3, false otherwise
      */
     @Override
-    public boolean isThirteen(List<Card> privateCards, List<Card> publicCards)
+    public boolean containsThirteen(List<Card> privateCards, List<Card> publicCards)
     {
         return false;
     }

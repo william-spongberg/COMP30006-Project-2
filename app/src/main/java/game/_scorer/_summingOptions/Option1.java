@@ -14,20 +14,10 @@ public class Option1 extends SummingOption {
      * @return true if the player can make thirteen with option 1, false otherwise
      */
     @Override
-    public boolean isThirteen(List<Card> privateCards, List<Card> publicCards)
+    public boolean containsThirteen(List<Card> privateCards, List<Card> publicCards)
     {
         // assumes there are two and only two private cards
-        for (int card1Value: CardEvaluator.getSumValues(privateCards.get(FIRST_CARD)))
-        {
-            for (int card2Value: CardEvaluator.getSumValues(privateCards.get(SECOND_CARD)))
-            {
-                if (card1Value + card2Value == THIRTEEN)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return isThirteen(privateCards.get(FIRST_CARD), privateCards.get(SECOND_CARD));
     }
 
     /**
@@ -40,7 +30,7 @@ public class Option1 extends SummingOption {
     public int case3Score(List<Card> privateCards, List<Card> publicCards)
     {
         // assumes there are two and only two private cards
-        if (!isThirteen(privateCards, publicCards))
+        if (!containsThirteen(privateCards, publicCards))
         {
             return NOT_THIRTEEN;
         }
