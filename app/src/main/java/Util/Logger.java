@@ -3,17 +3,17 @@ package Util;
 import game._card.Rank;
 import game._card.Suit;
 import ch.aplu.jcardgame.Card;
+import game._player.Player;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static game._scorer.Scorer.getScores;
 
 //TODO: DEAL WITH THE PACKAGE THIS IS IN. YUCK
 
 public class Logger {
 
-    //TODO: REMOVE THIS: THIS IS TEMP UNTIL I CAN GET SCORES FROM JOSH'S CODE
-    private int[] scores = new int[4];
-
-    // todo: we return this in luckythirdteen, figure out how to deal with it
     public static StringBuilder logResult = new StringBuilder();
 
      public void addCardPlayedToLog(int player, List<Card> cards) {
@@ -37,7 +37,8 @@ public class Logger {
          logResult.append("Round" + roundNumber + ":");
      }
 
-     public void addEndOfRoundToLog() {
+     public void addEndOfRoundToLog(Player[] players, List<Card> publicCards) {
+         int[] scores = getScores(players, publicCards);
          logResult.append("Score:");
          for (int i = 0; i < scores.length; i++) {
              logResult.append(scores[i] + ",");
@@ -45,7 +46,8 @@ public class Logger {
          logResult.append("\n");
      }
 
-     public void addEndOfGameToLog(List<Integer> winners) {
+     public void addEndOfGameToLog(List<Integer> winners, Player[] players, List<Card> publicCards) {
+         int[] scores = getScores(players, publicCards);
          logResult.append("EndGame:");
          for (int i = 0; i < scores.length; i++) {
              logResult.append(scores[i] + ",");

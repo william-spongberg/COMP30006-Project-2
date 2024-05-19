@@ -148,7 +148,7 @@ public class LuckyThirdteen extends CardGame {
 
         // call adding end of game to log
 
-        stateData = new StateData(winners);
+        stateData = new StateData(winners, players, playingArea.getCardList());
         state.setCurrentState(States.END_GAME ,stateData);
 
         // TODO: DISCUSS IF THIS IS BAD
@@ -338,7 +338,7 @@ public class LuckyThirdteen extends CardGame {
                 roundNumber++;
 
                 // call addEndOfRoundToLog
-                stateData = new StateData();
+                stateData = new StateData(players, playingArea.getCardList());
                 state.setCurrentState(States.END_ROUND, stateData);
 
                 // if more rounds, log the round information

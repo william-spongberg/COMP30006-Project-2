@@ -1,6 +1,8 @@
 package game._state;
 
 import ch.aplu.jcardgame.Card;
+import game._player.Player;
+
 import java.util.List;
 
 
@@ -12,6 +14,12 @@ public class StateData {
     private List<Card> cards;
     private int roundNumber;
     private List<Integer> winners;
+
+    private Player[] players;
+
+    private List<Card> publicCards;
+
+
 
     // different constructors depending on the state that is being changed to
     public StateData() {
@@ -30,8 +38,24 @@ public class StateData {
     }
 
     // for function addEndOfGameToLog
-    public StateData(List<Integer> winners) {
+    public StateData(List<Integer> winners, Player[] players, List<Card> publicCards) {
         this.winners = winners;
+        this.players = players;
+        this.publicCards = publicCards;
+    }
+
+    // for addEndOfRoundToLog
+    public StateData(Player[] players, List<Card> publicCards) {
+        this.players = players;
+        this.publicCards = publicCards;
+    }
+
+    public Player[] getPlayers() {
+        return players;
+    }
+
+    public List<Card> getPublicCards() {
+        return publicCards;
     }
 
     public int getPlayer() {

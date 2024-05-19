@@ -15,6 +15,9 @@ public class LoggerObserver implements Observer {
 
     private Logger logger = new Logger();
 
+    private Player[] players;
+    private List<Card> publicCards;
+
     public void onStateUpdate(States state, StateData stateData, Player[] newPlayers) {
 
         // each observer keeps an instance of players
@@ -32,11 +35,15 @@ public class LoggerObserver implements Observer {
                 logger.addCardPlayedToLog(player, cards);
 
             case END_ROUND:
-                logger.addEndOfRoundToLog();
+                players = stateData.getPlayers();
+                publicCards = stateData.getPublicCards();
+                logger.addEndOfRoundToLog(players, publicCards);
 
             case END_GAME:
                 List<Integer> winners = stateData.getWinners();
-                logger.addEndOfGameToLog(winners);
+                players = stateData.getPlayers();
+                publicCards = stateData.getPublicCards();
+                logger.addEndOfGameToLog(winners, players, publicCards);
 
 
 
