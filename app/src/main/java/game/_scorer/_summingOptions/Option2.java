@@ -1,6 +1,7 @@
 package game._scorer._summingOptions;
 
 import ch.aplu.jcardgame.Card;
+import game._scorer.CardEvaluator;
 
 import java.util.List;
 
@@ -15,6 +16,16 @@ public class Option2 extends SummingOption {
     @Override
     public boolean containsThirteen(List<Card> privateCards, List<Card> publicCards)
     {
+        for (Card privateCard: privateCards)
+        {
+            for (Card publicCard: publicCards)
+            {
+                if (isThirteen(privateCard, publicCard))
+                {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -27,6 +38,21 @@ public class Option2 extends SummingOption {
     @Override
     public int case3Score(List<Card> privateCards, List<Card> publicCards)
     {
-        return 0;
+        int max_score = 0;
+        for (Card privateCard: privateCards)
+        {
+            for (Card publicCard: publicCards)
+            {
+                if (isThirteen(publicCard, privateCard))
+                {
+                    int score = CardEvaluator.getCardScore(privateCard, false) + CardEvaluator.getCardScore(publicCard, true);
+                    if (score > max_score)
+                    {
+                        max_score = score;
+                    }
+                }
+            }
+        }
+        return max_score;
     }
 }

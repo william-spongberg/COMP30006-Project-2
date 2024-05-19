@@ -29,7 +29,6 @@ public class Option1 extends SummingOption {
     @Override
     public int case3Score(List<Card> privateCards, List<Card> publicCards)
     {
-        // assumes there are two and only two private cards
         if (!containsThirteen(privateCards, publicCards))
         {
             return NOT_THIRTEEN;
