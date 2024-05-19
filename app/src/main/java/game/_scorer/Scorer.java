@@ -26,16 +26,18 @@ public class Scorer {
      * @param publicCards the game's public cards
      * @return a list of players with the highest score; the winner or winners
      */
-    public static List<Player> winner(Player[] players, List<Card> publicCards) {
+
+    // why are we returning this as a list of players?
+    public static List<Integer> winner(Player[] players, List<Card> publicCards) {
         // find the highest score
         int[] scores = getScores(players, publicCards);
         int maxScore = Arrays.stream(scores).max().getAsInt();
 
         // build list of players with that score
-        List<Player> winners = new ArrayList<>();
+        List<Integer> winners = new ArrayList<>();
         for (int i = 0; i < players.length; i++) {
             if (scores[i] == maxScore) {
-                winners.add(players[i]);
+                winners.add(i);
             }
         }
         return winners;

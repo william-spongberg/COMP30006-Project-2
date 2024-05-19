@@ -18,6 +18,8 @@ import game._player._controllers.Human;
 import game._state.*;
 
 import static Util.Logger.logResult;
+import static game._scorer.Scorer.getScores;
+import static game._scorer.Scorer.winner;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
@@ -109,7 +111,7 @@ public class LuckyThirdteen extends CardGame {
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
         setStatusText("Initialising...");
 
-        // FIXME: create Score object here - or should it be inside the game?
+        // FIXME: create Score object here - or should it be inside the game? - No, score stuff is static
         initScores();
         initScore();
 
@@ -123,16 +125,15 @@ public class LuckyThirdteen extends CardGame {
         initGame();
         playGame();
 
-        for (int i = 0; i < nbPlayers; i++)
-            updateScore(i);
+        // what is this actually doing?
+        scores = getScores(players, playingArea.getCardList());
         int maxScore = 0;
         for (int i = 0; i < nbPlayers; i++)
             if (scores[i] > maxScore)
                 maxScore = scores[i];
-        final List<Integer> winners = new ArrayList<>();
-        for (int i = 0; i < nbPlayers; i++)
-            if (scores[i] == maxScore)
-                winners.add(i);
+
+        // replace with winners method
+        final List<Integer> winners = winner(players,  playingArea.getCardList());
         String winText;
         if (winners.size() == 1) {
             winText = "Game over. Winner is player: " +
@@ -146,13 +147,10 @@ public class LuckyThirdteen extends CardGame {
         refresh();
 
         // call adding end of game to log
-
         stateData = new StateData(winners, players, playingArea.getCardList());
         state.setCurrentState(States.END_GAME ,stateData);
 
         // TODO: DISCUSS IF THIS IS BAD
-
-
         return logResult.toString();
     }
     // TODO: move scoring to new score class?
@@ -178,7 +176,7 @@ public class LuckyThirdteen extends CardGame {
     }
 
     private void initGame() {
-        // FIXME: each player should contain hand and score
+        // FIXME: each player should contain hand and score -- ?
 
         System.out.println("initialising game");
 
@@ -285,7 +283,6 @@ public class LuckyThirdteen extends CardGame {
                 drawnCard = dealer.getRandomCard(false);
             }
             players[currPlayer].addCard(dealer.getCard(drawnCard, true));
-            // hands[currPlayer].insert(drawnCard, false);
 
             System.out.println("Player " + currPlayer + " drew card: " + drawnCard);
 
@@ -345,13 +342,13 @@ public class LuckyThirdteen extends CardGame {
                     stateData = new StateData(roundNumber);
                     state.setCurrentState(States.START_ROUND ,stateData);
                 }
-                // calculateScoreEndOfRound();
+                scores = getScores(players, playingArea.getCardList());
             }
 
             // FIXME: this is never reached?
             // if round is over, calculate round score
             // if (roundNumber > MAX_ROUNDS) {
-            // calculateScoreEndOfRound();
+            // scores = getScores(players, playingArea.getCardList());
             // }
 
             // delay before next round
@@ -359,103 +356,26 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
-    // used for scoring
-    public boolean rankGreater(Card card1, Card card2) {
+    //TODO: I can't remember what this was used for. Delete?
+    //public boolean rankGreater(Card card1, Card card2) {
         // Warning: Reverse rank order of cards (see comment on enum)
-        // FIXME: why warning?
-        return card1.getRankId() < card2.getRankId();
-    }
-
-
-
-    private void calculateScoreEndOfRound() {
-        List<Boolean> isThirteenChecks = Arrays.asList(false, false, false, false);
-        for (int i = 0; i < hands.length; i++) {
-            isThirteenChecks.set(i, isThirteen(i));
-        }
-        List<Integer> indexesWithThirteen = new ArrayList<>();
-        for (int i = 0; i < isThirteenChecks.size(); i++) {
-            if (isThirteenChecks.get(i)) {
-                indexesWithThirteen.add(i);
-            }
-        }
-        long countTrue = indexesWithThirteen.size();
-        Arrays.fill(scores, 0);
-        if (countTrue == 1) {
-            int winnerIndex = indexesWithThirteen.get(0);
-            scores[winnerIndex] = 100;
-        } else if (countTrue > 1) {
-            for (Integer thirteenIndex : indexesWithThirteen) {
-                scores[thirteenIndex] = calculateMaxScoreForThirteenPlayer(thirteenIndex);
-            }
-
-        } else {
-            for (int i = 0; i < scores.length; i++) {
-                scores[i] = getScorePrivateCard(hands[i].getCardList().get(0)) +
-                        getScorePrivateCard(hands[i].getCardList().get(1));
-            }
-        }
-    }
+        // FIXME: why warning? - because it returns reverse
+    //    return card1.getRankId() < card2.getRankId();
+    //}
 
     // -------------------------- 13 CHECKING --------------------------------------
-    // TODO: move game referee methods into seperate class?
-    private boolean isThirteenFromPossibleValues(int[] possibleValues1, int[] possibleValues2) {
-        for (int value1 : possibleValues1) {
-            for (int value2 : possibleValues2) {
-                if (value1 + value2 == THIRTEEN_GOAL) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private boolean isThirteenCards(Card card1, Card card2) {
-        Rank rank1 = (Rank) card1.getRank();
-        Rank rank2 = (Rank) card2.getRank();
-        return isThirteenFromPossibleValues(rank1.getPossibleSumValues(), rank2.getPossibleSumValues());
-    }
-
-    private boolean isThirteenMixedCards(List<Card> privateCards, List<Card> publicCards) {
-        for (Card privateCard : privateCards) {
-            for (Card publicCard : publicCards) {
-                if (isThirteenCards(privateCard, publicCard)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean isThirteen(int playerIndex) {
-        List<Card> privateCards = hands[playerIndex].getCardList();
-        List<Card> publicCards = playingArea.getCardList();
-        boolean isThirteenPrivate = isThirteenCards(privateCards.get(0), privateCards.get(1));
-        boolean isThirteenMixed = isThirteenMixedCards(privateCards, publicCards);
-        return isThirteenMixed || isThirteenPrivate;
-    }
 
 
     // --------------------------- GETTERS & SETTERS & UPDATERS --------------------
-    private int getScorePrivateCard(Card card) {
-        Rank rank = (Rank) card.getRank();
-        Suit suit = (Suit) card.getSuit();
 
-        return rank.getScoreCardValue() * suit.getMultiplicationFactor();
-    }
-
-    public int getScorePublicCard(Card card) {
-        Rank rank = (Rank) card.getRank();
-        return rank.getScoreCardValue() * Suit.PUBLIC_CARD_MULTIPLICATION_FACTOR;
-    }
     public void setStatus(String string) {
         setStatusText(string);
     }
     // private Card selected;
 
+    // theres some functionality we're missing I think.
     private void updateScore(int player) {
-        // FIXME: why create new actor each time? just change text
+        // FIXME: why create new actor each time? just change text - cuz theres no update in this right, we have to add and remove everythin
         removeActor(scoreActors[player]);
         // why is max used here? how can the score be negative?
         int displayScore = Math.max(scores[player], 0);
@@ -466,53 +386,6 @@ public class LuckyThirdteen extends CardGame {
 
 
     // --------------------------- END GAME FUNCTIONS ---------------------------
-    private int calculateMaxScoreForThirteenPlayer(int playerIndex) {// , Hand[] hands, Hand playingArea) {
-        List<Card> privateCards = hands[playerIndex].getCardList();
-        List<Card> publicCards = playingArea.getCardList();
-        Card privateCard1 = privateCards.get(0);
-        Card privateCard2 = privateCards.get(1);
-        Card publicCard1 = publicCards.get(0);
-        Card publicCard2 = publicCards.get(1);
 
-        int maxScore = 0;
-
-        // TODO: refactor to use a list of cards instead of multiple if statements
-        if (isThirteenCards(privateCard1, privateCard2)) {
-            int score = getScorePrivateCard(privateCard1) + getScorePrivateCard(privateCard2);
-            if (maxScore < score) {
-                maxScore = score;
-            }
-        }
-
-        if (isThirteenCards(privateCard1, publicCard1)) {
-            int score = getScorePrivateCard(privateCard1) + getScorePublicCard(publicCard1);
-            if (maxScore < score) {
-                maxScore = score;
-            }
-        }
-
-        if (isThirteenCards(privateCard1, publicCard2)) {
-            int score = getScorePrivateCard(privateCard1) + getScorePublicCard(publicCard2);
-            if (maxScore < score) {
-                maxScore = score;
-            }
-        }
-
-        if (isThirteenCards(privateCard2, publicCard1)) {
-            int score = getScorePrivateCard(privateCard2) + getScorePublicCard(publicCard1);
-            if (maxScore < score) {
-                maxScore = score;
-            }
-        }
-
-        if (isThirteenCards(privateCard2, publicCard2)) {
-            int score = getScorePrivateCard(privateCard2) + getScorePublicCard(publicCard2);
-            if (maxScore < score) {
-                maxScore = score;
-            }
-        }
-
-        return maxScore;
-    }
 
 }
