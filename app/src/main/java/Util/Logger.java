@@ -14,7 +14,7 @@ public class Logger {
     private int[] scores = new int[4];
 
     // todo: we return this in luckythirdteen, figure out how to deal with it
-    public StringBuilder logResult = new StringBuilder();
+    public static StringBuilder logResult = new StringBuilder();
 
      public void addCardPlayedToLog(int player, List<Card> cards) {
          if (cards.size() < 2) {

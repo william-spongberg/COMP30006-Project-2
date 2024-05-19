@@ -17,6 +17,8 @@ import game._player.PlayerFactory;
 import game._player._controllers.Human;
 import game._state.*;
 
+import static Util.Logger.logResult;
+
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
     // TODO: move values put here to static finals in info expert?
@@ -70,7 +72,7 @@ public class LuckyThirdteen extends CardGame {
     private int[] autoIndexHands = new int[nbPlayers];
     private Hand[] hands;
 
-    private StringBuilder logResult = new StringBuilder();
+    //private StringBuilder logResult = new StringBuilder();
 
 
     // classes
@@ -148,6 +150,9 @@ public class LuckyThirdteen extends CardGame {
 
         stateData = new StateData(winners);
         state.setCurrentState(States.END_GAME ,stateData);
+
+        // TODO: DISCUSS IF THIS IS BAD
+
 
         return logResult.toString();
     }
@@ -363,23 +368,6 @@ public class LuckyThirdteen extends CardGame {
     }
 
 
-    // TODO: move to new log class?
-    private void addCardPlayedToLog(int player, List<Card> cards) {
-        if (cards.size() < 2) {
-            return;
-        }
-        logResult.append("P" + player + "-");
-
-        for (int i = 0; i < cards.size(); i++) {
-            Rank cardRank = (Rank) cards.get(i).getRank();
-            Suit cardSuit = (Suit) cards.get(i).getSuit();
-            logResult.append(cardRank.getRankCardLog() + cardSuit.getSuitShortHand());
-            if (i < cards.size() - 1) {
-                logResult.append("-");
-            }
-        }
-        logResult.append(",");
-    }
 
     private void calculateScoreEndOfRound() {
         List<Boolean> isThirteenChecks = Arrays.asList(false, false, false, false);
