@@ -1,20 +1,44 @@
 package game._observer;
 
+import ch.aplu.jcardgame.Card;
+import game._player.Player;
+import game._state.StateChange;
+import game._state.StateData;
 import game._state.States;
 
 import Util.Logger;
+
+import java.util.List;
 
 
 public class LoggerObserver implements Observer {
 
     private Logger logger = new Logger();
 
-    public void onStateUpdate(States changedState) {
+    public void onStateUpdate(States state, StateData stateData, Player[] newPlayers) {
+
+        // each observer keeps an instance of players
         // contact Logger
 
-        switch(changedState) {
+        switch(state) {
+            case START_GAME:
+            case START_ROUND:
+                int roundNumber = stateData.getRoundNumber();
+                logger.addRoundInfoToLog(roundNumber);
+
+            case END_TURN:
+                int player = stateData.getPlayer();
+                List<Card> cards = stateData.getCards();
+                logger.addCardPlayedToLog(player, cards);
+
             case END_ROUND:
                 logger.addEndOfRoundToLog();
+
+            case END_GAME:
+                List<Integer> winners = stateData.getWinners();
+                logger.addEndOfGameToLog(winners);
+
+
 
         }
 

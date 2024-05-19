@@ -12,9 +12,11 @@ public class Logger {
 
     //TODO: REMOVE THIS: THIS IS TEMP UNTIL I CAN GET SCORES FROM JOSH'S CODE
     private int[] scores = new int[4];
+
+    // todo: we return this in luckythirdteen, figure out how to deal with it
     public StringBuilder logResult = new StringBuilder();
 
-     private void addCardPlayedToLog(int player, List<Card> cards) {
+     public void addCardPlayedToLog(int player, List<Card> cards) {
          if (cards.size() < 2) {
              return;
          }
@@ -31,7 +33,7 @@ public class Logger {
          logResult.append(",");
      }
 
-     private void addRoundInfoToLog(int roundNumber) {
+     public void addRoundInfoToLog(int roundNumber) {
          logResult.append("Round" + roundNumber + ":");
      }
 
@@ -43,7 +45,7 @@ public class Logger {
          logResult.append("\n");
      }
 
-     private void addEndOfGameToLog(List<Integer> winners) {
+     public void addEndOfGameToLog(List<Integer> winners) {
          logResult.append("EndGame:");
          for (int i = 0; i < scores.length; i++) {
              logResult.append(scores[i] + ",");

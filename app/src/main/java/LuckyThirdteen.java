@@ -15,9 +15,7 @@ import game._observer.ScorerObserver;
 import game._player.Player;
 import game._player.PlayerFactory;
 import game._player._controllers.Human;
-import game._state.State;
-import game._state.StateContext;
-import game._state.States;
+import game._state.*;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
@@ -89,6 +87,9 @@ public class LuckyThirdteen extends CardGame {
     private LoggerObserver loggerObserver = new LoggerObserver();
     private ScorerObserver scorerObserver = new ScorerObserver();
 
+    private StateChange stateToChangeTo;
+    private StateData stateData;
+
 
     // --------------------------- CONSTRUCTOR ---------------------------
     public LuckyThirdteen(Properties properties) {
@@ -143,10 +144,10 @@ public class LuckyThirdteen extends CardGame {
         setStatusText(winText);
         refresh();
 
-        state.setCurrentState(States.END_GAME);
+        // call adding end of game to log
 
-        //TODO: CALL LOGGER
-        //addEndOfGameToLog(winners);
+        stateData = new StateData(winners);
+        state.setCurrentState(States.END_GAME ,stateData);
 
         return logResult.toString();
     }
@@ -240,16 +241,15 @@ public class LuckyThirdteen extends CardGame {
         Card discardCard = null;
         List<Card> cardsPlayed = new ArrayList<>();
         int roundNumber = 1;
-        addRoundInfoToLog(roundNumber);
 
-        //TODO: CAN POTENTIALLY COMBINE THESE TO ONE
-        // set state to start DO WE ACTUALLY NEED TO DO ANYTHING WITH THE OBSERVERS HERE?
-        state.setCurrentState(States.START_GAME);
+        // call add round info to log
+        stateData = new StateData(roundNumber);
+        state.setCurrentState(States.START_GAME, stateData);
 
         // start game loop
         while (roundNumber <= MAX_ROUNDS) {
-            // DONT UPDATE THE LOGGERS HERE!
-            state.setCurrentState(States.START_ROUND);
+            // TODO, do I need to update state here?
+            // state.setCurrentState(States.START_ROUND);
 
             // player behaviour: //
             // deal a card to the player
@@ -318,11 +318,11 @@ public class LuckyThirdteen extends CardGame {
             players[currPlayer].hideCards();
             players[currPlayer].renderCards();
 
-            state.setCurrentState(States.END_TURN);
-            // TODO: CALL LOGGER
 
-            // log cards played by the player
-            // addCardPlayedToLog(currPlayer, players[currPlayer].getCards());
+            // log end of turn
+            stateData = new StateData(currPlayer, players[currPlayer].getCards());
+            state.setCurrentState(States.END_TURN, stateData);
+
 
             // next player's turn
             currPlayer = (currPlayer + 1) % nbPlayers;
@@ -331,13 +331,15 @@ public class LuckyThirdteen extends CardGame {
             // round scores
             if (currPlayer == 0) {
                 roundNumber++;
-                state.setCurrentState(States.END_ROUND);
+
+                // call addEndOfRoundToLog
+                stateData = new StateData();
+                state.setCurrentState(States.END_ROUND, stateData);
 
                 // if more rounds, log the round information
                 if (roundNumber <= MAX_ROUNDS) {
-                    // TODO: CALL LOGGER
-                    state.setCurrentState(States.START_ROUND);
-                    // addRoundInfoToLog(roundNumber);
+                    stateData = new StateData(roundNumber);
+                    state.setCurrentState(States.START_ROUND ,stateData);
                 }
                 // calculateScoreEndOfRound();
             }
@@ -378,19 +380,6 @@ public class LuckyThirdteen extends CardGame {
         }
         logResult.append(",");
     }
-
-    private void addRoundInfoToLog(int roundNumber) {
-        logResult.append("Round" + roundNumber + ":");
-    }
-
-    private void addEndOfRoundToLog() {
-        logResult.append("Score:");
-        for (int i = 0; i < scores.length; i++) {
-            logResult.append(scores[i] + ",");
-        }
-        logResult.append("\n");
-    }
-
 
     private void calculateScoreEndOfRound() {
         List<Boolean> isThirteenChecks = Arrays.asList(false, false, false, false);
@@ -538,16 +527,5 @@ public class LuckyThirdteen extends CardGame {
 
         return maxScore;
     }
-
-    private void addEndOfGameToLog(List<Integer> winners) {
-        logResult.append("EndGame:");
-        for (int i = 0; i < scores.length; i++) {
-            logResult.append(scores[i] + ",");
-        }
-        logResult.append("\n");
-        logResult.append(
-                "Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
-    }
-
 
 }
