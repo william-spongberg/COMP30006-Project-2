@@ -1,13 +1,18 @@
-package game._scorer;
+package game._scorer._summingOptions;
 
 import ch.aplu.jcardgame.Card;
+import game._scorer.Scorer;
 
 import java.util.List;
 
 public abstract class SummingOption {
-    public SummingOption()
+    /**
+     * generates the summingOption objects
+     * @return a List containing each summingOption
+     */
+    public static List<SummingOption> getSummingOptions()
     {
-        Scorer.addSummingOption(this);
+        return null;
     }
 
     /**

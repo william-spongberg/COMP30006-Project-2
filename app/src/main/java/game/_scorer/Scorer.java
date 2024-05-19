@@ -2,6 +2,8 @@ package game._scorer;
 
 import ch.aplu.jcardgame.Card;
 import game._player.Player;
+import game._scorer._scoringCases.ScoringCase;
+import game._scorer._summingOptions.SummingOption;
 
 import java.util.List;
 
@@ -9,9 +11,8 @@ public class Scorer {
     private static final int CASE_1_THRESHOLD = 1;
     private static final int CASE_2_THRESHOLD = 0;
     private static final int CASE_3_THRESHOLD = 2;
-    private static final int CASE_1_WIN_SCORE = 100;
-    private static final int CASE_1_LOSS_SCORE = 0;
     private static List<SummingOption> summingOptions;
+    private static List<ScoringCase> scoringCases;
 
     /**
      * Returns the winner of a game of LuckyThirteen
@@ -52,26 +53,15 @@ public class Scorer {
         {
             case CASE_1_THRESHOLD:
                 // case 1
-                if (hasThirteen(players[index], publicCards))
-                {
-                    return CASE_1_WIN_SCORE;
-                }
-                else
-                {
-                    return CASE_1_LOSS_SCORE;
-                }
                 break;
             case CASE_2_THRESHOLD:
                 // case 2
-                int score = 0;
-                for (Card card: players[index].getCards())
-                {
-
-                }
                 break;
             default:
                 // case 3
         }
+        //placeholder
+        return 0;
     }
 
     /**
@@ -94,11 +84,13 @@ public class Scorer {
     }
 
     /**
-     * adds a SummingOption to the summingOptions list
-     * @param summingOption a SummingOption to be added to summingOptions
+     * gets the score of each player
+     * @param players an array containing each player
+     * @param publicCards the game's public cards
+     * @return a list of integers representing the players' scores int the same order as players
      */
-    public static void addSummingOption(SummingOption summingOption)
+    public static int[] getScores(Player[] players, List<Card> publicCards)
     {
-        summingOptions.add(summingOption);
+        return null;
     }
 }

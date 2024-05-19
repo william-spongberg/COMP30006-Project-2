@@ -1,4 +1,4 @@
-package game._scorer;
+package game._scorer._summingOptions;
 
 import ch.aplu.jcardgame.Card;
 
