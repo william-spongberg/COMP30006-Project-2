@@ -2,6 +2,7 @@ package game._scorer._scoringCases;
 
 import ch.aplu.jcardgame.Card;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ScoringCase {
@@ -11,7 +12,11 @@ public abstract class ScoringCase {
      */
     public static List<ScoringCase> getScoringCases()
     {
-        return null;
+        List<ScoringCase> scoringCases = new ArrayList<>();
+        scoringCases.add(new Case1());
+        scoringCases.add(new Case2());
+        scoringCases.add(new Case3());
+        return scoringCases;
     }
 
     /**
