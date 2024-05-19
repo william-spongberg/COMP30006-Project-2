@@ -1,6 +1,7 @@
 package game._scorer._summingOptions;
 
 import ch.aplu.jcardgame.Card;
+import game._scorer.CardEvaluator;
 
 import java.util.List;
 
@@ -14,6 +15,23 @@ public class Option3 extends SummingOption {
     @Override
     public boolean containsThirteen(List<Card> privateCards, List<Card> publicCards)
     {
+        // assumes there are 2 private cards and 2 public cards
+        for (int privateCard1Value: CardEvaluator.getSumValues(privateCards.get(FIRST_CARD)))
+        {
+            for (int privateCard2Value: CardEvaluator.getSumValues(privateCards.get(SECOND_CARD)))
+            {
+                for (int publicCard1Value: CardEvaluator.getSumValues(publicCards.get(FIRST_CARD)))
+                {
+                    for (int publicCard2Value: CardEvaluator.getSumValues(publicCards.get(SECOND_CARD)))
+                    {
+                        if (privateCard1Value + privateCard2Value + publicCard1Value + publicCard2Value == THIRTEEN)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -26,6 +44,13 @@ public class Option3 extends SummingOption {
     @Override
     public int case3Score(List<Card> privateCards, List<Card> publicCards)
     {
-        return 0;
+        if (!containsThirteen(privateCards, publicCards))
+        {
+            return NOT_THIRTEEN;
+        }
+        else
+        {
+            return CardEvaluator.getCardScore(privateCards.get(FIRST_CARD), false) + CardEvaluator.getCardScore(privateCards.get(SECOND_CARD), false) + CardEvaluator.getCardScore(publicCards.get(FIRST_CARD), true) + CardEvaluator.getCardScore(publicCards.get(SECOND_CARD), true);
+        }
     }
 }
