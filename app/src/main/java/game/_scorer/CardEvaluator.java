@@ -1,8 +1,11 @@
 package game._scorer;
 
 import ch.aplu.jcardgame.Card;
+import game._card.Rank;
+import game._card.Suit;
 
 public class CardEvaluator {
+    private static final int PUBLIC_MULTIPLIER = 2;
     /**
      * finds the score a card contributes to scoring cases 2 and 3
      * @param card the card to be scored
@@ -11,7 +14,23 @@ public class CardEvaluator {
      */
     public static int getCardScore(Card card, boolean isPublic)
     {
-        return 0;
+        // find card value
+        Rank rank = (Rank)card.getRank();
+        int score = rank.getScoreCardValue();
+
+        // find multiplier
+        int multiplier;
+        if (isPublic)
+        {
+            multiplier = PUBLIC_MULTIPLIER;
+        }
+        else
+        {
+            Suit suit = (Suit)card.getSuit();
+            multiplier = suit.getMultiplicationFactor();
+        }
+
+        return score * multiplier;
     }
 
     /**
@@ -21,6 +40,7 @@ public class CardEvaluator {
      */
     public static int[] getSumValues(Card card)
     {
-        return null;
+        Rank rank = (Rank)card.getRank();
+        return rank.getPossibleSumValues();
     }
 }
