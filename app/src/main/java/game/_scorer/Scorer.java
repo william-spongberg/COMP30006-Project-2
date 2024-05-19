@@ -5,14 +5,19 @@ import game._player.Player;
 import game._scorer._scoringCases.ScoringCase;
 import game._scorer._summingOptions.SummingOption;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Scorer {
     private static final int CASE_1_THRESHOLD = 1;
     private static final int CASE_2_THRESHOLD = 0;
     private static final int CASE_3_THRESHOLD = 2;
-    private static List<SummingOption> summingOptions;
-    private static List<ScoringCase> scoringCases;
+    private static final int CASE_1_INDEX = 0;
+    private static final int CASE_2_INDEX = 1;
+    private static final int CASE_3_INDEX = 2;
+    private static final List<SummingOption> SUMMING_OPTIONS = SummingOption.getSummingOptions();
+    private static final List<ScoringCase> SCORING_CASES = ScoringCase.getScoringCases();
 
     /**
      * Returns the winner of a game of LuckyThirteen
@@ -22,7 +27,20 @@ public class Scorer {
      */
     public static List<Player> winner(Player[] players, List<Card> publicCards)
     {
-        return null;
+        // find the highest score
+        int[] scores = getScores(players, publicCards);
+        int maxScore = Arrays.stream(scores).max().getAsInt();
+
+        // build list of players with that score
+        List<Player> winners = new ArrayList<>();
+        for (int i = 0; i < players.length; i++)
+        {
+            if (scores[i] == maxScore)
+            {
+                winners.add(players[i]);
+            }
+        }
+        return winners;
     }
 
     /**
@@ -41,6 +59,7 @@ public class Scorer {
             if (hasThirteen(player, publicCards))
             {
                 numPlayersWithThirteen++;
+                // break early if we're past the case 3 threshold
                 if (numPlayersWithThirteen >= CASE_3_THRESHOLD)
                 {
                     break;
@@ -49,19 +68,11 @@ public class Scorer {
         }
 
         // find what scoring case will be used
-        switch (numPlayersWithThirteen)
-        {
-            case CASE_1_THRESHOLD:
-                // case 1
-                break;
-            case CASE_2_THRESHOLD:
-                // case 2
-                break;
-            default:
-                // case 3
-        }
-        //placeholder
-        return 0;
+        return switch (numPlayersWithThirteen) {
+            case CASE_1_THRESHOLD -> SCORING_CASES.get(CASE_1_INDEX).score(players[index].getCards(), publicCards);
+            case CASE_2_THRESHOLD -> SCORING_CASES.get(CASE_2_INDEX).score(players[index].getCards(), publicCards);
+            default -> SCORING_CASES.get(CASE_3_INDEX).score(players[index].getCards(), publicCards);
+        };
     }
 
     /**
@@ -73,7 +84,7 @@ public class Scorer {
     public static boolean hasThirteen(Player player, List<Card> publicCards)
     {
         List<Card> privateCards = player.getCards();
-        for (SummingOption summingOption: summingOptions)
+        for (SummingOption summingOption: SUMMING_OPTIONS)
         {
             if (summingOption.isThirteen(privateCards, publicCards))
             {
@@ -91,6 +102,11 @@ public class Scorer {
      */
     public static int[] getScores(Player[] players, List<Card> publicCards)
     {
-        return null;
+        int[] scores = new int[players.length];
+        for (int i = 0; i < players.length; i++)
+        {
+            scores[i] = score(players, i, publicCards);
+        }
+        return scores;
     }
 }
