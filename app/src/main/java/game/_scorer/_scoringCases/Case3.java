@@ -10,8 +10,9 @@ import java.util.List;
 public class Case3 extends ScoringCase {
     /**
      * finds the score using case 3
+     *
      * @param privateCards the player's private cards
-     * @param publicCards the game's public cards
+     * @param publicCards  the game's public cards
      * @return the number of points given the cards for case 3
      */
     @Override
@@ -19,8 +20,7 @@ public class Case3 extends ScoringCase {
         // find score using each summing option
         List<SummingOption> summingOptions = SummingOption.getSummingOptions();
         int[] scores = new int[summingOptions.size()];
-        for (int i = 0; i < summingOptions.size(); i++)
-        {
+        for (int i = 0; i < summingOptions.size(); i++) {
             scores[i] = summingOptions.get(i).case3Score(privateCards, publicCards);
         }
         // return highest

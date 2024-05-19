@@ -9,10 +9,12 @@ import java.util.List;
 public class Case2 extends ScoringCase {
     private static final int FIRST_CARD = 0;
     private static final int SECOND_CARD = 1;
+
     /**
      * finds the score using case 2
+     *
      * @param privateCards the player's private cards
-     * @param publicCards the game's public cards
+     * @param publicCards  the game's public cards
      * @return the number of points given the cards for case 2
      */
     @Override

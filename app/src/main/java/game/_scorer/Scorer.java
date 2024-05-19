@@ -21,22 +21,20 @@ public class Scorer {
 
     /**
      * Returns the winner of a game of LuckyThirteen
-     * @param players an array list of players
+     *
+     * @param players     an array list of players
      * @param publicCards the game's public cards
      * @return a list of players with the highest score; the winner or winners
      */
-    public static List<Player> winner(Player[] players, List<Card> publicCards)
-    {
+    public static List<Player> winner(Player[] players, List<Card> publicCards) {
         // find the highest score
         int[] scores = getScores(players, publicCards);
         int maxScore = Arrays.stream(scores).max().getAsInt();
 
         // build list of players with that score
         List<Player> winners = new ArrayList<>();
-        for (int i = 0; i < players.length; i++)
-        {
-            if (scores[i] == maxScore)
-            {
+        for (int i = 0; i < players.length; i++) {
+            if (scores[i] == maxScore) {
                 winners.add(players[i]);
             }
         }
@@ -45,23 +43,20 @@ public class Scorer {
 
     /**
      * returns the score of player at index in players
-     * @param players an array of players
-     * @param index the index of the player to return the score of
+     *
+     * @param players     an array of players
+     * @param index       the index of the player to return the score of
      * @param publicCards the game's public cards
      * @return the score of the player at index
      */
-    public static int score(Player[] players, int index, List<Card> publicCards)
-    {
+    public static int score(Player[] players, int index, List<Card> publicCards) {
         // find how many players have thirteen
         int numPlayersWithThirteen = 0;
-        for (Player player: players)
-        {
-            if (hasThirteen(player, publicCards))
-            {
+        for (Player player : players) {
+            if (hasThirteen(player, publicCards)) {
                 numPlayersWithThirteen++;
                 // break early if we're past the case 3 threshold
-                if (numPlayersWithThirteen >= CASE_3_THRESHOLD)
-                {
+                if (numPlayersWithThirteen >= CASE_3_THRESHOLD) {
                     break;
                 }
             }
@@ -77,17 +72,15 @@ public class Scorer {
 
     /**
      * finds whether a player can make thirteen with their cards
-     * @param player the player in question
+     *
+     * @param player      the player in question
      * @param publicCards the game's public cards
      * @return true if player has a combination of cards that sum to thirteen, false otherwise
      */
-    public static boolean hasThirteen(Player player, List<Card> publicCards)
-    {
+    public static boolean hasThirteen(Player player, List<Card> publicCards) {
         List<Card> privateCards = player.getCards();
-        for (SummingOption summingOption: SUMMING_OPTIONS)
-        {
-            if (summingOption.containsThirteen(privateCards, publicCards))
-            {
+        for (SummingOption summingOption : SUMMING_OPTIONS) {
+            if (summingOption.containsThirteen(privateCards, publicCards)) {
                 return true;
             }
         }
@@ -96,15 +89,14 @@ public class Scorer {
 
     /**
      * gets the score of each player
-     * @param players an array containing each player
+     *
+     * @param players     an array containing each player
      * @param publicCards the game's public cards
      * @return a list of integers representing the players' scores int the same order as players
      */
-    public static int[] getScores(Player[] players, List<Card> publicCards)
-    {
+    public static int[] getScores(Player[] players, List<Card> publicCards) {
         int[] scores = new int[players.length];
-        for (int i = 0; i < players.length; i++)
-        {
+        for (int i = 0; i < players.length; i++) {
             scores[i] = score(players, i, publicCards);
         }
         return scores;
