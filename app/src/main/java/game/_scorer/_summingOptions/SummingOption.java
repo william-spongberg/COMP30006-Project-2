@@ -1,8 +1,8 @@
 package game._scorer._summingOptions;
 
 import ch.aplu.jcardgame.Card;
-import game._scorer.Scorer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SummingOption {
@@ -12,7 +12,11 @@ public abstract class SummingOption {
      */
     public static List<SummingOption> getSummingOptions()
     {
-        return null;
+        List<SummingOption> summingOptions = new ArrayList<>();
+        summingOptions.add(new Option1());
+        summingOptions.add(new Option2());
+        summingOptions.add(new Option3());
+        return summingOptions;
     }
 
     /**
