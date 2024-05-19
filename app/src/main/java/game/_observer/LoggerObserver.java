@@ -27,22 +27,26 @@ public class LoggerObserver implements Observer {
             case START_ROUND:
                 int roundNumber = stateData.getRoundNumber();
                 logger.addRoundInfoToLog(roundNumber);
+                break;
 
             case END_TURN:
                 int player = stateData.getPlayer();
                 List<Card> cards = stateData.getCards();
                 logger.addCardPlayedToLog(player, cards);
+                break;
 
             case END_ROUND:
                 players = stateData.getPlayers();
                 publicCards = stateData.getPublicCards();
                 logger.addEndOfRoundToLog(players, publicCards);
+                break;
 
             case END_GAME:
                 List<Integer> winners = stateData.getWinners();
                 players = stateData.getPlayers();
                 publicCards = stateData.getPublicCards();
                 logger.addEndOfGameToLog(winners, players, publicCards);
+                break;
 
 
 
