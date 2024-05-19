@@ -5,6 +5,7 @@ import game._scorer.CardEvaluator;
 
 import java.util.List;
 
+// Option 3: 2 private and 2 public cards
 public class Option3 extends SummingOption {
     /**
      * finds if a player can make thirteen using option 3
