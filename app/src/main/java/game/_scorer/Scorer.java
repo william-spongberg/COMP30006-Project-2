@@ -6,6 +6,11 @@ import game._player.Player;
 import java.util.List;
 
 public class Scorer {
+    private static final int CASE_1_THRESHOLD = 1;
+    private static final int CASE_2_THRESHOLD = 0;
+    private static final int CASE_3_THRESHOLD = 2;
+    private static final int CASE_1_WIN_SCORE = 100;
+    private static final int CASE_1_LOSS_SCORE = 0;
     private static List<SummingOption> summingOptions;
 
     /**
@@ -28,7 +33,45 @@ public class Scorer {
      */
     public static int score(Player[] players, int index, List<Card> publicCards)
     {
-        return 0;
+        // find how many players have thirteen
+        int numPlayersWithThirteen = 0;
+        for (Player player: players)
+        {
+            if (hasThirteen(player, publicCards))
+            {
+                numPlayersWithThirteen++;
+                if (numPlayersWithThirteen >= CASE_3_THRESHOLD)
+                {
+                    break;
+                }
+            }
+        }
+
+        // find what scoring case will be used
+        switch (numPlayersWithThirteen)
+        {
+            case CASE_1_THRESHOLD:
+                // case 1
+                if (hasThirteen(players[index], publicCards))
+                {
+                    return CASE_1_WIN_SCORE;
+                }
+                else
+                {
+                    return CASE_1_LOSS_SCORE;
+                }
+                break;
+            case CASE_2_THRESHOLD:
+                // case 2
+                int score = 0;
+                for (Card card: players[index].getCards())
+                {
+
+                }
+                break;
+            default:
+                // case 3
+        }
     }
 
     /**
@@ -39,6 +82,14 @@ public class Scorer {
      */
     public static boolean hasThirteen(Player player, List<Card> publicCards)
     {
+        List<Card> privateCards = player.getCards();
+        for (SummingOption summingOption: summingOptions)
+        {
+            if (summingOption.isThirteen(privateCards, publicCards))
+            {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -48,6 +99,6 @@ public class Scorer {
      */
     public static void addSummingOption(SummingOption summingOption)
     {
-        return;
+        summingOptions.add(summingOption);
     }
 }
