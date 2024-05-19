@@ -11,7 +11,6 @@ import game.Dealer;
 import game._card.Rank;
 import game._card.Suit;
 import game._observer.LoggerObserver;
-import game._observer.ScorerObserver;
 import game._player.Player;
 import game._player.PlayerFactory;
 import game._player._controllers.Human;
@@ -74,9 +73,6 @@ public class LuckyThirdteen extends CardGame {
     private int[] autoIndexHands = new int[nbPlayers];
     private Hand[] hands;
 
-    //private StringBuilder logResult = new StringBuilder();
-
-
     // classes
     Dealer dealer;
     Card selected;
@@ -89,7 +85,6 @@ public class LuckyThirdteen extends CardGame {
     // state initialisation (initialised in initgame)
     private StateContext state = new StateContext();
     private LoggerObserver loggerObserver = new LoggerObserver();
-    private ScorerObserver scorerObserver = new ScorerObserver();
 
     private StateData stateData;
 
@@ -180,9 +175,8 @@ public class LuckyThirdteen extends CardGame {
 
         System.out.println("initialising game");
 
-        // ADDED - SETUP OF OBSERVERS
+        // ADDED - SETUP OF OBSERVER
         state.addObservers(loggerObserver);
-        state.addObservers(scorerObserver);
 
         // read properties file
         PropertiesReader pReader = new PropertiesReader(properties);
