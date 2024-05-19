@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SummingOption {
+    // constants used by concrete SummingOption classes
+    protected static final int THIRTEEN = 13;
+    protected static final int FIRST_CARD = 0;
+    protected static final int SECOND_CARD = 1;
+    protected static final int NOT_THIRTEEN = 0;
     /**
      * generates the summingOption objects
      * @return a List containing each summingOption
