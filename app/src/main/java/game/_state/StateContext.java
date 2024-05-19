@@ -24,25 +24,17 @@ public class StateContext {
     public void addObservers(Observer observer) {
         observers.add(observer);
     }
-    public States getCurrentState() {
-        return currentState;
-    }
+
     public void setCurrentState(States currentState, StateData stateData) {
         this.currentState = currentState;
         this.stateData = stateData;
         notifyObservers();
     }
 
-    // call this when we update state and we need players.
-    // TODO. This sucks.
-     public void updatePlayers(Player[] newPlayers) {
-        this.players = newPlayers;
-     }
-
     // call this to run the onStateupdate of all observers.
     private void notifyObservers() {
         for (Observer observer : observers) {
-            observer.onStateUpdate(currentState, stateData, players);
+            observer.onStateUpdate(currentState, stateData);
         }
     }
 

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class ScorerObserver implements Observer{
 
-    public void onStateUpdate(States state, StateData stateData, Player[] newPlayers){
+    public void onStateUpdate(States state, StateData stateData){
         // contact ScoreA
 
     }

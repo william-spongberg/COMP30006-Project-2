@@ -6,6 +6,6 @@ import game._state.States;
 
 public interface Observer {
 
-    public void onStateUpdate(States state, StateData stateData, Player[] newPlayers);
+    public void onStateUpdate(States state, StateData stateData);
 
 }

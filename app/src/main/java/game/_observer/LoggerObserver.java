@@ -17,7 +17,7 @@ public class LoggerObserver implements Observer {
     private Player[] players;
     private List<Card> publicCards;
 
-    public void onStateUpdate(States state, StateData stateData, Player[] newPlayers) {
+    public void onStateUpdate(States state, StateData stateData) {
 
         // each observer keeps an instance of players
         // contact Logger
