@@ -89,7 +89,6 @@ public class LuckyThirdteen extends CardGame {
     private LoggerObserver loggerObserver = new LoggerObserver();
     private ScorerObserver scorerObserver = new ScorerObserver();
 
-    private StateChange stateToChangeTo;
     private StateData stateData;
 
 

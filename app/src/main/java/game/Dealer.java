@@ -1,15 +1,11 @@
 package game;
-import game._card.CardFactory;
-import game._card.CardUtil;
 import game._card.Rank;
 import game._card.Suit;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Deck;
 import ch.aplu.jcardgame.Hand;
-import ch.aplu.jgamegrid.Location;
 
-import java.util.List;
 import java.util.Random;
 
 public class Dealer {

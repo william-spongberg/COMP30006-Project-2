@@ -2,7 +2,6 @@ package game._observer;
 
 import ch.aplu.jcardgame.Card;
 import game._player.Player;
-import game._state.StateChange;
 import game._state.StateData;
 import game._state.States;
 
