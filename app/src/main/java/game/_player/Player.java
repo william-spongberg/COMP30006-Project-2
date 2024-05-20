@@ -19,7 +19,7 @@ public class Player {
     private Hand hand;
     private List<Card> sharedCards;
     private final PlayerController controller;
-    private List<List<Card>> autoMovements;
+    private final List<List<Card>> autoMovements;
     private int autoIndex = 0;
 
     public boolean isMouseControlled() {
@@ -136,10 +136,10 @@ public class Player {
     }
 
     public Card drawCard() {
-        if (!autoMovements.get(0).isEmpty()) {
+        if (!autoMovements.get(autoIndex).isEmpty()) {
             if (autoMovements.get(autoIndex).size() == 2) {
                 System.out.println("auto moves: " + autoMovements);
-                return autoMovements.get(autoIndex).remove(0);
+                return autoMovements.get(autoIndex).get(0);
             }
         }
 
@@ -154,10 +154,10 @@ public class Player {
         // if game is set to auto
         if (isAuto && !finishedAuto) {
             System.out.println("auto moves: " + autoMovements);
-            if (!autoMovements.get(0).isEmpty()) {
-                if (autoMovements.get(autoIndex).size() == 1) {
+            if (!autoMovements.get(autoIndex).isEmpty()) {
+                if (autoMovements.get(autoIndex).size() == 2) {
                     autoIndex++;
-                    return autoMovements.get(autoIndex - 1).remove(0);
+                    return autoMovements.get(autoIndex - 1).get(1);
                 }
             }
         }
