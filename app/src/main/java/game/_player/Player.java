@@ -1,6 +1,7 @@
 package game._player;
 
 import game.Dealer;
+import game._player._controllers.Clever;
 import game._player._controllers.PlayerController;
 
 import ch.aplu.jcardgame.Card;
@@ -39,6 +40,9 @@ public class Player {
         sharedCards = initialSharedCards;
         sortHand();
         convertListToHand(initialCards);
+        if (this.controller instanceof Clever) {
+            ((Clever) this.controller).sharedCards = sharedCards;
+        }
     }
 
 
