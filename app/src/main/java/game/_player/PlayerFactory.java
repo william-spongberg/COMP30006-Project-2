@@ -38,7 +38,7 @@ public class PlayerFactory {
             }
             case "random" -> controller = new Random();
             case "basic" -> controller = new Basic();
-            case "clever" -> controller = new Clever();
+            case "clever" -> controller = new Clever(sharedCards);
 
             // should this be throwing an error instead?
             default -> {

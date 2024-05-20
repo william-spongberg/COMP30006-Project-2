@@ -16,6 +16,10 @@ public class Clever implements PlayerController {
 
     public List<Card> sharedCards;
 
+    public Clever(List<Card> sharedCards) {
+        this.sharedCards = sharedCards;
+    }
+
     @Override
     public Card discardCard(Hand hand) {
 

@@ -40,9 +40,6 @@ public class Player {
         sharedCards = initialSharedCards;
         sortHand();
         convertListToHand(initialCards);
-        if (this.controller instanceof Clever) {
-            ((Clever) this.controller).sharedCards = sharedCards;
-        }
     }
 
 
