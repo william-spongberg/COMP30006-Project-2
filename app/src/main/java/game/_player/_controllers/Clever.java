@@ -28,26 +28,8 @@ public class Clever implements PlayerController {
     public Card discardCard(Hand hand) {
         List<Card> cardsPlayed = DiscardPile.getDiscardCards();
         Integer indexToRemove = cleverCardToRemove(cardsPlayed, hand);
-
-        if (indexToRemove != null && indexToRemove >= 0 && indexToRemove < hand.getCardList().size()) {
-            return hand.getCardList().get(indexToRemove);
-        }
-
-        // Fallback: if cleverCardToRemove fails, return the first card as a default
-        return hand.getCardList().isEmpty() ? null : hand.getCardList().get(0);
+        return hand.getCardList().get(indexToRemove);
     }
-
-
-    // THINGS TO NOTE:
-        // EVERY PLAYER CAN SEE THE DISCARDED CARDs
-        // so we know what cards aren't around anymore.
-        // this can be used as an optimisation
-        // we know how many cards are left
-        // we know what cards we have (3) and what the two public cards are
-        // the goal: cleverly decide which card we should remove
-        // only four rounds
-    // return index of card to discard
-
 
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
         List<Card> cardsInHand = new ArrayList<>(hand.getCardList());
@@ -55,18 +37,39 @@ public class Clever implements PlayerController {
         double bestAverageScore = 0;
 
         for (int i = 0; i < cardsInHand.size(); i++) {
+            List<Card> tempHand = new ArrayList<>(cardsInHand);
+            tempHand.remove(i);
+            // Check if there is a combination adding up to 13
+            if (hasThirteen(cardsInHand, sharedCards)) {
+                // System.out.println("We have Thirteen!");
+                // if there's already a combination adding up to 13, find the card that doesn't contribute to it
+                for (int j = 0; j < cardsInHand.size(); j++) {
+                    List<Card> newHand = new ArrayList<>(cardsInHand);
+                    newHand.remove(j);
+
+                    if (!hasThirteen(newHand, sharedCards)) {
+                        // if removing this card breaks the 13 combination, discard it
+                        // System.out.println("Found a dud! removing...");
+                        return j;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < cardsInHand.size(); i++) {
             List<Card> newHand = new ArrayList<>(cardsInHand);
             // this is suspicious, lol
             Card removedCard = newHand.remove(i);
 
             double averageScore = maximiseScore(newHand, cardsPlayed);
-            System.out.println("Removed card: " + removedCard); // Debug: Print the removed card
-            System.out.println("Average score after removing " + removedCard + ": " + averageScore); // Debug: Print average score
+            // System.out.println("Removed card: " + removedCard); // Debug: Print the removed card
+            // System.out.println("Average score after removing " + removedCard + ": " + averageScore); // Debug: Print average score
             if (averageScore > bestAverageScore) {
                 bestAverageScore = averageScore;
                 bestCardIndex = i;
             }
         }
+
 
         return bestCardIndex;
     }
@@ -83,8 +86,8 @@ public class Clever implements PlayerController {
 
         }
         else {
-            // if we dont have 13, try a case1.
-            score = scoringCases.get(0).score(cardsInHand, sharedCards);
+            // if we dont have 13, try a case2.
+            score = scoringCases.get(1).score(cardsInHand, sharedCards);
 
         }
 
