@@ -136,7 +136,7 @@ public class Player {
     }
 
     public Card drawCard() {
-        if (!autoMovements.get(autoIndex).isEmpty()) {
+        if (isAuto && !autoMovements.get(autoIndex).isEmpty()) {
             if (autoMovements.get(autoIndex).size() == 2) {
                 System.out.println("auto moves: " + autoMovements);
                 return autoMovements.get(autoIndex).get(0);
