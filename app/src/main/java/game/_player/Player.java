@@ -150,7 +150,7 @@ public class Player {
         if (isAuto) {
             if (autoMovements.get(autoIndex).size() == 2) {
                 System.out.println("auto moves: " + autoMovements);
-                return autoMovements.get(autoIndex).remove(0);
+                return autoMovements.get(autoIndex).get(0);
             }
         }
 
@@ -168,7 +168,7 @@ public class Player {
             System.out.println("auto moves: " + autoMovements);
             if (autoMovements.get(autoIndex).size() == 2) {
                 autoIndex++;
-                return autoMovements.get(autoIndex - 1).remove(1);
+                return autoMovements.get(autoIndex - 1).get(1);
             }
         }
 
