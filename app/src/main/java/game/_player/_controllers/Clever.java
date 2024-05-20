@@ -10,11 +10,13 @@ import game._card.Suit;
 import java.util.ArrayList;
 import java.util.List;
 
+import static game._scorer.CardEvaluator.getCardScore;
 import static game._scorer.Scorer.hasThirteen;
+import static game._scorer._summingOptions.SummingOption.isThirteen;
 
 public class Clever implements PlayerController {
 
-    public List<Card> sharedCards;
+    private List<Card> sharedCards;
 
     public Clever(List<Card> sharedCards) {
         this.sharedCards = sharedCards;
@@ -52,14 +54,14 @@ public class Clever implements PlayerController {
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
         ArrayList<Card> cardsInHand = hand.getCardList();
         int bestCardIndex = -1;
-        int bestScore = Integer.MIN_VALUE;
+        int bestScore = 0;
 
         for (int i = 0; i < cardsInHand.size(); i++) {
             Card cardToDiscard = cardsInHand.get(i);
             ArrayList<Card> newHand = cardsInHand;
             newHand.remove(cardToDiscard);
 
-            int score = minimax(newHand, cardsPlayed, 0, true);
+            int score = maximiseScore(newHand, cardsPlayed, 0, true);
             if (score > bestScore) {
                 bestScore = score;
                 bestCardIndex = i;
@@ -71,24 +73,51 @@ public class Clever implements PlayerController {
 
     // we need to evaluate hands to see if they have 13 in them
     // if they do, we optimise for score. (i.e, look for higher scoring 13s)
-    // TODO: FIGURE OUT HOW TO DO THIS BETTER, RIGHT NOW IT JUST RETURNS TRUE OR FALSE
-    private int evaluateHand(List<Card> cardsInHand) {
+    // TODO: this doesn't account for the case where 2 CARDS IN PUBLIC and 2 CARDS IN PRIVATE make a thirteen! which is the best case!
+    private int evaluateHand(List<Card> cardsInHand, List<Card> sharedCards) {
         int score = 0;
-        boolean thirteenCombination = hasThirteen(cardsInHand, sharedCards);
-        if (thirteenCombination) {
-            //for (Card card : thirteenCombination) {
-                //score += checkScore(card);
-            //}
-            score = 100;
+        List<Card[]> thirteensInHand = new ArrayList<>();
+        for (Card card1: cardsInHand) {
+            for (Card card2: sharedCards) {
+                if (isThirteen(card1, card2)) {
+                    Card[] thirteenCombo = {card1, card2};
+                    thirteensInHand.add(thirteenCombo);
+                }
+            }
         }
-        return score;
+        ArrayList<Integer> scores = new ArrayList<>();
+
+        // TODO: THIS TREATS SCORE AS ALWAYS PRIVATE CARD IN HAND!
+        if (!thirteensInHand.isEmpty()) {
+            for (Card[] thirteenMatch : thirteensInHand) {
+                int scoreVal = getCardScore(thirteenMatch[0], false) + getCardScore(thirteenMatch[1], false);
+                scores.add(scoreVal);
+            }
+        }
+        // if no thirteens, choose highest scoring card
+        else {
+            for (Card card: cardsInHand) {
+                scores.add(getCardScore(card, false));
+            }
+
+        }
+
+        Integer bestScore = 0;
+        // now get the top scoring card.
+        for (Integer tempScore: scores) {
+            if (tempScore > bestScore) {
+                bestScore = tempScore;
+            }
+        }
+
+        return bestScore;
     }
 
 
-    private int minimax(ArrayList<Card> hand, List<Card> cardsPlayed, int depth, boolean isMaximizingPlayer) {
+    private int maximiseScore(ArrayList<Card> hand, List<Card> cardsPlayed, int depth, boolean isMaximizingPlayer) {
         // Base case: stop recursion at depth 4 (end of the game)
         if (depth == 4) {
-            return evaluateHand(hand);
+            return evaluateHand(hand, sharedCards);
         }
 
         if (isMaximizingPlayer) {
@@ -99,7 +128,7 @@ public class Clever implements PlayerController {
 
                 for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, hand)) {
                     newHand.add(possibleCard);
-                    int eval = minimax(newHand, cardsPlayed, depth + 1, false);
+                    int eval = maximiseScore(newHand, cardsPlayed, depth + 1, false);
                     maxEval = Math.max(maxEval, eval);
                     newHand.remove(possibleCard);
                 }
@@ -127,6 +156,4 @@ public class Clever implements PlayerController {
         return deckAltered;
     }
 
-
-    // what other helper functions do we need?
 }
