@@ -149,7 +149,7 @@ public class Player {
         return null;
     }
     public Card discardCard(){
-        boolean finishedAuto = autoMovements.get(0).isEmpty();
+        boolean finishedAuto = autoMovements.get(autoIndex).isEmpty();
 
         // if game is set to auto
         if (isAuto && !finishedAuto) {

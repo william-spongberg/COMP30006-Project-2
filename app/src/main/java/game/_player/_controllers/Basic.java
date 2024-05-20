@@ -10,7 +10,6 @@ import static game._scorer.CardEvaluator.getCardScore;
 
 public class Basic implements PlayerController {
 
-    Card smallestCard;
 
     @Override
     public Card discardCard(Hand hand) {

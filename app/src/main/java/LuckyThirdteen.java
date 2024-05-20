@@ -88,6 +88,12 @@ public class LuckyThirdteen extends CardGame {
 
     private StateData stateData;
 
+    // discarded cards (publically visible)
+    // TODO decide what to do with this. Its static, which i think is ok because its supposed to be generally visible
+    // but also kind of problem
+
+    public static List<Card> discardedCards;
+
 
     // --------------------------- CONSTRUCTOR ---------------------------
     public LuckyThirdteen(Properties properties) {
@@ -106,6 +112,9 @@ public class LuckyThirdteen extends CardGame {
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
         setStatusText("Initialising...");
 
+
+        // initialise logResult
+        logResult = new StringBuilder();
         // FIXME: create Score object here - or should it be inside the game? - No, score stuff is static
         initScores();
         initScore();
@@ -303,6 +312,9 @@ public class LuckyThirdteen extends CardGame {
                 discardCard = players[currPlayer].getCards().get(random.nextInt(players[currPlayer].getCards().size()));
             }
             System.out.println("Player " + currPlayer + " discarded " + discardCard);
+
+            // for visibility to clever
+            //discardedCards.add(discardCard);
 
             players[currPlayer].removeCard(discardCard);
             players[currPlayer].renderCards();
