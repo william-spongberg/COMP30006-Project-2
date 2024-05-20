@@ -24,21 +24,17 @@ public class Clever implements PlayerController {
 
     @Override
     public Card discardCard(Hand hand) {
-
-        // get all discardCards
         List<Card> cardsPlayed = DiscardPile.getDiscardCards();
+        Integer indexToRemove = cleverCardToRemove(cardsPlayed, hand);
 
-        switch (cleverCardToRemove(cardsPlayed, hand)) {
-            case 0:
-                return hand.getCardList().get(0);
-            case 1:
-                return hand.getCardList().get(1);
-            case 2:
-                return hand.getCardList().get(2);
-
+        if (indexToRemove != null && indexToRemove >= 0 && indexToRemove < hand.getCardList().size()) {
+            return hand.getCardList().get(indexToRemove);
         }
-        return null;
+
+        // Fallback: if cleverCardToRemove fails, return the first card as a default
+        return hand.getCardList().isEmpty() ? null : hand.getCardList().get(0);
     }
+
 
     // THINGS TO NOTE:
         // EVERY PLAYER CAN SEE THE DISCARDED CARDs
@@ -52,30 +48,30 @@ public class Clever implements PlayerController {
 
 
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
-        ArrayList<Card> cardsInHand = hand.getCardList();
-        int bestCardIndex = -1;
-        int bestScore = 0;
+        List<Card> cardsInHand = new ArrayList<>(hand.getCardList());
+        int worstCardIndex = 0; // just in case
+        double worstAverageScore = 0;
 
         for (int i = 0; i < cardsInHand.size(); i++) {
-            Card cardToDiscard = cardsInHand.get(i);
-            ArrayList<Card> newHand = cardsInHand;
-            newHand.remove(cardToDiscard);
+            List<Card> newHand = new ArrayList<>(cardsInHand);
+            // this is suspicious, lol
+            newHand.remove(i);
 
-            int score = maximiseScore(newHand, cardsPlayed, 0);
-            if (score > bestScore) {
-                bestScore = score;
-                bestCardIndex = i;
+            double averageScore = maximiseScore(newHand, cardsPlayed, 0);
+            if (averageScore > worstAverageScore) {
+                worstAverageScore = averageScore;
+                worstCardIndex = i;
             }
         }
 
-        return bestCardIndex;
+        return worstCardIndex;
     }
+
 
     // we need to evaluate hands to see if they have 13 in them
     // if they do, we optimise for score. (i.e, look for higher scoring 13s)
     // TODO: this doesn't account for the case where 2 CARDS IN PUBLIC and 2 CARDS IN PRIVATE make a thirteen! which is the best case!
     private int evaluateHand(List<Card> cardsInHand, List<Card> sharedCards) {
-        int score = 0;
         List<Card[]> thirteensInHand = new ArrayList<>();
         for (Card card1: cardsInHand) {
             for (Card card2: sharedCards) {
@@ -99,7 +95,6 @@ public class Clever implements PlayerController {
             for (Card card: cardsInHand) {
                 scores.add(getCardScore(card, false));
             }
-
         }
 
         Integer bestScore = 0;
@@ -113,27 +108,31 @@ public class Clever implements PlayerController {
         return bestScore;
     }
 
-
-    private int maximiseScore(ArrayList<Card> hand, List<Card> cardsPlayed, int depth) {
+    private double maximiseScore(List<Card> hand, List<Card> cardsPlayed, int depth) {
         // Base case: stop recursion at depth 4 (end of the game)
         if (depth == 4) {
             return evaluateHand(hand, sharedCards);
         }
 
-        int maxEval = 0;
-        for (Card card : hand) {
-            ArrayList<Card> newHand = hand;
+        double totalEval = 0;
+        int evaluationCount = 0;
+
+        for (Card card : new ArrayList<>(hand)) {
+            ArrayList<Card> newHand = new ArrayList<>(hand);
             newHand.remove(card);
 
-            for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, hand)) {
+            for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, newHand)) {
                 newHand.add(possibleCard);
-                int eval = maximiseScore(newHand, cardsPlayed, depth + 1, false);
-                maxEval = Math.max(maxEval, eval);
+                totalEval += maximiseScore(newHand, cardsPlayed, depth + 1);
                 newHand.remove(possibleCard);
+                evaluationCount++;
             }
         }
-        return maxEval;
+
+        return totalEval / evaluationCount;
     }
+
+
 
     // hypothesises what the deck looks like based on what cards are visible to the bot
     private ArrayList<Card> getPossibleCardsToDraw(List<Card> cardsPlayed, List<Card> sharedCards, ArrayList<Card> hand) {
