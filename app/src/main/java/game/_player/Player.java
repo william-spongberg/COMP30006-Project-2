@@ -21,6 +21,7 @@ public class Player {
     private final PlayerController controller;
     private final List<List<Card>> autoMovements;
     private int autoIndex = 0;
+    boolean finishedAuto = false;
 
     public boolean isMouseControlled() {
         return isMouseControlled;
@@ -57,6 +58,10 @@ public class Player {
         return isAuto;
     }
 
+    public boolean finishedAuto() {
+        return finishedAuto;
+    }
+
     public List<Card> getCards() {
         return cards;
     }
@@ -77,6 +82,10 @@ public class Player {
 
     public void setIsAuto(boolean isAuto) {
         this.isAuto = isAuto;
+    }
+
+    public void setFinishedAuto(boolean finishedAuto) {
+        this.finishedAuto = finishedAuto;
     }
 
     public void setCards(List<Card> cards) {
@@ -107,12 +116,6 @@ public class Player {
         hand.draw();
     }
 
-    // public void startRendering() {
-    //     hand.setDo
-    // }
-
-
-
     public void setCardListener(CardListener cardListener) {
         hand.addCardListener(cardListener);
     }
@@ -135,11 +138,19 @@ public class Player {
         this.sharedCards = sharedCards;
     }
 
+    public void checkFinishedAuto(int index) {
+        if (!autoMovements.isEmpty()) {
+            finishedAuto = autoMovements.get(index).isEmpty();
+        }
+    }
+
     public Card drawCard() {
-        if (isAuto && !autoMovements.get(autoIndex).isEmpty()) {
+        checkFinishedAuto(autoIndex);
+
+        if (isAuto) {
             if (autoMovements.get(autoIndex).size() == 2) {
                 System.out.println("auto moves: " + autoMovements);
-                return autoMovements.get(autoIndex).get(0);
+                return autoMovements.get(autoIndex).remove(0);
             }
         }
 
@@ -149,21 +160,15 @@ public class Player {
         return null;
     }
     public Card discardCard(){
-        boolean finishedAuto = false;
-
-        if (!autoMovements.isEmpty()) {
-            finishedAuto = autoMovements.get(autoIndex).isEmpty();
-        }
+        checkFinishedAuto(autoIndex);
         
 
         // if game is set to auto
-        if (isAuto && !finishedAuto) {
+        if (isAuto) {
             System.out.println("auto moves: " + autoMovements);
-            if (!autoMovements.get(autoIndex).isEmpty()) {
-                if (autoMovements.get(autoIndex).size() == 2) {
-                    autoIndex++;
-                    return autoMovements.get(autoIndex - 1).get(1);
-                }
+            if (autoMovements.get(autoIndex).size() == 2) {
+                autoIndex++;
+                return autoMovements.get(autoIndex - 1).remove(1);
             }
         }
 
