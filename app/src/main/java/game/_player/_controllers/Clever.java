@@ -2,18 +2,18 @@ package game._player._controllers;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import game.DiscardPile;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Clever implements PlayerController {
 
     @Override
     public Card discardCard(Hand hand) {
 
-        //TODO: THIS IS A PLACERHOLDER! REPLACE WITH APPROPRIATE GETTER ONCE IMPLEMENTED
-        // we need to get the count of how many cards are left in the pack. We can use this for probability purposes.
-        // Hand packRemaining = hand;
-        ArrayList<Card> cardsPlayed = new ArrayList<>();
+        // get all discardCards
+        List<Card> cardsPlayed = DiscardPile.getDiscardCards();
 
         switch (cleverCardToRemove(cardsPlayed, hand)) {
             case 0:
@@ -36,8 +36,8 @@ public class Clever implements PlayerController {
         // the goal: cleverly decide which card we should remove
         // only four rounds
     // return index of card to discard
-    private Integer cleverCardToRemove(ArrayList<Card> cardsPlayed, Hand hand) {
-        ArrayList<Card> cardsInHand = hand.getCardList();
+    private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
+        List<Card> cardsInHand = hand.getCardList();
         // worth noting, all face cards have a higher chance of making thirteen. Each face card can be 10, 11, 12, or 13
         // additionally, ace can be 0 or 1
 

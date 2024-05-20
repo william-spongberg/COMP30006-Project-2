@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import game.Dealer;
+import game.DiscardPile;
 import game._card.Rank;
 import game._card.Suit;
 import game._observer.LoggerObserver;
@@ -88,11 +89,7 @@ public class LuckyThirdteen extends CardGame {
 
     private StateData stateData;
 
-    // discarded cards (publically visible)
-    // TODO decide what to do with this. Its static, which i think is ok because its supposed to be generally visible
-    // but also kind of problem
 
-    public static List<Card> discardedCards;
 
 
     // --------------------------- CONSTRUCTOR ---------------------------
@@ -113,7 +110,8 @@ public class LuckyThirdteen extends CardGame {
         setStatusText("Initialising...");
 
 
-        // initialise logResult
+        // initialise logResult and discardPile
+        DiscardPile.discardCards.clear();
         logResult = new StringBuilder();
         // FIXME: create Score object here - or should it be inside the game? - No, score stuff is static
         initScores();
@@ -313,8 +311,8 @@ public class LuckyThirdteen extends CardGame {
             }
             System.out.println("Player " + currPlayer + " discarded " + discardCard);
 
-            // for visibility to clever
-            //discardedCards.add(discardCard);
+            // for visibility to clever, add to discardPile.
+            DiscardPile.addDiscardCards(discardCard);
 
             players[currPlayer].removeCard(discardCard);
             players[currPlayer].renderCards();
