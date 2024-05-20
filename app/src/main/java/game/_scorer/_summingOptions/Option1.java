@@ -20,6 +20,7 @@ public class Option1 extends SummingOption {
         return isThirteen(privateCards.get(FIRST_CARD), privateCards.get(SECOND_CARD));
     }
 
+
     /**
      * finds the score of the given cards if scoring case 3 is used
      *

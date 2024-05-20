@@ -6,6 +6,8 @@ import ch.aplu.jcardgame.Hand;
 import game.DiscardPile;
 import game._card.Rank;
 import game._card.Suit;
+import game._scorer._scoringCases.ScoringCase;
+import game._scorer._summingOptions.SummingOption;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,66 +51,47 @@ public class Clever implements PlayerController {
 
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
         List<Card> cardsInHand = new ArrayList<>(hand.getCardList());
-        int worstCardIndex = 0; // just in case
-        double worstAverageScore = 0;
+        int bestCardIndex = 0; // just in case
+        double bestAverageScore = 0;
 
         for (int i = 0; i < cardsInHand.size(); i++) {
             List<Card> newHand = new ArrayList<>(cardsInHand);
             // this is suspicious, lol
-            newHand.remove(i);
+            Card removedCard = newHand.remove(i);
 
-            double averageScore = maximiseScore(newHand, cardsPlayed, 0);
-            if (averageScore > worstAverageScore) {
-                worstAverageScore = averageScore;
-                worstCardIndex = i;
+            double averageScore = maximiseScore(newHand, cardsPlayed);
+            System.out.println("Removed card: " + removedCard); // Debug: Print the removed card
+            System.out.println("Average score after removing " + removedCard + ": " + averageScore); // Debug: Print average score
+            if (averageScore > bestAverageScore) {
+                bestAverageScore = averageScore;
+                bestCardIndex = i;
             }
         }
 
-        return worstCardIndex;
+        return bestCardIndex;
     }
 
-
-    // we need to evaluate hands to see if they have 13 in them
-    // if they do, we optimise for score. (i.e, look for higher scoring 13s)
-    // TODO: this doesn't account for the case where 2 CARDS IN PUBLIC and 2 CARDS IN PRIVATE make a thirteen! which is the best case!
     private int evaluateHand(List<Card> cardsInHand, List<Card> sharedCards) {
-        List<Card[]> thirteensInHand = new ArrayList<>();
-        for (Card card1: cardsInHand) {
-            for (Card card2: sharedCards) {
-                if (isThirteen(card1, card2)) {
-                    Card[] thirteenCombo = {card1, card2};
-                    thirteensInHand.add(thirteenCombo);
-                }
-            }
-        }
-        ArrayList<Integer> scores = new ArrayList<>();
 
-        // TODO: THIS TREATS SCORE AS ALWAYS PRIVATE CARD IN HAND!
-        if (!thirteensInHand.isEmpty()) {
-            for (Card[] thirteenMatch : thirteensInHand) {
-                int scoreVal = getCardScore(thirteenMatch[0], false) + getCardScore(thirteenMatch[1], false);
-                scores.add(scoreVal);
-            }
+        int score;
+        List<ScoringCase> scoringCases = ScoringCase.getScoringCases();
+
+        if (hasThirteen(cardsInHand, sharedCards)) {
+            // always evaluate as a case3.
+            score = scoringCases.get(2).score(cardsInHand, sharedCards);
+            //score = 100;
+
         }
-        // if no thirteens, choose highest scoring card
         else {
-            for (Card card: cardsInHand) {
-                scores.add(getCardScore(card, false));
-            }
+            // if we dont have 13, try a case1.
+            score = scoringCases.get(0).score(cardsInHand, sharedCards);
+
         }
 
-        Integer bestScore = 0;
-        // now get the top scoring card.
-        for (Integer tempScore: scores) {
-            if (tempScore > bestScore) {
-                bestScore = tempScore;
-            }
-        }
-
-        return bestScore;
+        return score;
     }
 
-    private double maximiseScore(List<Card> hand, List<Card> cardsPlayed, int depth) {
+    private double maximiseScore(List<Card> hand, List<Card> cardsPlayed) {
         double totalEval = 0;
         int evaluationCount = 0;
 
