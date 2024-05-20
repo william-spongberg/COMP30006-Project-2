@@ -109,22 +109,17 @@ public class Clever implements PlayerController {
     }
 
     private double maximiseScore(List<Card> hand, List<Card> cardsPlayed, int depth) {
-        // Base case: stop recursion at depth 4 (end of the game)
-        if (depth == 4) {
-            return evaluateHand(hand, sharedCards);
-        }
-
         double totalEval = 0;
         int evaluationCount = 0;
 
-        for (Card card : new ArrayList<>(hand)) {
+        for (Card card : hand) {
             ArrayList<Card> newHand = new ArrayList<>(hand);
             newHand.remove(card);
 
             for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, newHand)) {
-                newHand.add(possibleCard);
-                totalEval += maximiseScore(newHand, cardsPlayed, depth + 1);
-                newHand.remove(possibleCard);
+                List<Card> tempHand = new ArrayList<>(newHand);
+                tempHand.add(possibleCard);
+                totalEval += evaluateHand(tempHand, sharedCards);
                 evaluationCount++;
             }
         }
