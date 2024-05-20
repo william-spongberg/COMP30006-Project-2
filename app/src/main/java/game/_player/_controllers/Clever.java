@@ -61,7 +61,7 @@ public class Clever implements PlayerController {
             ArrayList<Card> newHand = cardsInHand;
             newHand.remove(cardToDiscard);
 
-            int score = maximiseScore(newHand, cardsPlayed, 0, true);
+            int score = maximiseScore(newHand, cardsPlayed, 0);
             if (score > bestScore) {
                 bestScore = score;
                 bestCardIndex = i;
@@ -114,28 +114,25 @@ public class Clever implements PlayerController {
     }
 
 
-    private int maximiseScore(ArrayList<Card> hand, List<Card> cardsPlayed, int depth, boolean isMaximizingPlayer) {
+    private int maximiseScore(ArrayList<Card> hand, List<Card> cardsPlayed, int depth) {
         // Base case: stop recursion at depth 4 (end of the game)
         if (depth == 4) {
             return evaluateHand(hand, sharedCards);
         }
 
-        if (isMaximizingPlayer) {
-            int maxEval = 0;
-            for (Card card : hand) {
-                ArrayList<Card> newHand = hand;
-                newHand.remove(card);
+        int maxEval = 0;
+        for (Card card : hand) {
+            ArrayList<Card> newHand = hand;
+            newHand.remove(card);
 
-                for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, hand)) {
-                    newHand.add(possibleCard);
-                    int eval = maximiseScore(newHand, cardsPlayed, depth + 1, false);
-                    maxEval = Math.max(maxEval, eval);
-                    newHand.remove(possibleCard);
-                }
+            for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, hand)) {
+                newHand.add(possibleCard);
+                int eval = maximiseScore(newHand, cardsPlayed, depth + 1, false);
+                maxEval = Math.max(maxEval, eval);
+                newHand.remove(possibleCard);
             }
-            return maxEval;
         }
-        return 0;
+        return maxEval;
     }
 
     // hypothesises what the deck looks like based on what cards are visible to the bot
