@@ -90,6 +90,22 @@ public class Scorer {
     }
 
     /**
+     * finds if thirteen can be made with the given private and public cards
+     *
+     * @param privateCards the player's private cards
+     * @param publicCards  the game's public cards
+     * @return true if player has a combination of cards that sum to thirteen, false otherwise
+     */
+    public static boolean hasThirteen(List<Card> privateCards, List<Card> publicCards) {
+        for (SummingOption summingOption : SUMMING_OPTIONS) {
+            if (summingOption.containsThirteen(privateCards, publicCards)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * gets the score of each player
      *
      * @param players     an array containing each player
