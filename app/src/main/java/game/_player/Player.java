@@ -1,43 +1,26 @@
 package game._player;
 
+import ch.aplu.jcardgame.*;
 import game.Dealer;
-import game._player._controllers.Clever;
 import game._player._controllers.PlayerController;
-
-import ch.aplu.jcardgame.Card;
-import ch.aplu.jcardgame.CardGame;
-import ch.aplu.jcardgame.CardListener;
-import ch.aplu.jcardgame.Hand;
-import ch.aplu.jcardgame.HandLayout;
-import ch.aplu.jcardgame.TargetArea;
 
 import java.util.List;
 
 public class Player {
-    public static final String PLAYER_NAME = "player";
-    private boolean isAuto;
-    private List<Card> cards;
-    private Hand hand;
-    private List<Card> sharedCards;
+    private final boolean isAuto;
+    private final Hand hand;
     private final PlayerController controller;
     private final List<List<Card>> autoMovements;
-    private int autoIndex = 0;
     boolean finishedAuto = false;
+    private final List<Card> cards;
+    private int autoIndex = 0;
 
-    public boolean isMouseControlled() {
-        return isMouseControlled;
-    }
-
-    private final boolean isMouseControlled;
-
-    public Player(List<Card> initialCards, List<Card> initialSharedCards, boolean isAuto, List<List<Card>> autoMovements, PlayerController controller, boolean isMouseControlled) {
+    public Player(List<Card> initialCards, boolean isAuto, List<List<Card>> autoMovements, PlayerController controller) {
         this.controller = controller;
         this.isAuto = isAuto;
         this.autoMovements = autoMovements;
-        this.isMouseControlled = isMouseControlled;
         hand = new Hand(Dealer.DECK);
         cards = initialCards;
-        sharedCards = initialSharedCards;
         sortHand();
         convertListToHand(initialCards);
     }
@@ -53,49 +36,11 @@ public class Player {
         }
     }
 
-    /* getters */
-
-    public boolean isAuto() {
-        return isAuto;
-    }
-
-    public boolean finishedAuto() {
-        return finishedAuto;
-    }
-
     public List<Card> getCards() {
         return cards;
     }
 
-    public Hand getHand() {
-        return hand;
-    }
-
-    public List<Card> getSharedCards() {
-        return sharedCards;
-    }
-
-    public PlayerController getController() {
-        return controller;
-    }
-
     /* setters */
-
-    public void setIsAuto(boolean isAuto) {
-        this.isAuto = isAuto;
-    }
-
-    public void setFinishedAuto(boolean finishedAuto) {
-        this.finishedAuto = finishedAuto;
-    }
-
-    public void setCards(List<Card> cards) {
-        this.cards = cards;
-    }
-
-    public void setHand(Hand hand) {
-        this.hand = hand;
-    }
 
     public void sortHand() {
         hand.sort(Hand.SortType.SUITPRIORITY, false);
@@ -117,9 +62,6 @@ public class Player {
         hand.draw();
     }
 
-    public void setCardListener(CardListener cardListener) {
-        hand.addCardListener(cardListener);
-    }
 
     public void setTargetArea(TargetArea targetArea) {
         hand.setTargetArea(targetArea);
@@ -135,9 +77,6 @@ public class Player {
         hand.remove(card, false);
     }
 
-    public void setSharedCards(List<Card> sharedCards) {
-        this.sharedCards = sharedCards;
-    }
 
     public void checkFinishedAuto(int index) {
         if (!autoMovements.isEmpty()) {
@@ -160,9 +99,10 @@ public class Player {
         System.out.println("auto moves: " + autoMovements);
         return null;
     }
-    public Card discardCard(){
+
+    public Card discardCard() {
         checkFinishedAuto(autoIndex);
-        
+
 
         // if game is set to auto
         if (isAuto) {

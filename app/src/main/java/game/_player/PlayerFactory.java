@@ -1,8 +1,7 @@
 package game._player;
 
-import game.Dealer;
-
 import ch.aplu.jcardgame.Card;
+import game.Dealer;
 import game._player._controllers.*;
 
 import java.util.ArrayList;
@@ -17,8 +16,8 @@ public class PlayerFactory {
     List<List<Card>> initCards;
     List<List<List<Card>>> autoMovements;
 
-    public PlayerFactory(List<List<String>> strInitCards, List<String> strSharedCards, 
-            List<List<List<String>>> strAutoMovements) {
+    public PlayerFactory(List<List<String>> strInitCards, List<String> strSharedCards,
+                         List<List<List<String>>> strAutoMovements) {
         dealer = new Dealer();
         convertAutoMovements(strAutoMovements);
         convertInitCards(strInitCards);
@@ -30,12 +29,8 @@ public class PlayerFactory {
         // java lists not linked lists, otherwise would use next()
         // TODO: change in future
         PlayerController controller;
-        boolean mouseControlled = false;
         switch (playerType) {
-            case "human" -> {
-                controller = new Human();
-                mouseControlled = true;
-            }
+            case "human" -> controller = new Human();
             case "random" -> controller = new Random();
             case "basic" -> controller = new Basic();
             case "clever" -> controller = new Clever(sharedCards);
@@ -46,9 +41,9 @@ public class PlayerFactory {
                 return null;
             }
         }
-        return new Player(initCards.get(i), sharedCards, isAuto, autoMovements.get(i), controller, mouseControlled);
+        return new Player(initCards.get(i), isAuto, autoMovements.get(i), controller);
     }
-    
+
     private void convertAutoMovements(List<List<List<String>>> strAutoMovements) {
         autoMovements = new ArrayList<>();
         for (List<List<String>> movement : strAutoMovements) {
@@ -102,27 +97,12 @@ public class PlayerFactory {
         }
     }
 
-    // public void setSharedCards(List<String> strInitSharedCards) {
-    // convertSharedCards(strInitSharedCards);
-    // }
-
     public Dealer getDealer() {
         return dealer;
-    }
-
-    public List<List<Card>> getInitCards() {
-        return initCards;
     }
 
     public List<Card> getSharedCards() {
         return sharedCards;
     }
 
-    public List<List<List<Card>>> getAutoMovements() {
-        return autoMovements;
-    }
-
-    public void setSharedCards(List<Card> sharedCards) {
-        this.sharedCards = sharedCards;
-    }
 }
