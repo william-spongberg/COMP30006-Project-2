@@ -1,3 +1,13 @@
+/**
+ * human.java
+ *
+ * contains the behaviour for the human player when discarding cards
+ *
+ * @author William Spongberg
+ * @author Joshua Linehan
+ * @author Ethan Hawkins
+ */
+
 package game.player.controllers;
 
 import ch.aplu.jcardgame.Card;

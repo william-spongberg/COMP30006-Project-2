@@ -1,3 +1,14 @@
+/**
+ * Random.java
+ *
+ * contains the class Random
+ * which implements the PlayerController interface which has the discardCard method
+ *
+ * @author William Spongberg
+ * @author Joshua Linehan
+ * @author Ethan Hawkins
+ */
+
 package game.player.controllers;
 
 import ch.aplu.jcardgame.Card;

@@ -15,7 +15,7 @@ import game.player.Player;
 import game.state.StateData;
 import game.state.States;
 
-import util.Logger;
+import game.util.Logger;
 
 import java.util.List;
 

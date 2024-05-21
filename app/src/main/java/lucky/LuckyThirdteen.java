@@ -15,7 +15,7 @@ import game.player.Player;
 import game.player.PlayerFactory;
 import game.state.*;
 
-import static util.Logger.logResult;
+import static game.util.Logger.logResult;
 import static game.scorer.Scorer.getScores;
 import static game.scorer.Scorer.winner;
 
@@ -149,6 +149,9 @@ public class LuckyThirdteen extends CardGame {
         // call adding end of game to log
         stateData = new StateData(winners, players, playingArea.getCardList());
         state.setCurrentState(States.END_GAME ,stateData);
+        for (int i = 0; i < players.length; i++) {
+            updateScore(i);
+        }
 
         // TODO: DISCUSS IF THIS IS BAD
         return logResult.toString();
@@ -156,7 +159,7 @@ public class LuckyThirdteen extends CardGame {
     // TODO: move scoring to new score class?
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
-            String text = "[" + String.valueOf(scores[i]) + "]";
+            String text = "P" + i + "[" + String.valueOf(scores[i]) + "]";
             scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
             addActor(scoreActors[i], scoreLocations[i]);
         }
@@ -166,14 +169,6 @@ public class LuckyThirdteen extends CardGame {
         Arrays.fill(scores, 0);
     }
 
-    private Actor[] initScore(int nbPlayers, int[] scores, Color bgColor, Font bigFont) {
-        for (int i = 0; i < nbPlayers; i++) {
-            String text = "[" + String.valueOf(scores[i]) + "]";
-            scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
-            addActor(scoreActors[i], scoreLocations[i]);
-        }
-        return scoreActors;
-    }
 
     private void initGame() {
         // FIXME: each player should contain hand and score -- ?

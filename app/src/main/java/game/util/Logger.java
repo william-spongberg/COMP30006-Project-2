@@ -1,4 +1,4 @@
-package util;
+package game.util;
 
 import game.card.Rank;
 import game.card.Suit;
