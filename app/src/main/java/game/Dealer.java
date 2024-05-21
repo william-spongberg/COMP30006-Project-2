@@ -1,6 +1,6 @@
 package game;
-import game._card.Rank;
-import game._card.Suit;
+import game.card.Rank;
+import game.card.Suit;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Deck;

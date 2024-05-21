@@ -10,17 +10,14 @@ import java.util.stream.Collectors;
 
 import game.Dealer;
 import game.DiscardPile;
-import game._card.Rank;
-import game._card.Suit;
-import game._observer.LoggerObserver;
-import game._player.Player;
-import game._player.PlayerFactory;
-import game._player._controllers.Human;
-import game._state.*;
+import game.observer.LoggerObserver;
+import game.player.Player;
+import game.player.PlayerFactory;
+import game.state.*;
 
-import static Util.Logger.logResult;
-import static game._scorer.Scorer.getScores;
-import static game._scorer.Scorer.winner;
+import static util.Logger.logResult;
+import static game.scorer.Scorer.getScores;
+import static game.scorer.Scorer.winner;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {

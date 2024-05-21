@@ -1,0 +1,35 @@
+/**
+ * Basic.java
+ * contains the behaviour for the basic player when discarding cards, which is to always
+ * discard the lowest one
+ *
+ * @author William Spongberg
+ * @author Joshua Linehan
+ * @author Ethan Hawkins
+ */
+
+package game.player.controllers;
+
+import ch.aplu.jcardgame.Card;
+import ch.aplu.jcardgame.Hand;
+import java.util.ArrayList;
+
+import static game.scorer.CardEvaluator.getCardScore;
+
+public class Basic implements PlayerController {
+
+
+    @Override
+    public Card discardCard(Hand hand) {
+        ArrayList<Card> cardsInHand = hand.getCardList();
+        Card smallestCard = cardsInHand.get(0);
+
+        for (int i = 1; i < cardsInHand.size(); i++) {
+            Card currentCard = cardsInHand.get(i);
+            if (getCardScore(currentCard, false) < getCardScore(smallestCard, false)) {
+                smallestCard = currentCard;
+            }
+        }
+        return smallestCard;
+    }
+}
