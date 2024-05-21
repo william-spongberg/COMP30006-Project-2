@@ -117,8 +117,6 @@ public class PropertiesReader {
     public void setThinkingTime(Properties properties) {
         if (properties.getProperty(THINKING_TIME) != null) {
             this.thinkingTime = Integer.parseInt(properties.getProperty(THINKING_TIME));
-        } else {
-            this.thinkingTime = DEFAULT_THINKING_TIME;
         }
     }
 
@@ -133,8 +131,6 @@ public class PropertiesReader {
     public void setDelayTime(Properties properties) {
         if (properties.getProperty(DELAY_TIME) != null) {
             this.delayTime = Integer.parseInt(properties.getProperty(DELAY_TIME));
-        } else {
-            this.delayTime = DEFAULT_DELAY_TIME;
         }
     }
 
