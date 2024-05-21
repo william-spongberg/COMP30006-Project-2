@@ -40,16 +40,14 @@ public class LuckyThirdteen extends CardGame {
 
     // --------------------------- VARIABLE DECLARATIONS ---------------------------
     // finals
-    public static final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
+
+    // why do we still have this in two places?
     public static final int seed = 30008;
-    public static final Random random = new Random();
-    public final int nbStartCards = 2;
-    public final int nbFaceUpCards = 2;
+    public static final Random random = new Random(30008);
     private final int handWidth = 400;
     private final int trickWidth = 40;
     // TODO: increment version per major commit?
     private final String version = "1.0";
-    private static final int THIRTEEN_GOAL = 13;
     static final int MAX_ROUNDS = 4;
     private final Location[] handLocations = {
             new Location(350, 625),
@@ -72,6 +70,8 @@ public class LuckyThirdteen extends CardGame {
     private int thinkingTime = 2000;
     private int delayTime = 600;
     private boolean isAuto = false;
+
+    private DiscardPile discardPile;
 
     // structures
     List<Card> initSharedCards = new ArrayList<>();
@@ -116,7 +116,7 @@ public class LuckyThirdteen extends CardGame {
         setStatusText("Initialising...");
 
         // initialise logResult and discardPile
-        DiscardPile.discardCards.clear();
+        discardPile = discardPile.getInstance();
         logResult = new StringBuilder();
         // FIXME: create Score object here - or should it be inside the game? - No,
         // score stuff is static
@@ -312,7 +312,7 @@ public class LuckyThirdteen extends CardGame {
             System.out.println("Player " + currPlayer + " discarded " + discardCard);
 
             // for visibility to clever, add to discardPile.
-            DiscardPile.addDiscardCards(discardCard);
+            discardPile.addDiscardCard(discardCard);
 
             players[currPlayer].removeCard(discardCard);
             players[currPlayer].renderCards();

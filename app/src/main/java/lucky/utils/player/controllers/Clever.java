@@ -28,6 +28,9 @@ import static lucky.utils.scorer.Scorer.hasThirteen;
 
 public class Clever implements PlayerController {
 
+    // create an instance to preserve singleton
+    private DiscardPile discardPile;
+
     private List<Card> sharedCards;
 
     public Clever(List<Card> sharedCards) {
@@ -38,7 +41,10 @@ public class Clever implements PlayerController {
     public Card discardCard(Hand hand) {
         Integer indexToRemove = 0;
         List<Card> cards = new ArrayList<>(hand.getCardList());
-        List<Card> cardsPlayed = DiscardPile.getDiscardCards();
+        // returns a copy, as is singleton
+        List<Card> cardsPlayed = discardPile.getDiscardCards();
+
+
         List<Card> cardGroupToCheck1 = new ArrayList<>(hand.getCardList()).subList(0, 2);
         List<Card> cardGroupToCheck2 = new ArrayList<>(hand.getCardList()).subList(1, 3);
         List<Card> cardGroupToCheck3 = new ArrayList<>(hand.getCardList());

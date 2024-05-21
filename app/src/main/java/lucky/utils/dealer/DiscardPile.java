@@ -18,13 +18,25 @@ import java.util.List;
 
 public class DiscardPile {
 
-    public static List<Card> discardCards = new ArrayList<>();
+    private static DiscardPile instance;
+    private List<Card> discardCards;
 
-    public static List<Card> getDiscardCards() {
-        return discardCards;
+    private DiscardPile() {
+        discardCards = new ArrayList<>();
     }
 
-    public static void addDiscardCards(Card discardCard) {
+    public static DiscardPile getInstance() {
+        if (instance == null) {
+            instance = new DiscardPile();
+        }
+        return instance;
+    }
+
+    public List<Card> getDiscardCards() {
+        return new ArrayList<>(discardCards); // Return a copy to preserve encapsulation
+    }
+
+    public void addDiscardCard(Card discardCard) {
         discardCards.add(discardCard);
     }
 }
