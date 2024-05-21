@@ -25,7 +25,7 @@ public class PlayerFactory {
 
     public PlayerFactory(List<List<String>> strInitCards, List<String> strSharedCards,
             List<List<List<String>>> strAutoMovements) {
-        dealer = new Dealer();
+        dealer = new Dealer(false);
         convertAutoMovements(strAutoMovements);
         convertInitCards(strInitCards);
         convertSharedCards(strSharedCards);

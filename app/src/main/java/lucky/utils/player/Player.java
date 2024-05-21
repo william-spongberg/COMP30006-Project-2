@@ -38,7 +38,7 @@ public class Player {
         this.controller = controller;
         this.isAuto = isAuto;
         this.autoMovements = autoMovements;
-        hand = new Hand(Dealer.DECK);
+        hand = new Hand(Dealer.BASE_DECK);
         cards = initialCards;
         sortHand();
         convertListToHand(initialCards);

@@ -45,7 +45,6 @@ public class Clever implements PlayerController {
         cardGroupToCheck3.remove(1);
         if (hasThirteen(cardGroupToCheck1, sharedCards) || hasThirteen(cardGroupToCheck2, sharedCards)
                 || hasThirteen(cardGroupToCheck3, sharedCards)) {
-            // System.out.println("We have thirteen!");
             indexToRemove = thirteenChecker(sharedCards, cards);
         } else {
             indexToRemove = cleverCardToRemove(cardsPlayed, hand);
@@ -84,8 +83,6 @@ public class Clever implements PlayerController {
 
         for (int i = 0; i < cardsInHand.size(); i++) {
             List<Card> newHand = new ArrayList<>(cardsInHand);
-            // this is suspicious, lol
-            Card removedCard = newHand.remove(i);
 
             double averageScore = maximiseScore(newHand, cardsPlayed);
             // System.out.println("Removed card: " + removedCard); // Debug: Print the
@@ -107,10 +104,8 @@ public class Clever implements PlayerController {
         List<ScoringCase> scoringCases = ScoringCase.getScoringCases();
 
         if (hasThirteen(cardsInHand, sharedCards)) {
-            // System.out.println(counter_per_card);
             // always evaluate as a case3.
             score = scoringCases.get(2).score(cardsInHand, sharedCards);
-            // score = 100;
 
         } else {
             // if we dont have 13, try a case2.
@@ -137,6 +132,10 @@ public class Clever implements PlayerController {
             }
         }
 
+        // avoid dividing by zero
+        if (evaluationCount == 0) {
+            return 0;
+        }
         return totalEval / evaluationCount;
     }
 

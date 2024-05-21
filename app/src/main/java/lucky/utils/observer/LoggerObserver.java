@@ -54,7 +54,9 @@ public class LoggerObserver implements Observer {
                 publicCards = stateData.getPublicCards();
                 logger.addEndOfGameToLog(winners, players, publicCards);
                 break;
-
+            default:
+                System.out.println("State not found");
+                System.exit(1);
         }
 
     }

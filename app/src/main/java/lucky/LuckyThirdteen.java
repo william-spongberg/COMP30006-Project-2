@@ -216,7 +216,7 @@ public class LuckyThirdteen extends CardGame {
 
         // lucky.UI stuff //
         // init shared cards
-        playingArea = new Hand(Dealer.DECK);
+        playingArea = new Hand(Dealer.BASE_DECK);
         for (Card card : pFactory.getSharedCards()) {
             playingArea.insert(card, false);
         }

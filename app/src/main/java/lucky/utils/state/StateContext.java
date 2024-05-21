@@ -21,16 +21,12 @@ import java.util.List;
 public class StateContext {
 
     private List<Observer> observers = new ArrayList<>();
-
     private StateData stateData;
-
-    States currentState;
-
-    private Player[] players;
+    private States currentState;
 
     public StateContext() {
-        States currentState = States.START_GAME;
-        StateData stateData = new StateData();
+        this.currentState = States.START_GAME;
+        this.stateData = new StateData();
     }
 
     public void addObservers(Observer observer) {

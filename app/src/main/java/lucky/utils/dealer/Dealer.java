@@ -22,16 +22,17 @@ import java.util.Random;
 public class Dealer {
     // TODO: only define once and use by all, need set random seed for testing
     private static final int SEED = 30008;
-    private static final Random random = new Random();
+    private static final Random random = new Random(SEED);
 
     // testing
-    public static final Deck DECK = new Deck(Suit.values(), Rank.values(), "cover");
+    public static final Deck BASE_DECK = new Deck(Suit.values(), Rank.values(), "cover");
 
     private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 
-    // public Dealer () {
-    // shuffle();
-    // }
+    public Dealer(boolean shuffle) {
+        if (shuffle)
+            shuffle();
+    }
 
     // deck converted into usable Hand (unshuffled)
     private Hand pack = deck.toHand(false);
@@ -143,7 +144,7 @@ public class Dealer {
         return Suit.CLUBS;
     }
 
-    public Deck getDeck() {
+    public Deck getBaseDeck() {
         return deck;
     }
 
