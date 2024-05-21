@@ -15,6 +15,9 @@ public class Player {
     private final List<Card> cards;
     private int autoIndex = 0;
 
+    private static final int DRAW_CARD_INDEX = 0;
+    private static final int DISCARD_CARD_INDEX = 1;
+
     public Player(List<Card> initialCards, boolean isAuto, List<List<Card>> autoMovements, PlayerController controller) {
         this.controller = controller;
         this.isAuto = isAuto;
@@ -88,10 +91,8 @@ public class Player {
         checkFinishedAuto(autoIndex);
 
         if (isAuto) {
-            if (autoMovements.get(autoIndex).size() == 2) {
-                System.out.println("auto moves: " + autoMovements);
-                return autoMovements.get(autoIndex).get(0);
-            }
+            System.out.println("auto moves: " + autoMovements);
+            return autoMovements.get(autoIndex).get(DRAW_CARD_INDEX);
         }
 
         // don't care which card is dealt otherwise
@@ -107,10 +108,8 @@ public class Player {
         // if game is set to auto
         if (isAuto) {
             System.out.println("auto moves: " + autoMovements);
-            if (autoMovements.get(autoIndex).size() == 2) {
-                autoIndex++;
-                return autoMovements.get(autoIndex - 1).get(1);
-            }
+            // get card and increment autoIndex
+            return autoMovements.get(autoIndex++).get(DISCARD_CARD_INDEX);
         }
 
         // if game is not set to auto or if finishedAuto is true
