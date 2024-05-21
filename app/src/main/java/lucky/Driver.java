@@ -1,3 +1,4 @@
+package lucky;
 
 import java.util.Properties;
 
