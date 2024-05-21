@@ -11,7 +11,7 @@ import java.util.Random;
 public class Dealer {
     // TODO: only define once and use by all, need set random seed for testing
     private static final int SEED = 30008;
-    private static final Random random = new Random(SEED);
+    private static final Random random = new Random();
 
     // testing
     public static final Deck DECK = new Deck(Suit.values(), Rank.values(), "cover");

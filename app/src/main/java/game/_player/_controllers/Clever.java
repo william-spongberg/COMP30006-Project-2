@@ -20,15 +20,52 @@ public class Clever implements PlayerController {
 
     private List<Card> sharedCards;
 
+    private int counter_per_card = 0;
+
     public Clever(List<Card> sharedCards) {
         this.sharedCards = sharedCards;
     }
 
     @Override
     public Card discardCard(Hand hand) {
+        Integer indexToRemove = 0;
+        List<Card> cards = new ArrayList<>(hand.getCardList());
         List<Card> cardsPlayed = DiscardPile.getDiscardCards();
-        Integer indexToRemove = cleverCardToRemove(cardsPlayed, hand);
+        List<Card> cardGroupToCheck1 = new ArrayList<>(hand.getCardList()).subList(0, 2);
+        List<Card> cardGroupToCheck2 = new ArrayList<>(hand.getCardList()).subList(1, 3);
+        List<Card> cardGroupToCheck3 = new ArrayList<>(hand.getCardList());
+        cardGroupToCheck3.remove(1);
+        if (hasThirteen(cardGroupToCheck1, sharedCards) || hasThirteen(cardGroupToCheck2, sharedCards) || hasThirteen(cardGroupToCheck3, sharedCards)) {
+            //System.out.println("We have thirteen!");
+            indexToRemove = thirteenChecker(sharedCards, cards);
+        }
+        else {
+            indexToRemove = cleverCardToRemove(cardsPlayed, hand);
+        }
         return hand.getCardList().get(indexToRemove);
+    }
+
+    private Integer thirteenChecker(List<Card> sharedCards, List<Card> hand) {
+
+        for (int i = 0; i < hand.size() - 1; i++) {
+            List<Card> tempHand = new ArrayList<>(hand);
+            tempHand.remove(i);
+            if ((hasThirteen(tempHand, sharedCards))) {
+                return i;
+            }
+        }
+
+        // if all cards result in 13, resort to basic, remove the lowest value contributor.
+        int worstCardIndex = 0;
+        Card smallestCard = hand.get(0);
+        for (int i = 1; i < hand.size(); i++) {
+            Card currentCard = hand.get(i);
+            if (getCardScore(currentCard, false) < getCardScore(smallestCard, false)) {
+                worstCardIndex = i;
+            }
+        }
+        // just remove zero since we already have thirteen anyway
+        return worstCardIndex;
     }
 
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
@@ -37,33 +74,13 @@ public class Clever implements PlayerController {
         double bestAverageScore = 0;
 
         for (int i = 0; i < cardsInHand.size(); i++) {
-            List<Card> tempHand = new ArrayList<>(cardsInHand);
-            tempHand.remove(i);
-            // Check if there is a combination adding up to 13
-            if (hasThirteen(cardsInHand, sharedCards)) {
-                // System.out.println("We have Thirteen!");
-                // if there's already a combination adding up to 13, find the card that doesn't contribute to it
-                for (int j = 0; j < cardsInHand.size(); j++) {
-                    List<Card> newHand = new ArrayList<>(cardsInHand);
-                    newHand.remove(j);
-
-                    if (!hasThirteen(newHand, sharedCards)) {
-                        // if removing this card breaks the 13 combination, discard it
-                        // System.out.println("Found a dud! removing...");
-                        return j;
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < cardsInHand.size(); i++) {
             List<Card> newHand = new ArrayList<>(cardsInHand);
             // this is suspicious, lol
             Card removedCard = newHand.remove(i);
 
             double averageScore = maximiseScore(newHand, cardsPlayed);
-            // System.out.println("Removed card: " + removedCard); // Debug: Print the removed card
-            // System.out.println("Average score after removing " + removedCard + ": " + averageScore); // Debug: Print average score
+            //System.out.println("Removed card: " + removedCard); // Debug: Print the removed card
+            //System.out.println("Average score after removing " + removedCard + ": " + averageScore); // Debug: Print average score
             if (averageScore > bestAverageScore) {
                 bestAverageScore = averageScore;
                 bestCardIndex = i;
@@ -80,6 +97,8 @@ public class Clever implements PlayerController {
         List<ScoringCase> scoringCases = ScoringCase.getScoringCases();
 
         if (hasThirteen(cardsInHand, sharedCards)) {
+            counter_per_card += 1;
+            //System.out.println(counter_per_card);
             // always evaluate as a case3.
             score = scoringCases.get(2).score(cardsInHand, sharedCards);
             //score = 100;
@@ -108,6 +127,7 @@ public class Clever implements PlayerController {
                 totalEval += evaluateHand(tempHand, sharedCards);
                 evaluationCount++;
             }
+            counter_per_card = 0;
         }
 
         return totalEval / evaluationCount;

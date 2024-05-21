@@ -30,7 +30,7 @@ public class LuckyThirdteen extends CardGame {
     // finals
     public static final String trumpImage[] = { "bigspade.gif", "bigheart.gif", "bigdiamond.gif", "bigclub.gif" };
     public static final int seed = 30008;
-    public static final Random random = new Random(seed);
+    public static final Random random = new Random();
     public final int nbStartCards = 2;
     public final int nbFaceUpCards = 2;
     private final int handWidth = 400;
