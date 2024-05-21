@@ -1,3 +1,4 @@
+package lucky;
 
 import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.*;
@@ -213,7 +214,7 @@ public class LuckyThirdteen extends CardGame {
             }
         }
 
-        // UI stuff //
+        // lucky.UI stuff //
         // init shared cards
         playingArea = new Hand(Dealer.DECK);
         for (Card card : pFactory.getSharedCards()) {

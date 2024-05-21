@@ -7,21 +7,17 @@ import game.DiscardPile;
 import game._card.Rank;
 import game._card.Suit;
 import game._scorer._scoringCases.ScoringCase;
-import game._scorer._summingOptions.SummingOption;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static game._scorer.CardEvaluator.getCardScore;
 import static game._scorer.Scorer.hasThirteen;
-import static game._scorer._summingOptions.SummingOption.isThirteen;
 
 public class Clever implements PlayerController {
 
     private List<Card> sharedCards;
-
-    private int counter_per_card = 0;
-
     public Clever(List<Card> sharedCards) {
         this.sharedCards = sharedCards;
     }
@@ -97,7 +93,6 @@ public class Clever implements PlayerController {
         List<ScoringCase> scoringCases = ScoringCase.getScoringCases();
 
         if (hasThirteen(cardsInHand, sharedCards)) {
-            counter_per_card += 1;
             //System.out.println(counter_per_card);
             // always evaluate as a case3.
             score = scoringCases.get(2).score(cardsInHand, sharedCards);
@@ -127,7 +122,6 @@ public class Clever implements PlayerController {
                 totalEval += evaluateHand(tempHand, sharedCards);
                 evaluationCount++;
             }
-            counter_per_card = 0;
         }
 
         return totalEval / evaluationCount;
