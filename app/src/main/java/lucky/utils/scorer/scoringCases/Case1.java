@@ -10,7 +10,6 @@
  * @author Ethan Hawkins
  */
 
-
 package lucky.utils.scorer.scoringCases;
 
 import ch.aplu.jcardgame.Card;

@@ -10,7 +10,6 @@
  * @author Ethan Hawkins
  */
 
-
 package lucky.utils.scorer.scoringCases;
 
 import ch.aplu.jcardgame.Card;
@@ -32,6 +31,7 @@ public class Case2 extends ScoringCase {
      */
     @Override
     public int score(List<Card> privateCards, List<Card> publicCards) {
-        return CardEvaluator.getCardScore(privateCards.get(FIRST_CARD), false) + CardEvaluator.getCardScore(privateCards.get(SECOND_CARD), false);
+        return CardEvaluator.getCardScore(privateCards.get(FIRST_CARD), false)
+                + CardEvaluator.getCardScore(privateCards.get(SECOND_CARD), false);
     }
 }

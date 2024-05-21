@@ -10,7 +10,6 @@
  * @author Ethan Hawkins
  */
 
-
 package lucky.utils.state;
 
 import lucky.utils.observer.Observer;

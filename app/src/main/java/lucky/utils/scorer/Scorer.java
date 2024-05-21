@@ -90,7 +90,8 @@ public class Scorer {
      *
      * @param player      the player in question
      * @param publicCards the game's public cards
-     * @return true if player has a combination of cards that sum to thirteen, false otherwise
+     * @return true if player has a combination of cards that sum to thirteen, false
+     *         otherwise
      */
     public static boolean hasThirteen(Player player, List<Card> publicCards) {
         List<Card> privateCards = player.getCards();
@@ -107,7 +108,8 @@ public class Scorer {
      *
      * @param privateCards the player's private cards
      * @param publicCards  the game's public cards
-     * @return true if player has a combination of cards that sum to thirteen, false otherwise
+     * @return true if player has a combination of cards that sum to thirteen, false
+     *         otherwise
      */
     public static boolean hasThirteen(List<Card> privateCards, List<Card> publicCards) {
         for (SummingOption summingOption : SUMMING_OPTIONS) {
@@ -123,7 +125,8 @@ public class Scorer {
      *
      * @param players     an array containing each player
      * @param publicCards the game's public cards
-     * @return a list of integers representing the players' scores int the same order as players
+     * @return a list of integers representing the players' scores int the same
+     *         order as players
      */
     public static int[] getScores(Player[] players, List<Card> publicCards) {
         int[] scores = new int[players.length];

@@ -8,6 +8,7 @@
  */
 
 package lucky.utils.card;
+
 public enum Suit {
     SPADES("S", 4), HEARTS("H", 3),
     DIAMONDS("D", 2), CLUBS("C", 1);

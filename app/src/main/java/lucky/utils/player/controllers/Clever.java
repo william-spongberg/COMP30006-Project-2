@@ -13,6 +13,7 @@
  */
 
 package lucky.utils.player.controllers;
+
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Deck;
 import ch.aplu.jcardgame.Hand;
@@ -28,6 +29,7 @@ import static lucky.utils.scorer.Scorer.hasThirteen;
 public class Clever implements PlayerController {
 
     private List<Card> sharedCards;
+
     public Clever(List<Card> sharedCards) {
         this.sharedCards = sharedCards;
     }
@@ -41,11 +43,11 @@ public class Clever implements PlayerController {
         List<Card> cardGroupToCheck2 = new ArrayList<>(hand.getCardList()).subList(1, 3);
         List<Card> cardGroupToCheck3 = new ArrayList<>(hand.getCardList());
         cardGroupToCheck3.remove(1);
-        if (hasThirteen(cardGroupToCheck1, sharedCards) || hasThirteen(cardGroupToCheck2, sharedCards) || hasThirteen(cardGroupToCheck3, sharedCards)) {
-            //System.out.println("We have thirteen!");
+        if (hasThirteen(cardGroupToCheck1, sharedCards) || hasThirteen(cardGroupToCheck2, sharedCards)
+                || hasThirteen(cardGroupToCheck3, sharedCards)) {
+            // System.out.println("We have thirteen!");
             indexToRemove = thirteenChecker(sharedCards, cards);
-        }
-        else {
+        } else {
             indexToRemove = cleverCardToRemove(cardsPlayed, hand);
         }
         return hand.getCardList().get(indexToRemove);
@@ -61,7 +63,8 @@ public class Clever implements PlayerController {
             }
         }
 
-        // if all cards result in 13, resort to basic, remove the lowest value contributor.
+        // if all cards result in 13, resort to basic, remove the lowest value
+        // contributor.
         int worstCardIndex = 0;
         Card smallestCard = hand.get(0);
         for (int i = 1; i < hand.size(); i++) {
@@ -85,14 +88,15 @@ public class Clever implements PlayerController {
             Card removedCard = newHand.remove(i);
 
             double averageScore = maximiseScore(newHand, cardsPlayed);
-            //System.out.println("Removed card: " + removedCard); // Debug: Print the removed card
-            //System.out.println("Average score after removing " + removedCard + ": " + averageScore); // Debug: Print average score
+            // System.out.println("Removed card: " + removedCard); // Debug: Print the
+            // removed card
+            // System.out.println("Average score after removing " + removedCard + ": " +
+            // averageScore); // Debug: Print average score
             if (averageScore > bestAverageScore) {
                 bestAverageScore = averageScore;
                 bestCardIndex = i;
             }
         }
-
 
         return bestCardIndex;
     }
@@ -103,13 +107,12 @@ public class Clever implements PlayerController {
         List<ScoringCase> scoringCases = ScoringCase.getScoringCases();
 
         if (hasThirteen(cardsInHand, sharedCards)) {
-            //System.out.println(counter_per_card);
+            // System.out.println(counter_per_card);
             // always evaluate as a case3.
             score = scoringCases.get(2).score(cardsInHand, sharedCards);
-            //score = 100;
+            // score = 100;
 
-        }
-        else {
+        } else {
             // if we dont have 13, try a case2.
             score = scoringCases.get(1).score(cardsInHand, sharedCards);
 
@@ -137,10 +140,10 @@ public class Clever implements PlayerController {
         return totalEval / evaluationCount;
     }
 
-
-
-    // hypothesises what the deck looks like based on what cards are visible to the bot
-    private ArrayList<Card> getPossibleCardsToDraw(List<Card> cardsPlayed, List<Card> sharedCards, ArrayList<Card> hand) {
+    // hypothesises what the deck looks like based on what cards are visible to the
+    // bot
+    private ArrayList<Card> getPossibleCardsToDraw(List<Card> cardsPlayed, List<Card> sharedCards,
+            ArrayList<Card> hand) {
         Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
         Hand pack = deck.toHand();
         ArrayList<Card> deckAltered = pack.getCardList();

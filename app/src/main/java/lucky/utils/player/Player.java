@@ -18,7 +18,8 @@ import java.util.List;
 
 /**
  * The Player class represents a player in the game.
- * It contains information about the player's hand, controller, auto movements, and cards.
+ * It contains information about the player's hand, controller, auto movements,
+ * and cards.
  */
 public class Player {
     private final boolean isAuto;
@@ -32,7 +33,8 @@ public class Player {
     private static final int DRAW_CARD_INDEX = 0;
     private static final int DISCARD_CARD_INDEX = 1;
 
-    public Player(List<Card> initialCards, boolean isAuto, List<List<Card>> autoMovements, PlayerController controller) {
+    public Player(List<Card> initialCards, boolean isAuto, List<List<Card>> autoMovements,
+            PlayerController controller) {
         this.controller = controller;
         this.isAuto = isAuto;
         this.autoMovements = autoMovements;
@@ -41,7 +43,6 @@ public class Player {
         sortHand();
         convertListToHand(initialCards);
     }
-
 
     public void convertListToHand(List<Card> cards) {
         if (cards.isEmpty() || cards.get(0) == null) {
@@ -79,7 +80,6 @@ public class Player {
         hand.draw();
     }
 
-
     public void setTargetArea(TargetArea targetArea) {
         hand.setTargetArea(targetArea);
     }
@@ -93,7 +93,6 @@ public class Player {
         cards.remove(card);
         hand.remove(card, false);
     }
-
 
     public void checkFinishedAuto(int index) {
         if (!autoMovements.isEmpty()) {
@@ -117,7 +116,6 @@ public class Player {
 
     public Card discardCard() {
         checkFinishedAuto(autoIndex);
-
 
         // if game is set to auto
         if (isAuto) {

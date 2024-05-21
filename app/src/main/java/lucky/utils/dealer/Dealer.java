@@ -9,6 +9,7 @@
  */
 
 package lucky.utils.dealer;
+
 import lucky.utils.card.Rank;
 import lucky.utils.card.Suit;
 
@@ -29,7 +30,7 @@ public class Dealer {
     private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 
     // public Dealer () {
-    //     shuffle();
+    // shuffle();
     // }
 
     // deck converted into usable Hand (unshuffled)
@@ -84,7 +85,7 @@ public class Dealer {
                 return packCard;
             }
         }
-        
+
         try {
             throw new Exception("Card not found: " + card);
         } catch (Exception e) {

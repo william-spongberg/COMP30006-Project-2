@@ -67,13 +67,11 @@ public class LuckyThirdteen extends CardGame {
     private final Location trickLocation = new Location(350, 350);
     private final Location textLocation = new Location(350, 450);
 
-
     // primitives
     public int nbPlayers = 4;
     private int thinkingTime = 2000;
     private int delayTime = 600;
     private boolean isAuto = false;
-
 
     // structures
     List<Card> initSharedCards = new ArrayList<>();
@@ -101,9 +99,6 @@ public class LuckyThirdteen extends CardGame {
 
     private StateData stateData;
 
-
-
-
     // --------------------------- CONSTRUCTOR ---------------------------
     public LuckyThirdteen(Properties properties) {
         super(700, 700, 30);
@@ -113,19 +108,18 @@ public class LuckyThirdteen extends CardGame {
         delayTime = Integer.parseInt(properties.getProperty("delayTime", "50"));
     }
 
-    // --------------------------- INITIALISATION FUNCTIONS ---------------------------
-
-
+    // --------------------------- INITIALISATION FUNCTIONS
+    // ---------------------------
 
     public String runApp() {
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
         setStatusText("Initialising...");
 
-
         // initialise logResult and discardPile
         DiscardPile.discardCards.clear();
         logResult = new StringBuilder();
-        // FIXME: create Score object here - or should it be inside the game? - No, score stuff is static
+        // FIXME: create Score object here - or should it be inside the game? - No,
+        // score stuff is static
         initScores();
         initScore();
 
@@ -147,7 +141,7 @@ public class LuckyThirdteen extends CardGame {
                 maxScore = scores[i];
 
         // replace with winners method
-        final List<Integer> winners = winner(players,  playingArea.getCardList());
+        final List<Integer> winners = winner(players, playingArea.getCardList());
         String winText;
         if (winners.size() == 1) {
             winText = "Game over. Winner is player: " +
@@ -162,7 +156,7 @@ public class LuckyThirdteen extends CardGame {
 
         // call adding end of game to log
         stateData = new StateData(winners, players, playingArea.getCardList());
-        state.setCurrentState(States.END_GAME ,stateData);
+        state.setCurrentState(States.END_GAME, stateData);
         for (int i = 0; i < players.length; i++) {
             updateScore(i);
         }
@@ -170,6 +164,7 @@ public class LuckyThirdteen extends CardGame {
         // TODO: DISCUSS IF THIS IS BAD
         return logResult.toString();
     }
+
     // TODO: move scoring to new score class?
     private void initScore() {
         for (int i = 0; i < nbPlayers; i++) {
@@ -182,7 +177,6 @@ public class LuckyThirdteen extends CardGame {
     private void initScores() {
         Arrays.fill(scores, 0);
     }
-
 
     private void initGame() {
         // FIXME: each player should contain hand and score -- ?
@@ -240,7 +234,6 @@ public class LuckyThirdteen extends CardGame {
             players[i].renderCards();
         }
     }
-
 
     // --------------------------- DURING GAME FUNCTIONS ---------------------------
 
@@ -330,11 +323,9 @@ public class LuckyThirdteen extends CardGame {
             players[currPlayer].hideCards();
             players[currPlayer].renderCards();
 
-
             // log end of turn
             stateData = new StateData(currPlayer, players[currPlayer].getCards());
             state.setCurrentState(States.END_TURN, stateData);
-
 
             // next player's turn
             currPlayer = (currPlayer + 1) % nbPlayers;
@@ -351,7 +342,7 @@ public class LuckyThirdteen extends CardGame {
                 // if more rounds, log the round information
                 if (roundNumber <= MAX_ROUNDS) {
                     stateData = new StateData(roundNumber);
-                    state.setCurrentState(States.START_ROUND ,stateData);
+                    state.setCurrentState(States.START_ROUND, stateData);
                 }
                 scores = getScores(players, playingArea.getCardList());
             }
@@ -367,15 +358,14 @@ public class LuckyThirdteen extends CardGame {
         }
     }
 
-    //TODO: I can't remember what this was used for. Delete?
-    //public boolean rankGreater(Card card1, Card card2) {
-        // Warning: Reverse rank order of cards (see comment on enum)
-        // FIXME: why warning? - because it returns reverse
-    //    return card1.getRankId() < card2.getRankId();
-    //}
+    // TODO: I can't remember what this was used for. Delete?
+    // public boolean rankGreater(Card card1, Card card2) {
+    // Warning: Reverse rank order of cards (see comment on enum)
+    // FIXME: why warning? - because it returns reverse
+    // return card1.getRankId() < card2.getRankId();
+    // }
 
     // -------------------------- 13 CHECKING --------------------------------------
-
 
     // --------------------------- GETTERS & SETTERS & UPDATERS --------------------
 
@@ -386,7 +376,8 @@ public class LuckyThirdteen extends CardGame {
 
     // theres some functionality we're missing I think.
     private void updateScore(int player) {
-        // FIXME: why create new actor each time? just change text - cuz theres no update in this right, we have to add and remove everythin
+        // FIXME: why create new actor each time? just change text - cuz theres no
+        // update in this right, we have to add and remove everythin
         removeActor(scoreActors[player]);
         // why is max used here? how can the score be negative?
         int displayScore = Math.max(scores[player], 0);
@@ -395,8 +386,6 @@ public class LuckyThirdteen extends CardGame {
         addActor(scoreActors[player], scoreLocations[player]);
     }
 
-
     // --------------------------- END GAME FUNCTIONS ---------------------------
-
 
 }

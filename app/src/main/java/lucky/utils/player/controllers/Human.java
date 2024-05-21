@@ -19,8 +19,7 @@ import ch.aplu.jgamegrid.GameGrid;
 public class Human implements PlayerController {
     private Card selected = null;
     private static final int DELAY_INTERVAL = 50;
-    private CardListener cardListener = new CardAdapter()
-    {
+    private CardListener cardListener = new CardAdapter() {
         @Override
         public void leftDoubleClicked(Card card) {
             selected = card;
@@ -28,7 +27,7 @@ public class Human implements PlayerController {
     };
 
     public Card discardCard(Hand hand) {
-        //TODO: is it necessary to set the hand and add listener every time?
+        // TODO: is it necessary to set the hand and add listener every time?
         hand.addCardListener(cardListener);
         selected = null;
         hand.setTouchEnabled(true);

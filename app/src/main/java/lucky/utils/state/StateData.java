@@ -17,7 +17,6 @@ import lucky.utils.player.Player;
 
 import java.util.List;
 
-
 // contains all data we need for a state change.
 // initialised in luckyThirdTeen, and set just before caling the state change.
 public class StateData {
@@ -30,8 +29,6 @@ public class StateData {
     private Player[] players;
 
     private List<Card> publicCards;
-
-
 
     // different constructors depending on the state that is being changed to
     public StateData() {

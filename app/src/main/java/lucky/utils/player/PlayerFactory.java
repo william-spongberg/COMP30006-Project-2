@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The PlayerFactory class is responsible for creating players and initializing their properties.
- * It provides methods to convert string representations of cards and movements into actual card objects.
- * The factory can create different types of players based on the player type specified.
+ * The PlayerFactory class is responsible for creating players and initializing
+ * their properties.
+ * It provides methods to convert string representations of cards and movements
+ * into actual card objects.
+ * The factory can create different types of players based on the player type
+ * specified.
  */
 public class PlayerFactory {
     // factory for player + playercontroller + hand
@@ -21,7 +24,7 @@ public class PlayerFactory {
     List<List<List<Card>>> autoMovements;
 
     public PlayerFactory(List<List<String>> strInitCards, List<String> strSharedCards,
-                         List<List<List<String>>> strAutoMovements) {
+            List<List<List<String>>> strAutoMovements) {
         dealer = new Dealer();
         convertAutoMovements(strAutoMovements);
         convertInitCards(strInitCards);
@@ -84,7 +87,7 @@ public class PlayerFactory {
                 sharedCards.add(dealer.getCard(cardString, true));
             }
         }
-        //else deal out two cards to shared cards
+        // else deal out two cards to shared cards
         else {
             System.out.println("No shared cards given, dealing out two random cards");
             for (int i = 0; i < 2; i++) {

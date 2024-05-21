@@ -8,7 +8,6 @@
  * @author Ethan Hawkins
  */
 
-
 package lucky;
 
 import java.io.IOException;

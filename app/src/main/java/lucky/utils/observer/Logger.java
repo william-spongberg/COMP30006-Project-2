@@ -28,44 +28,44 @@ public class Logger {
 
     public static StringBuilder logResult = new StringBuilder();
 
-     public void addCardPlayedToLog(int player, List<Card> cards) {
-         if (cards.size() < 2) {
-             return;
-         }
-         logResult.append("P" + player + "-");
+    public void addCardPlayedToLog(int player, List<Card> cards) {
+        if (cards.size() < 2) {
+            return;
+        }
+        logResult.append("P" + player + "-");
 
-         for (int i = 0; i < cards.size(); i++) {
-             Rank cardRank = (Rank) cards.get(i).getRank();
-             Suit cardSuit = (Suit) cards.get(i).getSuit();
-             logResult.append(cardRank.getRankCardLog() + cardSuit.getSuitShortHand());
-             if (i < cards.size() - 1) {
-                 logResult.append("-");
-             }
-         }
-         logResult.append(",");
-     }
+        for (int i = 0; i < cards.size(); i++) {
+            Rank cardRank = (Rank) cards.get(i).getRank();
+            Suit cardSuit = (Suit) cards.get(i).getSuit();
+            logResult.append(cardRank.getRankCardLog() + cardSuit.getSuitShortHand());
+            if (i < cards.size() - 1) {
+                logResult.append("-");
+            }
+        }
+        logResult.append(",");
+    }
 
-     public void addRoundInfoToLog(int roundNumber) {
-         logResult.append("Round" + roundNumber + ":");
-     }
+    public void addRoundInfoToLog(int roundNumber) {
+        logResult.append("Round" + roundNumber + ":");
+    }
 
-     public void addEndOfRoundToLog(Player[] players, List<Card> publicCards) {
-         int[] scores = getScores(players, publicCards);
-         logResult.append("Score:");
-         for (int i = 0; i < scores.length; i++) {
-             logResult.append(scores[i] + ",");
-         }
-         logResult.append("\n");
-     }
+    public void addEndOfRoundToLog(Player[] players, List<Card> publicCards) {
+        int[] scores = getScores(players, publicCards);
+        logResult.append("Score:");
+        for (int i = 0; i < scores.length; i++) {
+            logResult.append(scores[i] + ",");
+        }
+        logResult.append("\n");
+    }
 
-     public void addEndOfGameToLog(List<Integer> winners, Player[] players, List<Card> publicCards) {
-         int[] scores = getScores(players, publicCards);
-         logResult.append("EndGame:");
-         for (int i = 0; i < scores.length; i++) {
-             logResult.append(scores[i] + ",");
-         }
-         logResult.append("\n");
-         logResult.append(
-                 "Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
-     }
+    public void addEndOfGameToLog(List<Integer> winners, Player[] players, List<Card> publicCards) {
+        int[] scores = getScores(players, publicCards);
+        logResult.append("EndGame:");
+        for (int i = 0; i < scores.length; i++) {
+            logResult.append(scores[i] + ",");
+        }
+        logResult.append("\n");
+        logResult.append(
+                "Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
+    }
 }

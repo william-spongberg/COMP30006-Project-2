@@ -9,7 +9,6 @@
  * @author Ethan Hawkins
  */
 
-
 package lucky.utils.state;
 
 public enum States {
@@ -19,6 +18,5 @@ public enum States {
     END_TURN,
     END_ROUND,
     END_GAME
-
 
 }

@@ -31,13 +31,13 @@ public class Option1 extends SummingOption {
         return isThirteen(privateCards.get(FIRST_CARD), privateCards.get(SECOND_CARD));
     }
 
-
     /**
      * finds the score of the given cards if scoring case 3 is used
      *
      * @param privateCards a player's private cards
      * @param publicCards  the game's public cards
-     * @return the number of points for these particular cards if scoring case 3 and option 1 is used
+     * @return the number of points for these particular cards if scoring case 3 and
+     *         option 1 is used
      */
     @Override
     public int case3Score(List<Card> privateCards, List<Card> publicCards) {

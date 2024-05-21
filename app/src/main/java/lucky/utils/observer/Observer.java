@@ -14,7 +14,8 @@ import lucky.utils.state.States;
 
 public interface Observer {
 
-    // when an observer sees that the state has been updated, it sees what the new state is, and executes the code of
+    // when an observer sees that the state has been updated, it sees what the new
+    // state is, and executes the code of
     // instance(s) being observed for that state.
     public void onStateUpdate(States state, StateData stateData);
 

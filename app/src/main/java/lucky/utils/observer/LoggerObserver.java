@@ -17,7 +17,6 @@ import lucky.utils.state.States;
 
 import java.util.List;
 
-
 public class LoggerObserver implements Observer {
 
     private Logger logger = new Logger();
@@ -30,7 +29,7 @@ public class LoggerObserver implements Observer {
         // each observer keeps an instance of players
         // contact Logger
 
-        switch(state) {
+        switch (state) {
             case START_GAME:
             case START_ROUND:
                 int roundNumber = stateData.getRoundNumber();
@@ -56,9 +55,7 @@ public class LoggerObserver implements Observer {
                 logger.addEndOfGameToLog(winners, players, publicCards);
                 break;
 
-
-
         }
 
-    }   
+    }
 }

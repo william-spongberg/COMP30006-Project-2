@@ -47,14 +47,18 @@ public class Option3 extends SummingOption {
      *
      * @param privateCards a player's private cards
      * @param publicCards  the game's public cards
-     * @return the number of points for these particular cards if scoring case 3 and option 3 is used
+     * @return the number of points for these particular cards if scoring case 3 and
+     *         option 3 is used
      */
     @Override
     public int case3Score(List<Card> privateCards, List<Card> publicCards) {
         if (!containsThirteen(privateCards, publicCards)) {
             return NOT_THIRTEEN;
         } else {
-            return CardEvaluator.getCardScore(privateCards.get(FIRST_CARD), false) + CardEvaluator.getCardScore(privateCards.get(SECOND_CARD), false) + CardEvaluator.getCardScore(publicCards.get(FIRST_CARD), true) + CardEvaluator.getCardScore(publicCards.get(SECOND_CARD), true);
+            return CardEvaluator.getCardScore(privateCards.get(FIRST_CARD), false)
+                    + CardEvaluator.getCardScore(privateCards.get(SECOND_CARD), false)
+                    + CardEvaluator.getCardScore(publicCards.get(FIRST_CARD), true)
+                    + CardEvaluator.getCardScore(publicCards.get(SECOND_CARD), true);
         }
     }
 }

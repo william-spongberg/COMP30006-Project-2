@@ -15,6 +15,7 @@ import ch.aplu.jcardgame.Card;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class DiscardPile {
 
     public static List<Card> discardCards = new ArrayList<>();
