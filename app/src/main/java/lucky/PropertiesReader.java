@@ -1,3 +1,13 @@
+/**
+ * PropertiesReader.java
+ * 
+ * This class is used to read properties files.
+ * 
+ * @author William Spongberg
+ * @author Joshua Linehan
+ * @author Ethan Hawkins
+ */
+
 package lucky;
 
 import java.util.ArrayList;

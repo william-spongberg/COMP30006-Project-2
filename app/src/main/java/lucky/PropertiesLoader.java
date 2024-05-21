@@ -1,3 +1,14 @@
+/**
+ * PropertiesLoader.java
+ * 
+ * This class is used to load properties files.
+ * 
+ * @author William Spongberg
+ * @author Joshua Linehan
+ * @author Ethan Hawkins
+ */
+
+
 package lucky;
 
 import java.io.IOException;

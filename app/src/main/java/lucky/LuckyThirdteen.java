@@ -1,3 +1,15 @@
+/**
+ * LuckyThirdteen.java
+ * 
+ * This is the main class used to house the game logic. 
+ * It contains many methods. The main ones are used to initialise the game, play the game, and end the game.
+ * these are called runApp, initGame, playGame, and endGame.
+ * 
+ * @author William Spongberg
+ * @author Joshua Linehan
+ * @author Ethan Hawkins
+ */
+
 package lucky;
 
 import ch.aplu.jcardgame.*;
@@ -8,16 +20,18 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import game.Dealer;
-import game.DiscardPile;
-import game.observer.LoggerObserver;
-import game.player.Player;
-import game.player.PlayerFactory;
-import game.state.*;
+import lucky.utils.dealer.Dealer;
+import lucky.utils.dealer.DiscardPile;
+import lucky.utils.observer.LoggerObserver;
+import lucky.utils.player.Player;
+import lucky.utils.player.PlayerFactory;
+import lucky.utils.state.StateContext;
+import lucky.utils.state.StateData;
+import lucky.utils.state.States;
 
-import static game.util.Logger.logResult;
-import static game.scorer.Scorer.getScores;
-import static game.scorer.Scorer.winner;
+import static lucky.utils.observer.Logger.logResult;
+import static lucky.utils.scorer.Scorer.getScores;
+import static lucky.utils.scorer.Scorer.winner;
 
 @SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
