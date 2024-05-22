@@ -1,10 +1,10 @@
 /**
  * LuckyThirdteen.java
- * 
- * This is the main class used to house the game logic. 
+ * <p>
+ * This is the main class used to house the game logic.
  * It contains many methods. The main ones are used to initialise the game, play the game, and end the game.
  * these are called runApp, initGame, playGame, and endGame.
- * 
+ *
  * @author William Spongberg
  * @author Joshua Linehan
  * @author Ethan Hawkins
@@ -13,13 +13,9 @@
 package lucky;
 
 import ch.aplu.jcardgame.*;
-import ch.aplu.jgamegrid.*;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import ch.aplu.jgamegrid.Actor;
+import ch.aplu.jgamegrid.Location;
+import ch.aplu.jgamegrid.TextActor;
 import lucky.utils.dealer.Dealer;
 import lucky.utils.dealer.DiscardPile;
 import lucky.utils.observer.LoggerObserver;
@@ -29,74 +25,52 @@ import lucky.utils.state.StateContext;
 import lucky.utils.state.StateData;
 import lucky.utils.state.States;
 
+import java.awt.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 import static lucky.utils.observer.Logger.logResult;
 import static lucky.utils.scorer.Scorer.getScores;
 import static lucky.utils.scorer.Scorer.winner;
 
-@SuppressWarnings("serial")
 public class LuckyThirdteen extends CardGame {
-    // TODO: move values put here to static finals in info expert?
-    // TODO: move attributes into respective classes?
-
     // --------------------------- VARIABLE DECLARATIONS ---------------------------
     // finals
 
-    // why do we still have this in two places?
-    public static final int seed = 30008;
-    public static final Random random = new Random(30008);
-    private final int handWidth = 400;
-    private final int trickWidth = 40;
-    // TODO: increment version per major commit?
-    private final String version = "1.0";
-    static final int MAX_ROUNDS = 4;
-    private final Location[] handLocations = {
-            new Location(350, 625),
-            new Location(75, 350),
-            new Location(350, 75),
-            new Location(625, 350)
-    };
-    private final Location[] scoreLocations = {
-            new Location(25, 575),
-            new Location(25, 25),
-            new Location(575, 25),
-            new Location(575, 575),
-    };
-
-    private final Location trickLocation = new Location(350, 350);
-    private final Location textLocation = new Location(350, 450);
-
+    public static final int SEED = 30008;
+    public static final Random RANDOM = new Random(SEED);
+    public static final int NUM_PLAYERS = 4;
+    private static final int MAX_ROUNDS = 4;
+    private static final int HAND_WIDTH = 400;
+    private static final int TRICK_WIDTH = 40;
+    private static final int FIRST_PLAYER = 0;
+    private static final int FIRST_ROUND = 1;
+    private static final int ONE_WINNER = 1;
+    private static final int NUM_PRIVATE_CARDS = 2;
+    private static final Location[] HAND_LOCATIONS = {new Location(350, 625), new Location(75, 350), new Location(350, 75), new Location(625, 350)};
+    private static final Location[] SCORE_LOCATIONS = {new Location(25, 575), new Location(25, 25), new Location(575, 25), new Location(575, 575),};
+    private static final Location TRICK_LOCATION = new Location(350, 350);
+    private static final Location TEXT_LOCATION = new Location(350, 450);
+    private final Actor[] scoreActors = {null, null, null, null};
+    private final Properties properties;
+    // state initialisation (initialised in initgame)
+    private final StateContext state = new StateContext();
+    private final LoggerObserver loggerObserver = new LoggerObserver();
     // primitives
-    public int nbPlayers = 4;
+    // structures
+    private Player[] players;
+    private final Font bigFont = new Font("Arial", Font.BOLD, 36);
     private int thinkingTime = 2000;
     private int delayTime = 600;
-    private boolean isAuto = false;
-
+    private boolean isAuto;
     private DiscardPile discardPile;
-
-    // structures
-    List<Card> initSharedCards = new ArrayList<>();
-    List<List<Card>> initPlayerHands = new ArrayList<>();
-    List<List<List<Card>>> autoPlayerMovements = new ArrayList<>();
-    Player[] players;
-    private Actor[] scoreActors = { null, null, null, null };
-    private int[] scores = new int[nbPlayers];
-
-    private int[] autoIndexHands = new int[nbPlayers];
-    private Hand[] hands;
-
+    private int[] scores = new int[NUM_PLAYERS];
     // classes
-    Dealer dealer;
-    Card selected;
+    private Dealer dealer;
     private Hand playingArea;
-    private Hand pack;
-    Font bigFont = new Font("Arial", Font.BOLD, 36);
-
-    private Properties properties;
-
-    // state initialisation (initialised in initgame)
-    private StateContext state = new StateContext();
-    private LoggerObserver loggerObserver = new LoggerObserver();
-
     private StateData stateData;
 
     // --------------------------- CONSTRUCTOR ---------------------------
@@ -108,49 +82,31 @@ public class LuckyThirdteen extends CardGame {
         delayTime = Integer.parseInt(properties.getProperty("delayTime", "50"));
     }
 
-    // --------------------------- INITIALISATION FUNCTIONS
-    // ---------------------------
+    // --------------------------- INITIALISATION FUNCTIONS ---------------------------
 
     public String runApp() {
+        String version = "1.0";
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
         setStatusText("Initialising...");
 
         // initialise logResult and discardPile
-        discardPile = discardPile.getInstance();
+        discardPile = DiscardPile.getInstance();
         logResult = new StringBuilder();
-        // FIXME: create Score object here - or should it be inside the game? - No,
-        // score stuff is static
         initScores();
-        initScore();
-
-        // Actor[] scoreActors = initScore(nbPlayers, scores, bgColor, bigFont);
-
-        // for (int i = 0; i < nbPlayers; i++)
-        // addActor(scoreActors[i], scoreLocations[i]);
-
-        // setupPlayerAutoMovements();
 
         initGame();
         playGame();
 
-        // what is this actually doing?
         scores = getScores(players, playingArea.getCardList());
-        int maxScore = 0;
-        for (int i = 0; i < nbPlayers; i++)
-            if (scores[i] > maxScore)
-                maxScore = scores[i];
 
-        // replace with winners method
         final List<Integer> winners = winner(players, playingArea.getCardList());
         String winText;
-        if (winners.size() == 1) {
-            winText = "Game over. Winner is player: " +
-                    winners.iterator().next();
+        if (winners.size() == ONE_WINNER) {
+            winText = "Game over. Winner is player: " + winners.iterator().next();
         } else {
-            winText = "Game Over. Drawn winners are players: " +
-                    String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList()));
+            winText = "Game Over. Drawn winners are players: " + winners.stream().map(String::valueOf).collect(Collectors.joining(", "));
         }
-        addActor(new Actor("sprites/gameover.gif"), textLocation);
+        addActor(new Actor("sprites/gameover.gif"), TEXT_LOCATION);
         setStatusText(winText);
         refresh();
 
@@ -165,17 +121,13 @@ public class LuckyThirdteen extends CardGame {
         return logResult.toString();
     }
 
-    // TODO: move scoring to new score class?
-    private void initScore() {
-        for (int i = 0; i < nbPlayers; i++) {
-            String text = "P" + i + "[" + String.valueOf(scores[i]) + "]";
-            scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
-            addActor(scoreActors[i], scoreLocations[i]);
-        }
-    }
-
     private void initScores() {
         Arrays.fill(scores, 0);
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            String text = "P" + i + "[" + scores[i] + "]";
+            scoreActors[i] = new TextActor(text, Color.WHITE, bgColor, bigFont);
+            addActor(scoreActors[i], SCORE_LOCATIONS[i]);
+        }
     }
 
     private void initGame() {
@@ -188,7 +140,6 @@ public class LuckyThirdteen extends CardGame {
 
         // read properties file
         PropertiesReader pReader = new PropertiesReader(properties);
-        nbPlayers = pReader.getNumPlayers();
         isAuto = pReader.isAuto();
         thinkingTime = pReader.getThinkingTime();
         delayTime = pReader.getDelayTime();
@@ -197,17 +148,16 @@ public class LuckyThirdteen extends CardGame {
         pReader.printProperties();
 
         // create players
-        players = new Player[nbPlayers];
-        PlayerFactory pFactory = new PlayerFactory(pReader.getStrInitPlayerHands(), pReader.getStrInitSharedCards(),
-                pReader.getStrPlayerAutoMovements());
+        players = new Player[NUM_PLAYERS];
+        PlayerFactory pFactory = new PlayerFactory(pReader.getStrInitPlayerHands(), pReader.getStrInitSharedCards(), pReader.getStrPlayerAutoMovements());
         // dealer created by player factory
         dealer = pFactory.getDealer();
 
-        for (int i = 0; i < nbPlayers; i++) {
+        for (int i = 0; i < NUM_PLAYERS; i++) {
             players[i] = pFactory.createPlayer(playerTypes.get(i), i, isAuto);
             if (players[i].getCards().isEmpty()) {
                 System.err.println("Player " + i + " has no starting cards");
-                for (int j = 0; j < 2; j++) {
+                for (int j = 0; j < NUM_PRIVATE_CARDS; j++) {
                     players[i].addCard(dealer.getRandomCard(true));
                 }
                 System.out.println("Init cards after random: " + players[i].getCards());
@@ -221,15 +171,15 @@ public class LuckyThirdteen extends CardGame {
             playingArea.insert(card, false);
         }
         // draw shared
-        playingArea.setView(this, new RowLayout(trickLocation, (playingArea.getNumberOfCards() + 2) * trickWidth));
+        playingArea.setView(this, new RowLayout(TRICK_LOCATION, (playingArea.getNumberOfCards() + 2) * TRICK_WIDTH));
         playingArea.draw();
         // init + draw player cards
-        RowLayout[] layouts = new RowLayout[nbPlayers];
-        for (int i = 0; i < nbPlayers; i++) {
-            layouts[i] = new RowLayout(handLocations[i], handWidth);
+        RowLayout[] layouts = new RowLayout[NUM_PLAYERS];
+        for (int i = 0; i < NUM_PLAYERS; i++) {
+            layouts[i] = new RowLayout(HAND_LOCATIONS[i], HAND_WIDTH);
             layouts[i].setRotationAngle(90.0 * i);
             players[i].setView(this, layouts[i]);
-            players[i].setTargetArea(new TargetArea(trickLocation));
+            players[i].setTargetArea(new TargetArea(TRICK_LOCATION));
             players[i].hideCards();
             players[i].renderCards();
         }
@@ -238,12 +188,10 @@ public class LuckyThirdteen extends CardGame {
     // --------------------------- DURING GAME FUNCTIONS ---------------------------
 
     private void playGame() {
-        // int winner = 0;
-        int currPlayer = 0;
-        Card drawnCard = null;
-        Card discardCard = null;
-        List<Card> cardsPlayed = new ArrayList<>();
-        int roundNumber = 1;
+        int currPlayer = FIRST_PLAYER;
+        Card drawnCard;
+        Card discardCard;
+        int roundNumber = FIRST_ROUND;
 
         // call add round info to log
         stateData = new StateData(roundNumber);
@@ -251,19 +199,10 @@ public class LuckyThirdteen extends CardGame {
 
         // start game loop
         while (roundNumber <= MAX_ROUNDS) {
-            // TODO, do I need to update state here?
-            // state.setCurrentState(States.START_ROUND);
-
-            // player behaviour: //
-            // deal a card to the player
-            // player selects a card from hand to discard
-            // card is removed from hand
-            // add to list of cards played (add to discard pile)
-
             // DEBUG //
             // check player's cards are not in dealer's deck
             Hand tmpHand = dealer.getPack();
-            for (int i = 0; i < nbPlayers; i++) {
+            for (int i = 0; i < NUM_PLAYERS; i++) {
                 for (Card card : players[i].getCards()) {
                     for (Card deckCard : tmpHand.getCardList()) {
                         if (card.equals(deckCard)) {
@@ -296,7 +235,6 @@ public class LuckyThirdteen extends CardGame {
             // log stuff //
             if (drawnCard != null) {
                 // add card to the list of cards played
-                cardsPlayed.add(drawnCard);
                 delay(delayTime);
             }
 
@@ -307,7 +245,7 @@ public class LuckyThirdteen extends CardGame {
             if (discardCard == null) {
                 System.err.println("Player " + currPlayer + " did not discard a card");
                 // TODO: change to players[currPlayer].getRandomCard()?
-                discardCard = players[currPlayer].getCards().get(random.nextInt(players[currPlayer].getCards().size()));
+                discardCard = players[currPlayer].getCards().get(RANDOM.nextInt(players[currPlayer].getCards().size()));
             }
             System.out.println("Player " + currPlayer + " discarded " + discardCard);
 
@@ -328,11 +266,11 @@ public class LuckyThirdteen extends CardGame {
             state.setCurrentState(States.END_TURN, stateData);
 
             // next player's turn
-            currPlayer = (currPlayer + 1) % nbPlayers;
+            currPlayer = (currPlayer + 1) % NUM_PLAYERS;
 
             // if the next player is player 0, increment the round number and log the end of
             // round scores
-            if (currPlayer == 0) {
+            if (currPlayer == FIRST_PLAYER) {
                 roundNumber++;
 
                 // call addEndOfRoundToLog
@@ -347,43 +285,19 @@ public class LuckyThirdteen extends CardGame {
                 scores = getScores(players, playingArea.getCardList());
             }
 
-            // FIXME: this is never reached?
-            // if round is over, calculate round score
-            // if (roundNumber > MAX_ROUNDS) {
-            // scores = getScores(players, playingArea.getCardList());
-            // }
-
             // delay before next round
             delay(delayTime);
         }
     }
 
-    // TODO: I can't remember what this was used for. Delete?
-    // public boolean rankGreater(Card card1, Card card2) {
-    // Warning: Reverse rank order of cards (see comment on enum)
-    // FIXME: why warning? - because it returns reverse
-    // return card1.getRankId() < card2.getRankId();
-    // }
-
-    // -------------------------- 13 CHECKING --------------------------------------
-
     // --------------------------- GETTERS & SETTERS & UPDATERS --------------------
 
-    public void setStatus(String string) {
-        setStatusText(string);
-    }
-    // private Card selected;
-
-    // theres some functionality we're missing I think.
     private void updateScore(int player) {
-        // FIXME: why create new actor each time? just change text - cuz theres no
-        // update in this right, we have to add and remove everythin
         removeActor(scoreActors[player]);
-        // why is max used here? how can the score be negative?
-        int displayScore = Math.max(scores[player], 0);
-        String text = "P" + player + "[" + String.valueOf(displayScore) + "]";
+        int displayScore = scores[player];
+        String text = "P" + player + "[" + displayScore + "]";
         scoreActors[player] = new TextActor(text, Color.WHITE, bgColor, bigFont);
-        addActor(scoreActors[player], scoreLocations[player]);
+        addActor(scoreActors[player], SCORE_LOCATIONS[player]);
     }
 
     // --------------------------- END GAME FUNCTIONS ---------------------------
