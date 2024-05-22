@@ -27,7 +27,6 @@ public class Human implements PlayerController {
     };
 
     public Card discardCard(Hand hand) {
-        // TODO: is it necessary to set the hand and add listener every time?
         hand.addCardListener(cardListener);
         selected = null;
         hand.setTouchEnabled(true);

@@ -26,8 +26,8 @@ public class LoggerObserver implements Observer {
 
     public void onStateUpdate(States state, StateData stateData) {
 
-        // each observer keeps an instance of players
-        // contact Logger
+        // each observer keeps an instance of players from stateData
+        // contact Logger and execute methods dependent on the state
 
         switch (state) {
             case START_GAME:

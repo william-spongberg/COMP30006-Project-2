@@ -22,12 +22,15 @@ import java.util.stream.Collectors;
 
 import static lucky.utils.scorer.Scorer.getScores;
 
-//TODO: DEAL WITH THE PACKAGE THIS IS IN. YUCK
 
+// contains all the methods for logging to be used by the Observer
 public class Logger {
 
+    // this must be static, as it needs to be used by the LuckyThirdteen class. If it were not static, it would
+    // not be possible to return from here. Given the log is globally visible, this is not beleived to be a problem.
     public static StringBuilder logResult = new StringBuilder();
 
+    // used at the end of a turn
     public void addCardPlayedToLog(int player, List<Card> cards) {
         if (cards.size() < 2) {
             return;
@@ -45,10 +48,12 @@ public class Logger {
         logResult.append(",");
     }
 
+    // used at start of the round
     public void addRoundInfoToLog(int roundNumber) {
         logResult.append("Round" + roundNumber + ":");
     }
 
+    // used at the end of a round
     public void addEndOfRoundToLog(Player[] players, List<Card> publicCards) {
         int[] scores = getScores(players, publicCards);
         logResult.append("Score:");
@@ -58,6 +63,7 @@ public class Logger {
         logResult.append("\n");
     }
 
+    // used at the end of the game
     public void addEndOfGameToLog(List<Integer> winners, Player[] players, List<Card> publicCards) {
         int[] scores = getScores(players, publicCards);
         logResult.append("EndGame:");

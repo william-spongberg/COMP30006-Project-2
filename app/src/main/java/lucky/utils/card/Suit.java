@@ -15,7 +15,6 @@ public enum Suit {
 
     private String suitShortHand = "";
     private int multiplicationFactor = 1;
-    public static final int PUBLIC_CARD_MULTIPLICATION_FACTOR = 2;
 
     Suit(String shortHand, int multiplicationFactor) {
         this.suitShortHand = shortHand;

@@ -28,15 +28,19 @@ import static lucky.utils.scorer.Scorer.hasThirteen;
 
 public class Clever implements PlayerController {
 
-    // create an instance to preserve singleton
+    // define as the getInstance to preverse singleton.
     private DiscardPile discardPile = DiscardPile.getInstance();
 
+    // used to hold the public cards
     private List<Card> sharedCards;
 
+    // when called, is given the public cards
     public Clever(List<Card> sharedCards) {
         this.sharedCards = sharedCards;
     }
 
+
+    // the central method of discarding cards
     @Override
     public Card discardCard(Hand hand) {
         Integer indexToRemove = 0;
@@ -45,19 +49,27 @@ public class Clever implements PlayerController {
         List<Card> cardsPlayed = discardPile.getDiscardCards();
 
 
+        // this is done as at the start of this method, we have three cards, and to check if we have thirteen, we use
+        // two cards.
         List<Card> cardGroupToCheck1 = new ArrayList<>(hand.getCardList()).subList(0, 2);
         List<Card> cardGroupToCheck2 = new ArrayList<>(hand.getCardList()).subList(1, 3);
         List<Card> cardGroupToCheck3 = new ArrayList<>(hand.getCardList());
         cardGroupToCheck3.remove(1);
+
+        // check if we have thirteen from all possible combos
         if (hasThirteen(cardGroupToCheck1, sharedCards) || hasThirteen(cardGroupToCheck2, sharedCards)
                 || hasThirteen(cardGroupToCheck3, sharedCards)) {
+            // if we do, remove whatever doesnt contribute to 13 or the lowest value card
             indexToRemove = thirteenChecker(sharedCards, cards);
         } else {
+            // else, we estimate what the best card is. we remove whatever maximises the score.
             indexToRemove = cleverCardToRemove(cardsPlayed, hand);
         }
         return hand.getCardList().get(indexToRemove);
     }
 
+    // check if we have thirteen. If we do, find whatever doesn't contribute to thirteen. If everything does,
+    //discard the lowest
     private Integer thirteenChecker(List<Card> sharedCards, List<Card> hand) {
 
         for (int i = 0; i < hand.size() - 1; i++) {
@@ -82,19 +94,18 @@ public class Clever implements PlayerController {
         return worstCardIndex;
     }
 
+
+    // ran if we dont have thirteen
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
         List<Card> cardsInHand = new ArrayList<>(hand.getCardList());
-        int bestCardIndex = 0; // just in case
+        int bestCardIndex = 0;
         double bestAverageScore = 0;
 
+        // iterate over each card in hand
         for (int i = 0; i < cardsInHand.size(); i++) {
             List<Card> newHand = new ArrayList<>(cardsInHand);
-
+            newHand.remove(i); // Remove the card at index i
             double averageScore = maximiseScore(newHand, cardsPlayed);
-            // System.out.println("Removed card: " + removedCard); // Debug: Print the
-            // removed card
-            // System.out.println("Average score after removing " + removedCard + ": " +
-            // averageScore); // Debug: Print average score
             if (averageScore > bestAverageScore) {
                 bestAverageScore = averageScore;
                 bestCardIndex = i;
@@ -104,6 +115,35 @@ public class Clever implements PlayerController {
         return bestCardIndex;
     }
 
+    // iteratively combine every card in our hypothetical hand with every card that is likely to be in the deck
+    // using the information provided by the discarded cards.
+    private double maximiseScore(List<Card> hand, List<Card> cardsPlayed) {
+        double totalEval = 0;
+        int evaluationCount = 0;
+
+        // List of possible cards to draw
+        ArrayList<Card> possibleCards = getPossibleCardsToDraw(cardsPlayed, sharedCards, new ArrayList<>(hand));
+
+        // Simulate every possible pair in the future for the two cards in our hand
+        for (int i = 0; i < hand.size(); i++) {
+            List<Card> tempHand = new ArrayList<>(hand);
+            tempHand.remove(i);
+
+            // Evaluate all possible two-card hands formed by drawing a new card
+            for (Card possibleCard : possibleCards) {
+                List<Card> simulatedHand = new ArrayList<>(tempHand);
+                simulatedHand.add(possibleCard);
+                totalEval += evaluateHand(simulatedHand, sharedCards); // Evaluate the hand
+                evaluationCount++;
+            }
+        }
+        if (evaluationCount == 0) {
+            return 0;
+        }
+        return totalEval / evaluationCount;
+    }
+
+    // use the static scoring functions to evaulate how good a hand is for averaging
     private int evaluateHand(List<Card> cardsInHand, List<Card> sharedCards) {
 
         int score;
@@ -120,29 +160,6 @@ public class Clever implements PlayerController {
         }
 
         return score;
-    }
-
-    private double maximiseScore(List<Card> hand, List<Card> cardsPlayed) {
-        double totalEval = 0;
-        int evaluationCount = 0;
-
-        for (Card card : hand) {
-            ArrayList<Card> newHand = new ArrayList<>(hand);
-            newHand.remove(card);
-
-            for (Card possibleCard : getPossibleCardsToDraw(cardsPlayed, sharedCards, newHand)) {
-                List<Card> tempHand = new ArrayList<>(newHand);
-                tempHand.add(possibleCard);
-                totalEval += evaluateHand(tempHand, sharedCards);
-                evaluationCount++;
-            }
-        }
-
-        // avoid dividing by zero
-        if (evaluationCount == 0) {
-            return 0;
-        }
-        return totalEval / evaluationCount;
     }
 
     // hypothesises what the deck looks like based on what cards are visible to the

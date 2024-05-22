@@ -114,7 +114,6 @@ public class LuckyThirdteen extends CardGame {
             updateScore(i);
         }
 
-        // TODO: DISCUSS IF THIS IS BAD
         return logResult.toString();
     }
 
@@ -128,7 +127,6 @@ public class LuckyThirdteen extends CardGame {
     }
 
     private void initGame() {
-        // FIXME: each player should contain hand and score -- ?
 
         System.out.println("initialising game");
 
@@ -292,6 +290,5 @@ public class LuckyThirdteen extends CardGame {
         addActor(scoreActors[player], SCORE_LOCATIONS[player]);
     }
 
-    // --------------------------- END GAME FUNCTIONS ---------------------------
 
 }
