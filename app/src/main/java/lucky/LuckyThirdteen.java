@@ -71,8 +71,6 @@ public class LuckyThirdteen extends CardGame {
     private int delayTime = 600;
     private boolean isAuto = false;
 
-    private DiscardPile discardPile;
-
     // structures
     List<Card> initSharedCards = new ArrayList<>();
     List<List<Card>> initPlayerHands = new ArrayList<>();
@@ -98,6 +96,7 @@ public class LuckyThirdteen extends CardGame {
     private LoggerObserver loggerObserver = new LoggerObserver();
 
     private StateData stateData;
+    private DiscardPile discardPile = DiscardPile.getInstance();
 
     // --------------------------- CONSTRUCTOR ---------------------------
     public LuckyThirdteen(Properties properties) {
@@ -114,9 +113,6 @@ public class LuckyThirdteen extends CardGame {
     public String runApp() {
         setTitle("LuckyThirteen (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
         setStatusText("Initialising...");
-
-        // initialise logResult and discardPile
-        discardPile = discardPile.getInstance();
         logResult = new StringBuilder();
         // FIXME: create Score object here - or should it be inside the game? - No,
         // score stuff is static

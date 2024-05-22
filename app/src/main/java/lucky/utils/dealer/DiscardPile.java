@@ -25,12 +25,14 @@ public class DiscardPile {
         discardCards = new ArrayList<>();
     }
 
-    public static DiscardPile getInstance() {
-        if (instance == null) {
+    public static synchronized DiscardPile getInstance()
+    {
+        if (instance == null)
             instance = new DiscardPile();
-        }
+
         return instance;
     }
+
 
     public List<Card> getDiscardCards() {
         return new ArrayList<>(discardCards); // Return a copy to preserve encapsulation

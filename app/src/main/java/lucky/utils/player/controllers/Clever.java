@@ -29,7 +29,7 @@ import static lucky.utils.scorer.Scorer.hasThirteen;
 public class Clever implements PlayerController {
 
     // create an instance to preserve singleton
-    private DiscardPile discardPile;
+    private DiscardPile discardPile = DiscardPile.getInstance();
 
     private List<Card> sharedCards;
 
