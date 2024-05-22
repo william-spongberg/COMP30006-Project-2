@@ -238,12 +238,7 @@ public class LuckyThirdteen extends CardGame {
             players[currPlayer].renderCards();
 
             discardCard = players[currPlayer].discardCard();
-
-            if (discardCard == null) {
-                System.err.println("Player " + currPlayer + " did not discard a card");
-                // TODO: change to players[currPlayer].getRandomCard()?
-                discardCard = players[currPlayer].getCards().get(RANDOM.nextInt(players[currPlayer].getCards().size()));
-            }
+            
             System.out.println("Player " + currPlayer + " discarded " + discardCard);
 
             // for visibility to clever, add to discardPile.
