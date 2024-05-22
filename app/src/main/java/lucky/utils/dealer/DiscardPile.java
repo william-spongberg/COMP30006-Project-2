@@ -35,7 +35,7 @@ public class DiscardPile {
 
 
     public List<Card> getDiscardCards() {
-        return new ArrayList<>(discardCards); // Return a copy to preserve encapsulation
+        return this.discardCards; // Return a copy to preserve encapsulation
     }
 
     public void addDiscardCard(Card discardCard) {
