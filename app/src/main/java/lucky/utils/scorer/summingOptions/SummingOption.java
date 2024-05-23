@@ -45,7 +45,7 @@ public abstract class SummingOption {
      * @param card2 the second card
      * @return true if a thirteen can be made with these cards, false otherwise
      */
-    public static boolean isThirteen(Card card1, Card card2) {
+    public boolean isThirteen(Card card1, Card card2) {
         for (int card1Value : CardEvaluator.getSumValues(card1)) {
             for (int card2Value : CardEvaluator.getSumValues(card2)) {
                 if (card1Value + card2Value == THIRTEEN) {
