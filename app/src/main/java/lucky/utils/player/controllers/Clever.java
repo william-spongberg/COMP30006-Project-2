@@ -18,29 +18,35 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Deck;
 import ch.aplu.jcardgame.Hand;
 import lucky.utils.dealer.DiscardPile;
+import lucky.utils.scorer.scoring_cases.ScoringCase;
 import lucky.utils.card.Rank;
 import lucky.utils.card.Suit;
-import lucky.utils.scorer.scoringCases.ScoringCase;
+
 import java.util.ArrayList;
 import java.util.List;
 import static lucky.utils.scorer.CardEvaluator.getCardScore;
 import static lucky.utils.scorer.Scorer.hasThirteen;
 
 public class Clever implements PlayerController {
-
-    // define as the getInstance to preverse singleton.
+    // attributes
     private DiscardPile discardPile = DiscardPile.getInstance();
-
-    // used to hold the public cards
     private List<Card> sharedCards;
 
-    // when called, is given the public cards
+    /*
+     * Constructor for the Clever class.
+     * Is given a list of shared cards on creation
+     */
     public Clever(List<Card> sharedCards) {
         this.sharedCards = sharedCards;
     }
 
-
-    // the central method of discarding cards
+    /*
+     * Discards a card from the hand based on the current state of the game
+     * Picks the card that maximises the score of the hand after the card is removed
+     * 
+     * @param the hand of the player
+     * @return the card to discard
+     */
     @Override
     public Card discardCard(Hand hand) {
         Integer indexToRemove = 0;
@@ -48,8 +54,8 @@ public class Clever implements PlayerController {
         // returns a copy, as is singleton
         List<Card> cardsPlayed = discardPile.getDiscardCards();
 
-
-        // this is done as at the start of this method, we have three cards, and to check if we have thirteen, we use
+        // this is done as at the start of this method, we have three cards, and to
+        // check if we have thirteen, we use
         // two cards.
         List<Card> cardGroupToCheck1 = new ArrayList<>(hand.getCardList()).subList(0, 2);
         List<Card> cardGroupToCheck2 = new ArrayList<>(hand.getCardList()).subList(1, 3);
@@ -62,14 +68,23 @@ public class Clever implements PlayerController {
             // if we do, remove whatever doesnt contribute to 13 or the lowest value card
             indexToRemove = thirteenChecker(sharedCards, cards);
         } else {
-            // else, we estimate what the best card is. we remove whatever maximises the score.
+            // else, we estimate what the best card is. we remove whatever maximises the
+            // score.
             indexToRemove = cleverCardToRemove(cardsPlayed, hand);
         }
         return hand.getCardList().get(indexToRemove);
     }
 
-    // check if we have thirteen. If we do, find whatever doesn't contribute to thirteen. If everything does,
-    //discard the lowest
+    /**
+     * Finds the index of the card to be removed from the hand that results in a sum
+     * of 13 when combined with the shared cards.
+     * If no such card is found, the index of the card with the lowest value is
+     * returned.
+     *
+     * @param sharedCards the list of shared cards
+     * @param hand        the list of cards in the hand
+     * @return the index of the card to be removed from the hand
+     */
     private Integer thirteenChecker(List<Card> sharedCards, List<Card> hand) {
 
         for (int i = 0; i < hand.size() - 1; i++) {
@@ -94,8 +109,13 @@ public class Clever implements PlayerController {
         return worstCardIndex;
     }
 
-
-    // ran if we dont have thirteen
+    /**
+     * Returns the index of the clever card to remove from the hand.
+     *
+     * @param cardsPlayed the list of cards played by other players
+     * @param hand        the hand of the player
+     * @return the index of the clever card to remove
+     */
     private Integer cleverCardToRemove(List<Card> cardsPlayed, Hand hand) {
         List<Card> cardsInHand = new ArrayList<>(hand.getCardList());
         int bestCardIndex = 0;
@@ -115,8 +135,15 @@ public class Clever implements PlayerController {
         return bestCardIndex;
     }
 
-    // iteratively combine every card in our hypothetical hand with every card that is likely to be in the deck
-    // using the information provided by the discarded cards.
+    /**
+     * Calculates the maximum score for a given hand and cards played.
+     * Uses a simulation akin to Mini-Max to maximise the score of the hand after
+     * removing a card.
+     * 
+     * @param hand        The list of cards in the player's hand.
+     * @param cardsPlayed The list of cards already played in the game.
+     * @return The maximum score calculated for the given hand and cards played.
+     */
     private double maximiseScore(List<Card> hand, List<Card> cardsPlayed) {
         double totalEval = 0;
         int evaluationCount = 0;
@@ -143,7 +170,14 @@ public class Clever implements PlayerController {
         return totalEval / evaluationCount;
     }
 
-    // use the static scoring functions to evaulate how good a hand is for averaging
+    /**
+     * Evaluates the score of a hand based on the given cards in hand and shared
+     * cards.
+     *
+     * @param cardsInHand the list of cards in hand
+     * @param sharedCards the list of shared cards
+     * @return the score of the hand
+     */
     private int evaluateHand(List<Card> cardsInHand, List<Card> sharedCards) {
 
         int score;
@@ -162,8 +196,16 @@ public class Clever implements PlayerController {
         return score;
     }
 
-    // hypothesises what the deck looks like based on what cards are visible to the
-    // bot
+    /**
+     * Returns a list of possible cards that can be drawn from the deck, given the
+     * cards already played,
+     * the shared cards, and the player's hand.
+     *
+     * @param cardsPlayed The list of cards already played.
+     * @param sharedCards The list of shared cards.
+     * @param hand        The player's hand.
+     * @return The list of possible cards to draw from the deck.
+     */
     private ArrayList<Card> getPossibleCardsToDraw(List<Card> cardsPlayed, List<Card> sharedCards,
             ArrayList<Card> hand) {
         Deck deck = new Deck(Suit.values(), Rank.values(), "cover");

@@ -11,11 +11,16 @@ package lucky;
 import java.util.Properties;
 
 public class Driver {
-    public static final String DEFAULT_PROPERTIES_PATH = "properties/game4.properties";
+    public static final String DEFAULT_PROPERTIES_PATH = "properties/game1.properties";
 
     public static void main(String[] args) {
-        final Properties properties = PropertiesLoader.loadPropertiesFile(DEFAULT_PROPERTIES_PATH);
+        // load properties file
+        Properties properties = PropertiesLoader.loadPropertiesFile(DEFAULT_PROPERTIES_PATH);
+
+        // run the game
         String logResult = new LuckyThirdteen(properties).runApp();
+
+        // print the result
         System.out.println("logResult = " + logResult);
     }
 }

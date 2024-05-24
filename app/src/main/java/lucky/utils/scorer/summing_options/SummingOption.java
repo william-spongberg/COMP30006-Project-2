@@ -10,7 +10,7 @@
  * @author Ethan Hawkins
  */
 
-package lucky.utils.scorer.summingOptions;
+package lucky.utils.scorer.summing_options;
 
 import ch.aplu.jcardgame.Card;
 import lucky.utils.scorer.CardEvaluator;

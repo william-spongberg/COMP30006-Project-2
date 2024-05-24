@@ -15,14 +15,15 @@ package lucky.utils.scorer;
 
 import ch.aplu.jcardgame.Card;
 import lucky.utils.player.Player;
-import lucky.utils.scorer.scoringCases.ScoringCase;
-import lucky.utils.scorer.summingOptions.SummingOption;
+import lucky.utils.scorer.scoring_cases.ScoringCase;
+import lucky.utils.scorer.summing_options.SummingOption;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Scorer {
+    // constants
     private static final int CASE_1_THRESHOLD = 1;
     private static final int CASE_2_THRESHOLD = 0;
     private static final int CASE_3_THRESHOLD = 2;

@@ -9,7 +9,7 @@
  * @author Ethan Hawkins
  */
 
-package lucky.utils.scorer.scoringCases;
+package lucky.utils.scorer.scoring_cases;
 
 import ch.aplu.jcardgame.Card;
 

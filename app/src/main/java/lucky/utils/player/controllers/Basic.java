@@ -18,6 +18,12 @@ import static lucky.utils.scorer.CardEvaluator.getCardScore;
 
 public class Basic implements PlayerController {
 
+    /*
+     * Discards the card with the lowest score
+     * 
+     * @param hand the hand of the player
+     * @return the card to discard
+     */
     @Override
     public Card discardCard(Hand hand) {
         ArrayList<Card> cardsInHand = hand.getCardList();

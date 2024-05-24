@@ -1,9 +1,8 @@
 /**
  * DiscardPile.java
  * 
- * the DiscardPile class is used to store the cards that have been discarded by the players.
- * it has a list of cards that have been discarded
- * this is a singleton!
+ * Used to store the cards that have been discarded by the players in a list.
+ * Is a singleton class, so only one instance can exist.
  * 
  * @author William Spongberg
  * @author Joshua Linehan
@@ -21,13 +20,13 @@ import java.util.List;
 // singleton
 public class DiscardPile {
 
-    // defines the only instance
+    // singleton instance
     private static DiscardPile instance;
 
-    // the discardCards this instance can contain
+    // attributes
     private List<Card> discardCards;
 
-    // the instance has an arrayList of discarded cards
+    // constructor
     private DiscardPile() {
         discardCards = new ArrayList<>();
     }
@@ -41,11 +40,12 @@ public class DiscardPile {
         return instance;
     }
 
-
+    // getters
     public List<Card> getDiscardCards() {
-        return this.discardCards; // Return a copy to preserve encapsulation
+        return this.discardCards;
     }
 
+    // setters
     public void addDiscardCard(Card discardCard) {
         discardCards.add(discardCard);
     }

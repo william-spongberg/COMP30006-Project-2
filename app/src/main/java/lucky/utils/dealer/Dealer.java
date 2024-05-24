@@ -1,7 +1,7 @@
 /**
  * Dealer.java
  * 
- * the Dealer class is used to handle the deck of cards in the game.
+ * The Dealer class is used to handle the deck of cards in the game.
  * 
  * @author William Spongberg
  * @author Joshua Linehan
@@ -10,6 +10,7 @@
 
 package lucky.utils.dealer;
 
+import lucky.LuckyThirdteen;
 import lucky.utils.card.Rank;
 import lucky.utils.card.Suit;
 
@@ -17,36 +18,43 @@ import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Deck;
 import ch.aplu.jcardgame.Hand;
 
-import java.util.Random;
-
 public class Dealer {
-    // TODO: only define once and use by all, need set random seed for testing
-    private static final int SEED = 30008;
-    private static final Random random = new Random(SEED);
+    // constants
+    public static final Deck INITIAL_DECK = new Deck(Suit.values(), Rank.values(), "cover");
 
-    // testing
-    public static final Deck BASE_DECK = new Deck(Suit.values(), Rank.values(), "cover");
-
-    private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
+    // attributes
+    private Deck deck = INITIAL_DECK;
+    private Hand pack = deck.toHand(false);
 
     public Dealer(boolean shuffle) {
         if (shuffle)
             shuffle();
     }
 
-    // deck converted into usable Hand (unshuffled)
-    private Hand pack = deck.toHand(false);
-
+    /**
+     * Shuffles the pack of cards.
+     */
     public void shuffle() {
-        // shuffle the pack
         pack.shuffle(false);
     }
 
+    /**
+     * Discards a card from the pack.
+     *
+     * @param card the card to be discarded
+     */
     public void discardCard(Card card) {
         // remove card from pack
         pack.remove(card, false);
     }
 
+    /*
+     * Gets a card from the pack.
+     * 
+     * @param discard whether to discard the card
+     * 
+     * @return the card
+     */
     public Card getCard(boolean discard) {
         // get top card from pack
         Card card = pack.get(0);
@@ -57,6 +65,15 @@ public class Dealer {
         return card;
     }
 
+    /**
+     * Retrieves a card from the pack based on the given card name.
+     * If the discard flag is set to true, the card will be discarded from the pack.
+     *
+     * @param cardName The name of the card to retrieve.
+     * @param discard  A flag indicating whether to discard the card from the pack.
+     * @return The card object matching the given card name, or null if the card is
+     *         not found.
+     */
     public Card getCard(String cardName, boolean discard) {
         // get card from pack based on card name
         Rank rank = getRankFromString(cardName);
@@ -78,6 +95,13 @@ public class Dealer {
         return null;
     }
 
+    /*
+     * Gets a card from the pack based on the given card.
+     * 
+     * @param card the card to get
+     * @param discard whether to discard the card
+     * @return the card
+     */
     public Card getCard(Card card, boolean discard) {
         for (Card packCard : pack.getCardList()) {
             if (card.getRank() == packCard.getRank() && card.getSuit() == packCard.getSuit()) {
@@ -95,9 +119,15 @@ public class Dealer {
         return null;
     }
 
+    /*
+     * Gets a random card from the pack.
+     * 
+     * @param discard whether to discard the card
+     * @return the card
+     */
     public Card getRandomCard(boolean discard) {
         // get random card from pack
-        Card card = pack.get(random.nextInt(pack.getNumberOfCards()));
+        Card card = pack.get(LuckyThirdteen.RANDOM.nextInt(pack.getNumberOfCards()));
         if (card == null)
             return null;
         if (discard)
@@ -105,16 +135,12 @@ public class Dealer {
         return card;
     }
 
-    public Card dealCard() {
-        // deals a random card from the pack
-        if (pack.isEmpty()) {
-            System.err.println("No more cards in deck");
-            return null;
-        }
-
-        return getRandomCard(true);
-    }
-
+    /*
+     * Gets the rank from the given card name.
+     * 
+     * @param cardName the name of the card
+     * @return the rank
+     */
     public static Rank getRankFromString(String cardName) {
         // get rank from card name
         String rankString = cardName.substring(0, cardName.length() - 1);
@@ -125,11 +151,17 @@ public class Dealer {
                 return rank;
             }
         }
-        // default return ACE
         System.err.println("Rank not found for card: " + cardName);
-        return Rank.ACE;
+        System.exit(1);
+        return null;
     }
 
+    /*
+     * Gets the suit from the given card name.
+     * 
+     * @param cardName the name of the card
+     * @return the suit
+     */
     public static Suit getSuitFromString(String cardName) {
         // get suit from card name
         String suitString = cardName.substring(cardName.length() - 1, cardName.length());
@@ -139,12 +171,14 @@ public class Dealer {
                 return suit;
             }
         }
-        // default return CLUBS
         System.err.println("Suit not found for card: " + cardName);
-        return Suit.CLUBS;
+        System.exit(1);
+        return null;
     }
 
-    public Deck getBaseDeck() {
+    // getters
+
+    public Deck getInitialDeck() {
         return deck;
     }
 

@@ -22,43 +22,112 @@ import java.util.List;
  * and cards.
  */
 public class Player {
-    private final boolean isAuto;
-    private final Hand hand;
-    private final PlayerController controller;
-    private final List<List<Card>> autoMovements;
-    boolean finishedAuto = false;
-    private final List<Card> cards;
-    private int autoIndex = 0;
-
+    // constants
     private static final int DRAW_CARD_INDEX = 0;
     private static final int DISCARD_CARD_INDEX = 1;
 
+    private final Hand hand;
+    private final PlayerController controller;
+    private final List<List<Card>> autoMovements;
+    private final List<Card> cards;
+
+    // attributes
+    private boolean isAuto = false;
+    private boolean finishedAuto = false;
+    private int autoIndex = 0;
+
+    /**
+     * Constructs a new Player object with the given initial cards, auto mode, auto
+     * movements,
+     * 
+     * @param initialCards  The initial cards for the player.
+     * @param isAuto        Whether the player is in auto mode.
+     * @param autoMovements The auto movements for the player.
+     * @param controller    The controller for the player.
+     */
     public Player(List<Card> initialCards, boolean isAuto, List<List<Card>> autoMovements,
             PlayerController controller) {
         this.controller = controller;
         this.isAuto = isAuto;
         this.autoMovements = autoMovements;
-        hand = new Hand(Dealer.BASE_DECK);
+
+        hand = new Hand(Dealer.INITIAL_DECK);
         cards = initialCards;
+
         sortHand();
         convertListToHand(initialCards);
     }
 
+    /**
+     * Converts a list of cards into a hand by inserting each card into the hand.
+     * 
+     * @param cards the list of cards to convert
+     */
     public void convertListToHand(List<Card> cards) {
         if (cards.isEmpty() || cards.get(0) == null) {
             return;
         }
-        System.out.println("cards: " + cards);
         for (Card card : cards) {
             hand.insert(card, false);
         }
     }
 
+    /**
+     * Checks if the auto movement at the specified index has finished.
+     *
+     * @param index the index of the auto movement to check
+     */
+    public void checkFinishedAuto(int index) {
+        if (!autoMovements.isEmpty()) {
+            finishedAuto = autoMovements.get(index).isEmpty();
+        }
+    }
+
+    /**
+     * Draws a card from the player's hand.
+     * If the game is set to auto, the card is drawn from the auto movements list.
+     * 
+     * @return The card drawn from the player's hand, or null if not auto.
+     */
+    public Card drawCard() {
+        checkFinishedAuto(autoIndex);
+
+        if (isAuto && !finishedAuto) {
+            return autoMovements.get(autoIndex).get(DRAW_CARD_INDEX);
+        }
+
+        // don't care which card is dealt otherwise
+        return null;
+    }
+
+    /*
+     * Discards a card from the player's hand.
+     * If the game is set to auto, the card is discarded from the auto movements
+     * list, else the card is discarded by the controller.
+     * 
+     * @return The card discarded from the player's hand.
+     */
+    public Card discardCard() {
+        checkFinishedAuto(autoIndex);
+
+        // if game is set to auto
+        if (isAuto) {
+            // get card and increment autoIndex
+            return autoMovements.get(autoIndex++).get(DISCARD_CARD_INDEX);
+        }
+
+        // if game is not set to auto or if finishedAuto is true
+        // fallback to controller
+        return controller.discardCard(hand);
+    }
+
+    // getters
+
     public List<Card> getCards() {
         return cards;
     }
 
-    /* setters */
+    // setters
 
     public void sortHand() {
         hand.sort(Hand.SortType.SUITPRIORITY, false);
@@ -92,40 +161,5 @@ public class Player {
     public void removeCard(Card card) {
         cards.remove(card);
         hand.remove(card, false);
-    }
-
-    public void checkFinishedAuto(int index) {
-        if (!autoMovements.isEmpty()) {
-            finishedAuto = autoMovements.get(index).isEmpty();
-        }
-    }
-
-    public Card drawCard() {
-        checkFinishedAuto(autoIndex);
-
-        if (isAuto) {
-            System.out.println("auto moves: " + autoMovements);
-            return autoMovements.get(autoIndex).get(DRAW_CARD_INDEX);
-        }
-
-        // don't care which card is dealt otherwise
-        // dealer with deal random card
-        System.out.println("auto moves: " + autoMovements);
-        return null;
-    }
-
-    public Card discardCard() {
-        checkFinishedAuto(autoIndex);
-
-        // if game is set to auto
-        if (isAuto) {
-            System.out.println("auto moves: " + autoMovements);
-            // get card and increment autoIndex
-            return autoMovements.get(autoIndex++).get(DISCARD_CARD_INDEX);
-        }
-
-        // if game is not set to auto or if finishedAuto is true
-        // fallback to controller
-        return controller.discardCard(hand);
     }
 }

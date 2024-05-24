@@ -13,13 +13,18 @@ package lucky.utils.player.controllers;
 
 import ch.aplu.jcardgame.Card;
 import ch.aplu.jcardgame.Hand;
+import lucky.LuckyThirdteen;
 
 public class Random implements PlayerController {
 
-    private final java.util.Random random = new java.util.Random();
-
+    /**
+     * Discards a random card from the hand.
+     * 
+     * @param hand the hand of the player
+     * @return the card to discard
+     */
     @Override
     public Card discardCard(Hand hand) {
-        return hand.getCardList().get(random.nextInt(hand.getCardList().size()));
+        return hand.getCardList().get(LuckyThirdteen.RANDOM.nextInt(hand.getCardList().size()));
     }
 }

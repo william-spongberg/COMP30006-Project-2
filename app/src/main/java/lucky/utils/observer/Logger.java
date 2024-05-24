@@ -25,12 +25,15 @@ import static lucky.utils.scorer.Scorer.getScores;
 
 // contains all the methods for logging to be used by the Observer
 public class Logger {
-
-    // this must be static, as it needs to be used by the LuckyThirdteen class. If it were not static, it would
-    // not be possible to return from here. Given the log is globally visible, this is not beleived to be a problem.
+    // attributes
     public static StringBuilder logResult = new StringBuilder();
 
-    // used at the end of a turn
+    /**
+     * Appends the played cards of a player to the log.
+     *
+     * @param player the player number
+     * @param cards the list of cards played by the player
+     */
     public void addCardPlayedToLog(int player, List<Card> cards) {
         if (cards.size() < 2) {
             return;
@@ -48,12 +51,22 @@ public class Logger {
         logResult.append(",");
     }
 
-    // used at start of the round
+    /**
+     * Appends the round information to the log.
+     *
+     * @param roundNumber the number of the round
+     */
     public void addRoundInfoToLog(int roundNumber) {
         logResult.append("Round" + roundNumber + ":");
     }
 
-    // used at the end of a round
+    /**
+     * Adds the end of round information to the log.
+     * Calculates the scores for each player and appends them to the log.
+     *
+     * @param players      an array of Player objects representing the players in the game
+     * @param publicCards  a List of Card objects representing the public cards in the game
+     */
     public void addEndOfRoundToLog(Player[] players, List<Card> publicCards) {
         int[] scores = getScores(players, publicCards);
         logResult.append("Score:");
@@ -63,7 +76,13 @@ public class Logger {
         logResult.append("\n");
     }
 
-    // used at the end of the game
+    /**
+     * Appends the end of game information to the log.
+     *
+     * @param winners      the list of integers representing the winners' indices
+     * @param players      the array of Player objects representing the players in the game
+     * @param publicCards  the list of Card objects representing the public cards in the game
+     */
     public void addEndOfGameToLog(List<Integer> winners, Player[] players, List<Card> publicCards) {
         int[] scores = getScores(players, publicCards);
         logResult.append("EndGame:");

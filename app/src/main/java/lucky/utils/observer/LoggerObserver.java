@@ -18,17 +18,20 @@ import lucky.utils.state.States;
 import java.util.List;
 
 public class LoggerObserver implements Observer {
-
+    // attributes
     private Logger logger = new Logger();
-
     private Player[] players;
     private List<Card> publicCards;
 
+    /**
+     * Updates the state of the observer based on the given state and state data.
+     *
+     * @param state     the current state of the game
+     * @param stateData the data associated with the current state
+     */
     public void onStateUpdate(States state, StateData stateData) {
-
-        // each observer keeps an instance of players from stateData
-        // contact Logger and execute methods dependent on the state
-
+        // switch statement to determine what to do based on the state
+        // and update the logger accordingly
         switch (state) {
             case START_GAME:
             case START_ROUND:
@@ -55,9 +58,8 @@ public class LoggerObserver implements Observer {
                 logger.addEndOfGameToLog(winners, players, publicCards);
                 break;
             default:
-                System.out.println("State not found");
+                System.err.println("State not found");
                 System.exit(1);
         }
-
     }
 }

@@ -10,10 +10,10 @@
  * @author Ethan Hawkins
  */
 
-package lucky.utils.scorer.scoringCases;
+package lucky.utils.scorer.scoring_cases;
 
 import ch.aplu.jcardgame.Card;
-import lucky.utils.scorer.summingOptions.SummingOption;
+import lucky.utils.scorer.summing_options.SummingOption;
 
 import java.util.List;
 
