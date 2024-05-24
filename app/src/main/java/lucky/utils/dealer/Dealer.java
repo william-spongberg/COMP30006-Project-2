@@ -48,22 +48,6 @@ public class Dealer {
         pack.remove(card, false);
     }
 
-    /*
-     * Gets a card from the pack.
-     * 
-     * @param discard whether to discard the card
-     * 
-     * @return the card
-     */
-    public Card getCard(boolean discard) {
-        // get top card from pack
-        Card card = pack.get(0);
-        if (card == null)
-            return null;
-        if (discard)
-            discardCard(card);
-        return card;
-    }
 
     /**
      * Retrieves a card from the pack based on the given card name.
@@ -184,13 +168,4 @@ public class Dealer {
         return null;
     }
 
-    // getters
-
-    public Deck getInitialDeck() {
-        return deck;
-    }
-
-    public Hand getPack() {
-        return pack;
-    }
 }
