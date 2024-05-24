@@ -350,26 +350,6 @@ public class LuckyThirdteen extends CardGame {
     }
 
     /**
-     * Checks if any player's cards are also present in the dealer's deck.
-     * If a player's card is found in the dealer's deck, an error message is printed
-     * and the program exits.
-     */
-    private void checkCardsInDealerDeck() {
-        // *DEBUG*: check player's cards are not also in dealer's deck
-        Hand tmpHand = dealer.getPack();
-        for (int i = 0; i < NUM_PLAYERS; i++) {
-            for (Card card : players[i].getCards()) {
-                for (Card deckCard : tmpHand.getCardList()) {
-                    if (card.equals(deckCard)) {
-                        System.err.println("Player " + i + " has card in dealer's deck");
-                        System.exit(1);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
      * Executes a player's turn in the game.
      *
      * This method displays the player's hand, draws a requested card from the deck

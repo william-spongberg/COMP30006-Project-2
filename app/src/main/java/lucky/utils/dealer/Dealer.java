@@ -151,8 +151,12 @@ public class Dealer {
                 return rank;
             }
         }
-        System.err.println("Rank not found for card: " + cardName);
-        System.exit(1);
+
+        try {
+            throw new Exception("Rank not found for card: " + cardName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
@@ -171,8 +175,12 @@ public class Dealer {
                 return suit;
             }
         }
-        System.err.println("Suit not found for card: " + cardName);
-        System.exit(1);
+
+        try {
+            throw new Exception("Suit not found for card: " + cardName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
