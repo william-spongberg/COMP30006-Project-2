@@ -239,7 +239,7 @@ public class LuckyThirdteen extends CardGame {
         // create players
         createPlayers();
 
-        // initialise shared cards
+        // initialise and draw shared cards
         initSharedCards();
 
         // initialise and draw player cards
@@ -346,6 +346,12 @@ public class LuckyThirdteen extends CardGame {
             }
             // delay before next round
             delay(delayTime);
+        }
+
+        // show all player cards
+        for (Player player : players) {
+            player.showCards();
+            player.renderCards();
         }
     }
 
