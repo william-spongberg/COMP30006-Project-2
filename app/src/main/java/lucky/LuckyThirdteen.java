@@ -20,14 +20,16 @@ import ch.aplu.jcardgame.*;
 import ch.aplu.jgamegrid.Actor;
 import ch.aplu.jgamegrid.Location;
 import ch.aplu.jgamegrid.TextActor;
-import lucky.utils.dealer.Dealer;
-import lucky.utils.dealer.DiscardPile;
+
+import lucky.utils.dealer.*;
 import lucky.utils.observer.LoggerObserver;
 import lucky.utils.player.Player;
 import lucky.utils.player.PlayerCreator;
-import lucky.utils.state.StateContext;
-import lucky.utils.state.StateData;
-import lucky.utils.state.States;
+import lucky.utils.state.*;
+
+import static lucky.utils.observer.Logger.logResult;
+import static lucky.utils.scorer.Scorer.getScores;
+import static lucky.utils.scorer.Scorer.winner;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -36,10 +38,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
-
-import static lucky.utils.observer.Logger.logResult;
-import static lucky.utils.scorer.Scorer.getScores;
-import static lucky.utils.scorer.Scorer.winner;
 
 public class LuckyThirdteen extends CardGame {
     // --------------------------- VARIABLE DECLARATIONS ---------------------------
