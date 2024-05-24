@@ -29,7 +29,6 @@ public class Player {
     private final Hand hand;
     private final PlayerController controller;
     private final List<List<Card>> autoMovements;
-    private final List<Card> cards;
 
     // attributes
     private boolean isAuto = false;
@@ -52,8 +51,6 @@ public class Player {
         this.autoMovements = autoMovements;
 
         hand = new Hand(Dealer.INITIAL_DECK);
-        cards = initialCards;
-
         sortHand();
         convertListToHand(initialCards);
     }
@@ -124,7 +121,7 @@ public class Player {
     // getters
 
     public List<Card> getCards() {
-        return cards;
+        return hand.getCardList();
     }
 
     // setters
@@ -154,12 +151,10 @@ public class Player {
     }
 
     public void addCard(Card card) {
-        cards.add(card);
         hand.insert(card, false);
     }
 
     public void removeCard(Card card) {
-        cards.remove(card);
         hand.remove(card, false);
     }
 }
