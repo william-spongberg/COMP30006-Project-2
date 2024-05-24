@@ -388,15 +388,13 @@ public class LuckyThirdteen extends CardGame {
         Card drawnCard = players[currPlayer].drawCard();
         if (drawnCard == null) {
             drawnCard = dealer.getRandomCard(false);
-        } else {
-            delay(delayTime);
         }
         players[currPlayer].addCard(dealer.getCard(drawnCard, true));
         players[currPlayer].renderCards();
 
         // show drawn card
         if (drawnCard != null) {
-            delay(delayTime);
+            delay(thinkingTime);
         }
         players[currPlayer].renderCards();
 
