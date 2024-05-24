@@ -24,7 +24,7 @@ import lucky.utils.dealer.Dealer;
 import lucky.utils.dealer.DiscardPile;
 import lucky.utils.observer.LoggerObserver;
 import lucky.utils.player.Player;
-import lucky.utils.player.PlayerFactory;
+import lucky.utils.player.PlayerCreator;
 import lucky.utils.state.StateContext;
 import lucky.utils.state.StateData;
 import lucky.utils.state.States;
@@ -100,7 +100,7 @@ public class LuckyThirdteen extends CardGame {
 
     // classes
     private PropertiesReader pReader;
-    private PlayerFactory pFactory;
+    private PlayerCreator pCreator;
     private Dealer dealer;
     private Hand publicCards;
     private StateData stateData;
@@ -269,13 +269,13 @@ public class LuckyThirdteen extends CardGame {
     private void createPlayers() {
         // create players
         players = new Player[NUM_PLAYERS];
-        pFactory = new PlayerFactory(pReader.getStrInitPlayerHands(), pReader.getStrInitSharedCards(),
+        pCreator = new PlayerCreator(pReader.getStrInitPlayerHands(), pReader.getStrInitSharedCards(),
                 pReader.getStrPlayerAutoMovements());
 
         // dealer created by player factory
-        dealer = pFactory.getDealer();
+        dealer = pCreator.getDealer();
         for (int i = 0; i < NUM_PLAYERS; i++) {
-            players[i] = pFactory.createPlayer(playerTypes.get(i), i, isAuto);
+            players[i] = pCreator.createPlayer(playerTypes.get(i), i, isAuto);
             if (players[i].getCards().isEmpty()) {
                 // add random cards to player
                 for (int j = 0; j < NUM_PRIVATE_CARDS; j++) {
@@ -293,7 +293,7 @@ public class LuckyThirdteen extends CardGame {
     private void initSharedCards() {
         // initialise shared cards
         publicCards = new Hand(Dealer.INITIAL_DECK);
-        for (Card card : pFactory.getSharedCards()) {
+        for (Card card : pCreator.getSharedCards()) {
             publicCards.insert(card, false);
         }
         publicCards.setView(this, new RowLayout(TRICK_LOCATION, (publicCards.getNumberOfCards() + 2) * TRICK_WIDTH));

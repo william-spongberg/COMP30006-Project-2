@@ -15,7 +15,7 @@ import java.util.List;
  * The factory can create different types of players based on the player type
  * specified.
  */
-public class PlayerFactory {
+public class PlayerCreator {
     // constants
     private static final String HUMAN = "human";
     private static final String RANDOM = "random";
@@ -35,7 +35,7 @@ public class PlayerFactory {
      * @param strSharedCards    The string-based shared cards.
      * @param strAutoMovements  The string-based auto movements for each player.
      */
-    public PlayerFactory(List<List<String>> strInitCards, List<String> strSharedCards,
+    public PlayerCreator(List<List<String>> strInitCards, List<String> strSharedCards,
             List<List<List<String>>> strAutoMovements) {
         dealer = new Dealer(false);
         convertAutoMovements(strAutoMovements);
