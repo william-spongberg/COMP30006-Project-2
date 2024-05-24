@@ -102,7 +102,7 @@ public class LuckyThirdteen extends CardGame {
     private PropertiesReader pReader;
     private PlayerFactory pFactory;
     private Dealer dealer;
-    private Hand playingArea;
+    private Hand publicCards;
     private StateData stateData;
     private DiscardPile discardPile = DiscardPile.getInstance();
 
@@ -156,7 +156,7 @@ public class LuckyThirdteen extends CardGame {
         playGame();
 
         // display winner(s)
-        scores = getScores(players, playingArea.getCardList());
+        scores = getScores(players, publicCards.getCardList());
         displayWinners();
     }
 
@@ -168,7 +168,7 @@ public class LuckyThirdteen extends CardGame {
      * display all the winners' names separated by commas.
      */
     private void displayWinners() {
-        winners = winner(players, playingArea.getCardList());
+        winners = winner(players, publicCards.getCardList());
 
         String winText;
         if (winners.size() == ONE_WINNER) {
@@ -186,7 +186,7 @@ public class LuckyThirdteen extends CardGame {
      */
     private void logEndOfGame() {
         // add end of game to log
-        stateData = new StateData(winners, players, playingArea.getCardList());
+        stateData = new StateData(winners, players, publicCards.getCardList());
         state.setCurrentState(States.END_GAME, stateData);
         for (int i = 0; i < players.length; i++) {
             updateScore(i);
@@ -292,12 +292,12 @@ public class LuckyThirdteen extends CardGame {
      */
     private void initSharedCards() {
         // initialise shared cards
-        playingArea = new Hand(Dealer.INITIAL_DECK);
+        publicCards = new Hand(Dealer.INITIAL_DECK);
         for (Card card : pFactory.getSharedCards()) {
-            playingArea.insert(card, false);
+            publicCards.insert(card, false);
         }
-        playingArea.setView(this, new RowLayout(TRICK_LOCATION, (playingArea.getNumberOfCards() + 2) * TRICK_WIDTH));
-        playingArea.draw();
+        publicCards.setView(this, new RowLayout(TRICK_LOCATION, (publicCards.getNumberOfCards() + 2) * TRICK_WIDTH));
+        publicCards.draw();
     }
 
     /**
@@ -420,7 +420,7 @@ public class LuckyThirdteen extends CardGame {
      */
     private void endOfRound(int roundNumber) {
         // call addEndOfRoundToLog
-        stateData = new StateData(players, playingArea.getCardList());
+        stateData = new StateData(players, publicCards.getCardList());
         state.setCurrentState(States.END_ROUND, stateData);
 
         // if more rounds, log the round information
@@ -428,7 +428,7 @@ public class LuckyThirdteen extends CardGame {
             stateData = new StateData(roundNumber);
             state.setCurrentState(States.START_ROUND, stateData);
         }
-        scores = getScores(players, playingArea.getCardList());
+        scores = getScores(players, publicCards.getCardList());
     }
 
 }
