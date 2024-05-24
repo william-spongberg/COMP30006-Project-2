@@ -47,7 +47,7 @@ public class Dealer {
         // remove card from pack
         pack.remove(card, false);
     }
-
+    
     /**
      * Retrieves a card from the pack based on the given card name.
      * If the discard flag is set to true, the card will be discarded from the pack.
