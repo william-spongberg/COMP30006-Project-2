@@ -23,8 +23,8 @@ public class Dealer {
     public static final Deck INITIAL_DECK = new Deck(Suit.values(), Rank.values(), "cover");
 
     // attributes
-    private Deck deck = INITIAL_DECK;
-    private Hand pack = deck.toHand(false);
+    private static final Deck deck = INITIAL_DECK;
+    private final Hand pack = deck.toHand(false);
 
     public Dealer(boolean shuffle) {
         if (shuffle)
@@ -46,23 +46,6 @@ public class Dealer {
     public void discardCard(Card card) {
         // remove card from pack
         pack.remove(card, false);
-    }
-
-    /*
-     * Gets a card from the pack.
-     * 
-     * @param discard whether to discard the card
-     * 
-     * @return the card
-     */
-    public Card getCard(boolean discard) {
-        // get top card from pack
-        Card card = pack.get(0);
-        if (card == null)
-            return null;
-        if (discard)
-            discardCard(card);
-        return card;
     }
 
     /**
@@ -144,7 +127,7 @@ public class Dealer {
     public static Rank getRankFromString(String cardName) {
         // get rank from card name
         String rankString = cardName.substring(0, cardName.length() - 1);
-        Integer rankValue = Integer.parseInt(rankString);
+        int rankValue = Integer.parseInt(rankString);
 
         for (Rank rank : Rank.values()) {
             if (rank.getRankCardValue() == rankValue) {
@@ -168,7 +151,7 @@ public class Dealer {
      */
     public static Suit getSuitFromString(String cardName) {
         // get suit from card name
-        String suitString = cardName.substring(cardName.length() - 1, cardName.length());
+        String suitString = cardName.substring(cardName.length() - 1);
 
         for (Suit suit : Suit.values()) {
             if (suit.getSuitShortHand().equals(suitString)) {
@@ -184,13 +167,4 @@ public class Dealer {
         return null;
     }
 
-    // getters
-
-    public Deck getInitialDeck() {
-        return deck;
-    }
-
-    public Hand getPack() {
-        return pack;
-    }
 }

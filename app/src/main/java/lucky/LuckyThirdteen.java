@@ -84,6 +84,7 @@ public class LuckyThirdteen extends CardGame {
 
     private final Actor[] scoreActors = { null, null, null, null };
     private final Properties properties;
+    private final DiscardPile discardPile = DiscardPile.getInstance();
 
     // state initialisation (initialised in initgame)
     private final StateContext state = new StateContext();
@@ -104,7 +105,6 @@ public class LuckyThirdteen extends CardGame {
     private Dealer dealer;
     private Hand publicCards;
     private StateData stateData;
-    private DiscardPile discardPile = DiscardPile.getInstance();
 
     // --------------------------- CONSTRUCTOR ---------------------------
     public LuckyThirdteen(Properties properties) {
@@ -138,7 +138,7 @@ public class LuckyThirdteen extends CardGame {
      */
     private void initApp() {
         // set up game window text
-        setTitle(TITLE_A + String.valueOf(VERSION) + TITLE_B);
+        setTitle(TITLE_A + VERSION + TITLE_B);
         setStatusText(INITIALISING);
 
         // initialise game

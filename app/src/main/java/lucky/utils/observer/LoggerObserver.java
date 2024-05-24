@@ -1,6 +1,6 @@
 /**
  * LoggerObserver.java
- * Contains a Observer for the Logger. This observer has a logger within it, which is
+ * Contains an observer for the Logger. This observer has a logger within it, which is
  * updated on state change.
  *
  * @author William Spongberg
@@ -19,9 +19,7 @@ import java.util.List;
 
 public class LoggerObserver implements Observer {
     // attributes
-    private Logger logger = new Logger();
-    private Player[] players;
-    private List<Card> publicCards;
+    private final Logger logger = new Logger();
 
     /**
      * Updates the state of the observer based on the given state and state data.
@@ -46,8 +44,8 @@ public class LoggerObserver implements Observer {
                 break;
 
             case END_ROUND:
-                players = stateData.getPlayers();
-                publicCards = stateData.getPublicCards();
+                Player[] players = stateData.getPlayers();
+                List<Card> publicCards = stateData.getPublicCards();
                 logger.addEndOfRoundToLog(players, publicCards);
                 break;
 

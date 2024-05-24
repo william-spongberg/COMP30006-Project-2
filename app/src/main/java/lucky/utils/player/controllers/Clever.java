@@ -2,8 +2,8 @@
  * Clever.java
  * contains the behaviour for the clever player when discarding a card, which is:
  * when we have thirteen - remove whatever allows us to keep that thirteen.
- * if all cards contribute to a thirteen, dicard the lowest value -
- * if we dont have thirteen, simulate the removal of each card from hand and the subsequent
+ * if all cards contribute to a thirteen, discard the lowest value -
+ * if we don't have thirteen, simulate the removal of each card from hand and the subsequent
  * consequence by averaging the result when having obtained every card that is *likely* to be in the deck
  * after removing discard cards, public cards, and the clever players private cards from said deck
  *
@@ -29,8 +29,8 @@ import static lucky.utils.scorer.Scorer.hasThirteen;
 
 public class Clever implements PlayerController {
     // attributes
-    private DiscardPile discardPile = DiscardPile.getInstance();
-    private List<Card> sharedCards;
+    private final DiscardPile discardPile = DiscardPile.getInstance();
+    private final List<Card> sharedCards;
 
     /*
      * Constructor for the Clever class.
@@ -49,7 +49,7 @@ public class Clever implements PlayerController {
      */
     @Override
     public Card discardCard(Hand hand) {
-        Integer indexToRemove = 0;
+        Integer indexToRemove;
         List<Card> cards = new ArrayList<>(hand.getCardList());
         // returns a copy, as is singleton
         List<Card> cardsPlayed = discardPile.getDiscardCards();
@@ -65,7 +65,7 @@ public class Clever implements PlayerController {
         // check if we have thirteen from all possible combos
         if (hasThirteen(cardGroupToCheck1, sharedCards) || hasThirteen(cardGroupToCheck2, sharedCards)
                 || hasThirteen(cardGroupToCheck3, sharedCards)) {
-            // if we do, remove whatever doesnt contribute to 13 or the lowest value card
+            // if we do, remove whatever doesn't contribute to 13 or the lowest value card
             indexToRemove = thirteenChecker(sharedCards, cards);
         } else {
             // else, we estimate what the best card is. we remove whatever maximises the
@@ -188,7 +188,7 @@ public class Clever implements PlayerController {
             score = scoringCases.get(2).score(cardsInHand, sharedCards);
 
         } else {
-            // if we dont have 13, try a case2.
+            // if we don't have 13, try a case2.
             score = scoringCases.get(1).score(cardsInHand, sharedCards);
 
         }

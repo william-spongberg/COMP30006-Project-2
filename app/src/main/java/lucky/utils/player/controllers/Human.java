@@ -22,11 +22,11 @@ public class Human implements PlayerController {
 
     // attributes
     private Card selected = null;
-    private CardListener cardListener = new CardAdapter() {
-        /*
-         * Sets the selected card to the card that was left double clicked
+    private final CardListener cardListener = new CardAdapter() {
+        /**
+         * Sets the selected card to the card that was left double-clicked
          * 
-         * @param card the card that was left double clicked
+         * @param card the card that was left double-clicked
          */
         @Override
         public void leftDoubleClicked(Card card) {

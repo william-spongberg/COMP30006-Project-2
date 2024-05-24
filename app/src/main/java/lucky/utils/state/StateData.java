@@ -18,7 +18,7 @@ import lucky.utils.player.Player;
 import java.util.List;
 
 // contains all data we need for a state change.
-// initialised in luckyThirdTeen, and set just before caling the state change.
+// initialised in luckyThirdTeen, and set just before calling the state change.
 public class StateData {
     // attributes
     private int player;
@@ -112,13 +112,5 @@ public class StateData {
 
     public void setCards(List<Card> cards) {
         this.cards = cards;
-    }
-
-    public void setRoundNumber(int roundNumber) {
-        this.roundNumber = roundNumber;
-    }
-
-    public void setWinners(List<Integer> winners) {
-        this.winners = winners;
     }
 }

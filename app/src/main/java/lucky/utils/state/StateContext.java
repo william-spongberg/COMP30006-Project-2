@@ -19,7 +19,7 @@ import java.util.List;
 
 public class StateContext {
     // attributes
-    private List<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
     private StateData stateData;
     private States currentState;
 

@@ -24,7 +24,7 @@ public class DiscardPile {
     private static DiscardPile instance;
 
     // attributes
-    private List<Card> discardCards;
+    private final List<Card> discardCards;
 
     // constructor
     private DiscardPile() {

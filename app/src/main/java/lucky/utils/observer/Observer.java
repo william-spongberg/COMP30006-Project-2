@@ -13,6 +13,6 @@ import lucky.utils.state.StateData;
 import lucky.utils.state.States;
 
 public interface Observer {
-    public void onStateUpdate(States state, StateData stateData);
+    void onStateUpdate(States state, StateData stateData);
 
 }

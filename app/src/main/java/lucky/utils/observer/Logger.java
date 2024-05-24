@@ -38,12 +38,12 @@ public class Logger {
         if (cards.size() < 2) {
             return;
         }
-        logResult.append("P" + player + "-");
+        logResult.append("P").append(player).append("-");
 
         for (int i = 0; i < cards.size(); i++) {
             Rank cardRank = (Rank) cards.get(i).getRank();
             Suit cardSuit = (Suit) cards.get(i).getSuit();
-            logResult.append(cardRank.getRankCardLog() + cardSuit.getSuitShortHand());
+            logResult.append(cardRank.getRankCardLog()).append(cardSuit.getSuitShortHand());
             if (i < cards.size() - 1) {
                 logResult.append("-");
             }
@@ -57,7 +57,7 @@ public class Logger {
      * @param roundNumber the number of the round
      */
     public void addRoundInfoToLog(int roundNumber) {
-        logResult.append("Round" + roundNumber + ":");
+        logResult.append("Round").append(roundNumber).append(":");
     }
 
     /**
@@ -70,8 +70,8 @@ public class Logger {
     public void addEndOfRoundToLog(Player[] players, List<Card> publicCards) {
         int[] scores = getScores(players, publicCards);
         logResult.append("Score:");
-        for (int i = 0; i < scores.length; i++) {
-            logResult.append(scores[i] + ",");
+        for (int score : scores) {
+            logResult.append(score).append(",");
         }
         logResult.append("\n");
     }
@@ -86,11 +86,10 @@ public class Logger {
     public void addEndOfGameToLog(List<Integer> winners, Player[] players, List<Card> publicCards) {
         int[] scores = getScores(players, publicCards);
         logResult.append("EndGame:");
-        for (int i = 0; i < scores.length; i++) {
-            logResult.append(scores[i] + ",");
+        for (int score : scores) {
+            logResult.append(score).append(",");
         }
         logResult.append("\n");
-        logResult.append(
-                "Winners:" + String.join(", ", winners.stream().map(String::valueOf).collect(Collectors.toList())));
+        logResult.append("Winners:").append(winners.stream().map(String::valueOf).collect(Collectors.joining(", ")));
     }
 }

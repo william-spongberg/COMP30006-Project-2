@@ -31,7 +31,7 @@ public class Player {
     private final List<List<Card>> autoMovements;
 
     // attributes
-    private boolean isAuto = false;
+    private final boolean isAuto;
     private boolean finishedAuto = false;
     private int autoIndex = 0;
 

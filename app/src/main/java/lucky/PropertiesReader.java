@@ -32,11 +32,10 @@ public class PropertiesReader {
     private boolean isAuto = false;
     private int thinkingTime = DEFAULT_THINKING_TIME;
     private int delayTime = DEFAULT_DELAY_TIME;
-    private int numPlayers = 0;
-    private List<String> playerTypes = new ArrayList<>();
+    private final List<String> playerTypes = new ArrayList<>();
     private List<String> strInitSharedCards = new ArrayList<>();
-    private List<List<String>> strInitPlayerHands = new ArrayList<>();
-    private List<List<List<String>>> strPlayerAutoMovements = new ArrayList<>();
+    private final List<List<String>> strInitPlayerHands = new ArrayList<>();
+    private final List<List<List<String>>> strPlayerAutoMovements = new ArrayList<>();
 
     /**
      * Constructs a new PropertiesReader object with the given properties.
@@ -54,18 +53,6 @@ public class PropertiesReader {
         setInitialSharedCards(properties);
         setInitPlayerHands(properties);
         setAutoMovements(properties);
-    }
-
-    // *DEBUG* print properties
-    public void printProperties() {
-        System.out.println("isAuto: " + isAuto);
-        System.out.println("thinkingTime: " + thinkingTime);
-        System.out.println("delayTime: " + delayTime);
-        System.out.println("numPlayers: " + numPlayers);
-        System.out.println("playerTypes: " + playerTypes);
-        System.out.println("initialSharedCards: " + strInitSharedCards);
-        System.out.println("initialPlayerHands: " + strInitPlayerHands);
-        System.out.println("playerAutoMovements: " + strPlayerAutoMovements);
     }
 
     /**
@@ -129,7 +116,7 @@ public class PropertiesReader {
                 strPlayerAutoMovements.add(new ArrayList<>());
             } else {
                 // split up rounds by ","
-                List<String> movements = Arrays.asList(playerAutoMovement.split(","));
+                String[] movements = playerAutoMovement.split(",");
                 // split up movements by "-"
                 List<List<String>> playerMovements = new ArrayList<>();
                 for (String movement : movements) {
@@ -154,10 +141,6 @@ public class PropertiesReader {
         return delayTime;
     }
 
-    public int getNumPlayers() {
-        return numPlayers;
-    }
-
     public List<String> getPlayerTypes() {
         return playerTypes;
     }
@@ -175,19 +158,10 @@ public class PropertiesReader {
     }
 
     // setters
-
-    public void setAuto(boolean isAuto) {
-        this.isAuto = isAuto;
-    }
-
     public void setAuto(Properties properties) {
         if (properties.getProperty(IS_AUTO) != null) {
             this.isAuto = Boolean.parseBoolean(properties.getProperty(IS_AUTO));
         }
-    }
-
-    public void setThinkingTime(int thinkingTime) {
-        this.thinkingTime = thinkingTime;
     }
 
     public void setThinkingTime(Properties properties) {
@@ -196,33 +170,17 @@ public class PropertiesReader {
         }
     }
 
-    public void setDelayTime(int delayTime) {
-        this.delayTime = delayTime;
-    }
-
     public void setDelayTime(Properties properties) {
         if (properties.getProperty(DELAY_TIME) != null) {
             this.delayTime = Integer.parseInt(properties.getProperty(DELAY_TIME));
         }
     }
 
-    public void setNumPlayers(int numPlayers) {
-        this.numPlayers = numPlayers;
-    }
-
     public void incrementNumPlayers() {
-        this.numPlayers++;
-    }
-
-    public void setPlayerTypes(List<String> playerTypes) {
-        this.playerTypes = playerTypes;
     }
 
     public void addPlayerType(String playerType) {
         this.playerTypes.add(playerType);
     }
 
-    public void setStrPlayerAutoMovements(List<List<List<String>>> playerAutoMovements) {
-        this.strPlayerAutoMovements = playerAutoMovements;
-    }
 }

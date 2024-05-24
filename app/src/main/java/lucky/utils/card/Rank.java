@@ -20,9 +20,9 @@ public enum Rank {
     FOUR(4, 4, 4), THREE(3, 3, 3),
     TWO(2, 2, 2);
 
-    private int rankCardValue = 1;
-    private int scoreValue = 0;
-    private int[] possibleSumValues = null;
+    private final int rankCardValue;
+    private final int scoreValue;
+    private final int[] possibleSumValues;
 
     Rank(int rankCardValue, int scoreValue, int... possibleSumValues) {
         this.rankCardValue = rankCardValue;

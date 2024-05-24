@@ -1,6 +1,6 @@
 /**
  * Suit.java
- * Contains enum Suit, which allwows us to obtain the mutlitplication factor when scoring cards
+ * Contains enum Suit, which allows us to obtain the multiplication factor when scoring cards
  *
  * @author William Spongberg
  * @author Joshua Linehan
@@ -13,8 +13,8 @@ public enum Suit {
     SPADES("S", 4), HEARTS("H", 3),
     DIAMONDS("D", 2), CLUBS("C", 1);
 
-    private String suitShortHand = "";
-    private int multiplicationFactor = 1;
+    private final String suitShortHand;
+    private final int multiplicationFactor;
 
     Suit(String shortHand, int multiplicationFactor) {
         this.suitShortHand = shortHand;
