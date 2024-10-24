@@ -5,7 +5,7 @@
 
 Refactored and updated Java program that simulates a card game.
 
-Find assignment details [here](/SWEN30006_24S1_Project2.pdf)
+Find assignment details [here](/SWEN30006_24S1_Project2.pdf).
 
 ## Team Members
 
