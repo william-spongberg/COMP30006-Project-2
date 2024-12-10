@@ -7,6 +7,8 @@ Refactored and updated Java program that simulates a card game.
 
 Find assignment details [here](/SWEN30006_24S1_Project2.pdf).
 
+Find our report [here](/documentation/Report.pdf).
+
 ## Team Members
 
 - Ethan Hawkins, <ewhawkins@student.unimelb.edu.au>, @Chillerbag
